@@ -173,7 +173,7 @@ export function ReviewPage() {
           onChange={(e) => setOccurredAt(e.target.value)}
         />
         {/* Shown only when this is an expense or the draft already carries an amount */}
-        {(type === 'expense' || initialDraft?.amount != null) && (
+        {(type === 'expense' || initialDraft.amount != null) && (
           <FormField
             id="review-amount"
             label="Amount"
