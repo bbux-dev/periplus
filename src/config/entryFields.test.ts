@@ -167,6 +167,42 @@ describe('buildReviewDraft — metadata number NaN handling (consistent with cor
   })
 })
 
+describe('buildReviewDraft — rating range enforcement (IN-03)', () => {
+  it('stores in-range rating (1–5 inclusive)', () => {
+    const fields = ENTRY_FIELDS.show
+    for (const val of ['1', '3', '5']) {
+      const draft = buildReviewDraft(fields, {
+        title: 'Show', creator: '', occurredAt: '', rating: val, description: '', tags: '',
+      })
+      expect(draft.metadata.rating).toBe(parseFloat(val))
+    }
+  })
+
+  it('skips rating below minimum (0 is below 1)', () => {
+    const fields = ENTRY_FIELDS.show
+    const draft = buildReviewDraft(fields, {
+      title: 'Show', creator: '', occurredAt: '', rating: '0', description: '', tags: '',
+    })
+    expect(draft.metadata.rating).toBeUndefined()
+  })
+
+  it('skips rating above maximum (6 is above 5)', () => {
+    const fields = ENTRY_FIELDS.show
+    const draft = buildReviewDraft(fields, {
+      title: 'Show', creator: '', occurredAt: '', rating: '6', description: '', tags: '',
+    })
+    expect(draft.metadata.rating).toBeUndefined()
+  })
+
+  it('skips negative rating', () => {
+    const fields = ENTRY_FIELDS.movie
+    const draft = buildReviewDraft(fields, {
+      title: 'Film', creator: '', occurredAt: '', rating: '-1', description: '', tags: '',
+    })
+    expect(draft.metadata.rating).toBeUndefined()
+  })
+})
+
 describe('buildReviewDraft — tags splitting', () => {
   it('splits comma-separated tags, trims each, and filters empty segments', () => {
     const fields = ENTRY_FIELDS.show

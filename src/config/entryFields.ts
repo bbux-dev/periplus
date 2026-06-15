@@ -17,6 +17,9 @@ export interface FieldDescriptor {
   inputType: FieldInputType
   placeholder?: string
   required?: boolean
+  /** Inclusive numeric bounds; enforced in buildReviewDraft — out-of-range values are skipped */
+  min?: number
+  max?: number
   mapTo: FieldMapping
 }
 
@@ -28,7 +31,7 @@ export const ENTRY_FIELDS: Record<EntryType, FieldDescriptor[]> = {
     { key: 'title',       label: 'Title',   inputType: 'text',   required: true,  mapTo: { kind: 'core', field: 'title' } },
     { key: 'creator',     label: 'Creator', inputType: 'text',                    mapTo: { kind: 'metadata', key: 'creator' } },
     { key: 'occurredAt',  label: 'Date',    inputType: 'date',                    mapTo: { kind: 'core', field: 'occurredAt' } },
-    { key: 'rating',      label: 'Rating',  inputType: 'number', placeholder: '1–5', mapTo: { kind: 'metadata', key: 'rating' } },
+    { key: 'rating',      label: 'Rating',  inputType: 'number', placeholder: '1–5', min: 1, max: 5, mapTo: { kind: 'metadata', key: 'rating' } },
     { key: 'description', label: 'Notes',   inputType: 'text',                    mapTo: { kind: 'core', field: 'description' } },
     { key: 'tags',        label: 'Tags',    inputType: 'tags',   placeholder: 'tag1, tag2', mapTo: { kind: 'core', field: 'tags' } },
   ],
@@ -36,7 +39,7 @@ export const ENTRY_FIELDS: Record<EntryType, FieldDescriptor[]> = {
     { key: 'title',       label: 'Title',    inputType: 'text',   required: true,  mapTo: { kind: 'core', field: 'title' } },
     { key: 'creator',     label: 'Director', inputType: 'text',                    mapTo: { kind: 'metadata', key: 'creator' } },
     { key: 'occurredAt',  label: 'Date',     inputType: 'date',                    mapTo: { kind: 'core', field: 'occurredAt' } },
-    { key: 'rating',      label: 'Rating',   inputType: 'number', placeholder: '1–5', mapTo: { kind: 'metadata', key: 'rating' } },
+    { key: 'rating',      label: 'Rating',   inputType: 'number', placeholder: '1–5', min: 1, max: 5, mapTo: { kind: 'metadata', key: 'rating' } },
     { key: 'description', label: 'Notes',    inputType: 'text',                    mapTo: { kind: 'core', field: 'description' } },
     { key: 'tags',        label: 'Tags',     inputType: 'tags',   placeholder: 'tag1, tag2', mapTo: { kind: 'core', field: 'tags' } },
   ],
@@ -44,7 +47,7 @@ export const ENTRY_FIELDS: Record<EntryType, FieldDescriptor[]> = {
     { key: 'title',       label: 'Title',     inputType: 'text',   required: true,  mapTo: { kind: 'core', field: 'title' } },
     { key: 'creator',     label: 'Author',    inputType: 'text',                    mapTo: { kind: 'metadata', key: 'creator' } },
     { key: 'occurredAt',  label: 'Date Read', inputType: 'date',                    mapTo: { kind: 'core', field: 'occurredAt' } },
-    { key: 'rating',      label: 'Rating',    inputType: 'number', placeholder: '1–5', mapTo: { kind: 'metadata', key: 'rating' } },
+    { key: 'rating',      label: 'Rating',    inputType: 'number', placeholder: '1–5', min: 1, max: 5, mapTo: { kind: 'metadata', key: 'rating' } },
     { key: 'description', label: 'Notes',     inputType: 'text',                    mapTo: { kind: 'core', field: 'description' } },
     { key: 'tags',        label: 'Tags',      inputType: 'tags',   placeholder: 'tag1, tag2', mapTo: { kind: 'core', field: 'tags' } },
   ],
@@ -52,7 +55,7 @@ export const ENTRY_FIELDS: Record<EntryType, FieldDescriptor[]> = {
     { key: 'title',       label: 'Title',  inputType: 'text',   required: true,  mapTo: { kind: 'core', field: 'title' } },
     { key: 'creator',     label: 'Host',   inputType: 'text',                    mapTo: { kind: 'metadata', key: 'creator' } },
     { key: 'occurredAt',  label: 'Date',   inputType: 'date',                    mapTo: { kind: 'core', field: 'occurredAt' } },
-    { key: 'rating',      label: 'Rating', inputType: 'number', placeholder: '1–5', mapTo: { kind: 'metadata', key: 'rating' } },
+    { key: 'rating',      label: 'Rating', inputType: 'number', placeholder: '1–5', min: 1, max: 5, mapTo: { kind: 'metadata', key: 'rating' } },
     { key: 'description', label: 'Notes',  inputType: 'text',                    mapTo: { kind: 'core', field: 'description' } },
     { key: 'tags',        label: 'Tags',   inputType: 'tags',   placeholder: 'tag1, tag2', mapTo: { kind: 'core', field: 'tags' } },
   ],
@@ -143,7 +146,13 @@ export function buildReviewDraft(
       if (field.inputType === 'number') {
         // Consistent with core amount: skip NaN instead of falling back to raw string.
         const n = parseFloat(raw)
-        if (!isNaN(n)) draft.metadata[field.mapTo.key] = n
+        if (!isNaN(n)) {
+          // IN-03: skip out-of-range values when min/max are declared on the descriptor
+          const inRange =
+            (field.min == null || n >= field.min) &&
+            (field.max == null || n <= field.max)
+          if (inRange) draft.metadata[field.mapTo.key] = n
+        }
       } else {
         draft.metadata[field.mapTo.key] = raw
       }

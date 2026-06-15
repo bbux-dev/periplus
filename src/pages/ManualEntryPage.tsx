@@ -104,6 +104,8 @@ export function ManualEntryPage() {
             type={field.inputType === 'tags' ? 'text' : field.inputType}
             placeholder={field.placeholder}
             required={field.required}  // WR-01: wire through so HTML required attr is set
+            min={field.min}            // IN-03: numeric range bounds for browser enforcement
+            max={field.max}
             value={formValues[field.key] ?? ''}
             onChange={(e) => handleChange(field.key, e.target.value)}
           />
