@@ -55,7 +55,7 @@ Plans:
   5. A new entry can be created and persisted while offline
 **Plans**: 3 plans (1 wave — all parallel, zero file overlap)
 Plans:
-- [ ] 02-01-PLAN.md — SETUP-04 shared primitives: requestState, assertNever, appBrand, publicEnv (+ co-located tests) (Wave 1)
+- [x] 02-01-PLAN.md — SETUP-04 shared primitives: requestState, assertNever, appBrand, publicEnv (+ co-located tests) (Wave 1)
 - [ ] 02-02-PLAN.md — Dexie v2 schema + LifeLogEntry model + entriesRepository CRUD/listUnsynced/useEntries (Wave 1)
 - [ ] 02-03-PLAN.md — vite-plugin-pwa: createPwaOptions factory, manifest + service worker, SW registration, PWA icons (Wave 1)
 **UI hint**: no
@@ -122,7 +122,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & App Shell | 3/3 | Complete | 2026-06-15 |
-| 2. Data Layer & PWA Shell | 0/3 | Planned | - |
+| 2. Data Layer & PWA Shell | 1/3 | In Progress|  |
 | 3. Navigation & Dashboard | 0/TBD | Not started | - |
 | 4. URL-First Capture | 0/TBD | Not started | - |
 | 5. Manual Entry | 0/TBD | Not started | - |

@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: Tracer Bullet — App Shell + DB-Backed Counter
-status: phase_complete
-stopped_at: Completed 01-03-PLAN.md (WelcomePage + Counter tracer)
-last_updated: "2026-06-15T18:29:00Z"
+status: executing
+stopped_at: Completed 02-01-PLAN.md (SETUP-04 shared primitives)
+last_updated: "2026-06-15T19:19:00.064Z"
 last_activity: 2026-06-15
 progress:
   total_phases: 6
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 6
+  completed_plans: 4
   percent: 17
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-15)
 
 **Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 01 — Foundation & App Shell — COMPLETE
+**Current focus:** Phase 02 — Data Layer & PWA Shell
 
 ## Current Position
 
-Phase: 01 (Foundation & App Shell) — COMPLETE
-Plan: 3 of 3 — ALL COMPLETE
-Status: Phase 1 complete; ready for Phase 2
+Phase: 02 (Data Layer & PWA Shell) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-06-15
 
-Progress: [██░░░░░░░░] 17% (1 of 6 phases)
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Progress: [██░░░░░░░░] 17% (1 of 6 phases)
 | Phase 01 P01 | 9min | 2 tasks | 22 files |
 | Phase 01 P02 | 2min | 2 tasks | 5 files |
 | Phase 01 P03 | 4min | 2 tasks | 6 files |
+| Phase 02-data-layer-pwa-shell P01 | 2min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,8 @@ architecture-template.md SPEC + spec.md:
 - [Phase 01-02]: Button uses var(--color-*) tokens (Tailwind v4 form); LifeLogDB version(1) left intact for Phase 2 version(2) migration
 - [Phase 01-03]: MemoryRouter in WelcomePage.test.tsx — satisfies react-router context in isolated RTL tests
 - [Phase 01-03]: findByText + act() in Counter.test.tsx — useLiveQuery is async; act() flushes Dexie put re-render cycle
+- [Phase ?]: appBrand.themeColor = '#1e40af' (hex of --color-primary per RESEARCH Pattern 7; pwaConfig.ts inlines own constants to stay within tsconfig.node.json scope)
+- [Phase ?]: publicEnv = {} as const placeholder — no VITE_* vars in Phase 2; future phases extend with non-secret keys only (T-02-01 accept)
 
 ### Pending Todos
 
@@ -90,6 +93,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-15T18:29:00Z
-Stopped at: Completed 01-03-PLAN.md (WelcomePage + Counter tracer) — Phase 1 COMPLETE
+Last session: 2026-06-15T19:19:00.053Z
+Stopped at: Completed 02-01-PLAN.md (SETUP-04 shared primitives)
 Resume file: None
