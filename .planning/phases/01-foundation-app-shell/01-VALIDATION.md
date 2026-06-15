@@ -17,7 +17,7 @@ created: 2026-06-15
 
 | Property | Value |
 |----------|-------|
-| **Framework** | Vitest 3.x + @testing-library/react + fake-indexeddb |
+| **Framework** | Vitest 4.x + @testing-library/react + fake-indexeddb |
 | **Config file** | `vite.config.ts` (test block) + `src/test-setup.ts` — installed in Wave 0 |
 | **Quick run command** | `npx vitest run` |
 | **Full suite command** | `npx vitest run && npx tsc -b && npx vite build` |
@@ -43,7 +43,7 @@ created: 2026-06-15
 | 1-cn-button | 01 | 1 | SETUP-03 | — | N/A | unit | `npx vitest run src/components/ui` | ❌ W0 | ⬜ pending |
 | 1-db | 02 | 1 | DEMO-01 | — | N/A | unit | `npx vitest run src/services` | ❌ W0 | ⬜ pending |
 | 1-shell | 02 | 2 | SHELL-01 | — | N/A | unit | `npx vitest run src/pages` | ❌ W0 | ⬜ pending |
-| 1-counter | 02 | 2 | DEMO-01 | — | N/A | unit | `npx vitest run src/pages` | ❌ W0 | ⬜ pending |
+| 1-counter | 02 | 2 | DEMO-01 | — | N/A | unit | `npx vitest run src/components` | ❌ W0 | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 

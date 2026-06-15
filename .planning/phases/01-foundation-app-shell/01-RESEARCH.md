@@ -585,17 +585,17 @@ Available sub-paths: `24/outline`, `24/solid`, `20/solid`, `16/solid`. Use `24/o
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **`@vitejs/plugin-react` version selection**
    - What we know: create-vite@7.1.3 ships `@vitejs/plugin-react@^5.0.0`; npm latest is `6.0.2` (which likely requires Vite 8)
    - What's unclear: Whether `@vitejs/plugin-react@5.x` or `6.x` works correctly with Vite 7.3.x
-   - Recommendation: Stick with `^5.0.0` as provided by the create-vite@7 template. Do not upgrade plugin-react independently of vite.
+   - RESOLVED: Stick with `^5.0.0` as provided by the create-vite@7 template. Do not upgrade plugin-react independently of vite.
 
 2. **Vitest + fake-indexeddb compatibility under jsdom**
    - What we know: `fake-indexeddb/auto` registers `indexedDB` on `globalThis`; Vitest's jsdom environment does not provide IndexedDB natively
    - What's unclear: Whether the `fake-indexeddb/auto` side-effect import works reliably in Vitest's module isolation or requires setup file placement
-   - Recommendation: Add `import 'fake-indexeddb/auto'` in `src/test-setup.ts` (before RTL setup). If issues arise, use explicit `IDBFactory` injection per the Dexie test docs (Method 2 in Pattern section).
+   - RESOLVED: Add `import 'fake-indexeddb/auto'` as the FIRST line in `src/test-setup.ts` (before RTL setup). If issues arise, use explicit `IDBFactory` injection per the Dexie test docs (Method 2 in Pattern section).
 
 ---
 
