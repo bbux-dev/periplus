@@ -38,11 +38,11 @@ Committed prototype scope, kept on the roadmap and sequenced into later mileston
 
 ### PWA & Offline (PWA) — later _(Phase 2)_
 
-- [ ] **PWA-01**: `pwa/pwaConfig.ts` exports a testable `createPwaOptions()` factory consumed by a thin `vite.config.ts`
-- [ ] **PWA-02**: App is installable as a mobile-first PWA with a web manifest
-- [ ] **PWA-03**: Service worker caches the app shell (NetworkFirst navigation, precache static assets, `registerType: 'autoUpdate'`)
-- [ ] **PWA-04**: App shell and previously visited routes load while the device is offline
-- [ ] **PWA-05**: A new entry can be created and persisted while offline
+- [x] **PWA-01**: `pwa/pwaConfig.ts` exports a testable `createPwaOptions()` factory consumed by a thin `vite.config.ts`
+- [x] **PWA-02**: App is installable as a mobile-first PWA with a web manifest
+- [x] **PWA-03**: Service worker caches the app shell (NetworkFirst navigation, precache static assets, `registerType: 'autoUpdate'`)
+- [x] **PWA-04**: App shell and previously visited routes load while the device is offline
+- [x] **PWA-05**: A new entry can be created and persisted while offline
 
 ### Data Layer (DATA) — later _(Phase 2)_
 

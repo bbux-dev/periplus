@@ -16,7 +16,7 @@ Life Log is built bottom-up by dependency. **Milestone v0.1.0 is a tracer bullet
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
 - [x] **Phase 1: Foundation & App Shell** — Scaffold the locked stack into a runnable app with a "Life Log" welcome screen and a DB-backed counter tracer _(v0.1.0)_
-- [ ] **Phase 2: Data Layer & PWA Shell** — Dexie `LifeLogEntry` + repository with reactive reads, plus an installable, offline-capable PWA shell
+- [x] **Phase 2: Data Layer & PWA Shell** — Dexie `LifeLogEntry` + repository with reactive reads, plus an installable, offline-capable PWA shell (completed 2026-06-15)
 - [ ] **Phase 3: Navigation & Dashboard** — Home dashboard, category screens, and routing across all 7 screens
 - [ ] **Phase 4: URL-First Capture** — Default paste-URL → extract → review → save flow with offline create
 - [ ] **Phase 5: Manual Entry** — Secondary `Enter Manually` path with type-specific forms
@@ -57,7 +57,7 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — SETUP-04 shared primitives: requestState, assertNever, appBrand, publicEnv (+ co-located tests) (Wave 1)
 - [x] 02-02-PLAN.md — Dexie v2 schema + LifeLogEntry model + entriesRepository CRUD/listUnsynced/useEntries (Wave 1)
-- [ ] 02-03-PLAN.md — vite-plugin-pwa: createPwaOptions factory, manifest + service worker, SW registration, PWA icons (Wave 1)
+- [x] 02-03-PLAN.md — vite-plugin-pwa: createPwaOptions factory, manifest + service worker, SW registration, PWA icons (Wave 1)
 **UI hint**: no
 **Note**: SC2b (cross-refresh), SC4c (offline shell), SC5 (offline create) are MANUAL-ONLY verifications — build-artifact assertions are the automated proxy. The Phase 1 counter is preserved (not removed in Phase 2).
 
@@ -122,7 +122,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & App Shell | 3/3 | Complete | 2026-06-15 |
-| 2. Data Layer & PWA Shell | 2/3 | In Progress|  |
+| 2. Data Layer & PWA Shell | 3/3 | Complete   | 2026-06-15 |
 | 3. Navigation & Dashboard | 0/TBD | Not started | - |
 | 4. URL-First Capture | 0/TBD | Not started | - |
 | 5. Manual Entry | 0/TBD | Not started | - |
