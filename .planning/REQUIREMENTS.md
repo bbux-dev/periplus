@@ -17,7 +17,7 @@ real capture lands.
 
 - [x] **SETUP-01**: Single Vite 7 + React 19 + TypeScript 5.9 app scaffolds at repo root with project references (`tsconfig.json` → `tsconfig.app.json` + `tsconfig.node.json`)
 - [x] **SETUP-02**: Tailwind CSS v4 wired via `@tailwindcss/vite` with theme tokens in `index.css`, and the template directory layout in place (`pages`, `components/ui`, `services`, `state/common`, `config`, `pwa`, `assets`)
-- [ ] **SETUP-03**: `components/ui/` contains the `cn` helper and a `Button` primitive referencing CSS custom-property theme tokens (enough for the counter's icon buttons)
+- [x] **SETUP-03**: `components/ui/` contains the `cn` helper and a `Button` primitive referencing CSS custom-property theme tokens (enough for the counter's icon buttons)
 
 ### App Shell (SHELL)
 
@@ -25,7 +25,7 @@ real capture lands.
 
 ### Tracer Demo (DEMO)
 
-- [ ] **DEMO-01**: A Counter with **+ / − heroicons** increments/decrements an integer value that is persisted in a Dexie/IndexedDB store, read reactively via `dexie-react-hooks` `useLiveQuery`, and survives a page refresh
+- [x] **DEMO-01**: A Counter with **+ / − heroicons** increments/decrements an integer value that is persisted in a Dexie/IndexedDB store, read reactively via `dexie-react-hooks` `useLiveQuery`, and survives a page refresh
 
 ## Future Milestone Requirements (v0.2.0+)
 
