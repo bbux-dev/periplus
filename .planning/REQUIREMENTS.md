@@ -46,11 +46,11 @@ Committed prototype scope, kept on the roadmap and sequenced into later mileston
 
 ### Data Layer (DATA) — later _(Phase 2)_
 
-- [ ] **DATA-01**: `LifeLogEntry` type is defined matching the authoritative schema (id, domain, type, title, description?, occurredAt?, recordedAt, sourceUrl?, amount?, location?, tags, metadata)
-- [ ] **DATA-02**: Dexie database (`services/db.ts`) defines `entries` (keyed by `id`) and `settings` object stores
-- [ ] **DATA-03**: `services/entriesRepository.ts` provides CRUD over `LifeLogEntry` (create, read, list, update, delete)
-- [ ] **DATA-04**: Repository exposes an "unsynced entries" query stub so a future sync layer can read local entries
-- [ ] **DATA-05**: Reactive reads over `LifeLogEntry` use `dexie-react-hooks` `useLiveQuery` (components re-render when entries change)
+- [x] **DATA-01**: `LifeLogEntry` type is defined matching the authoritative schema (id, domain, type, title, description?, occurredAt?, recordedAt, sourceUrl?, amount?, location?, tags, metadata)
+- [x] **DATA-02**: Dexie database (`services/db.ts`) defines `entries` (keyed by `id`) and `settings` object stores
+- [x] **DATA-03**: `services/entriesRepository.ts` provides CRUD over `LifeLogEntry` (create, read, list, update, delete)
+- [x] **DATA-04**: Repository exposes an "unsynced entries" query stub so a future sync layer can read local entries
+- [x] **DATA-05**: Reactive reads over `LifeLogEntry` use `dexie-react-hooks` `useLiveQuery` (components re-render when entries change)
 
 ### Navigation & Screens (NAV) — later _(Phase 3)_
 
