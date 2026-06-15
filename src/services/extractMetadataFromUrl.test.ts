@@ -187,4 +187,41 @@ describe('extractMetadataFromUrl', () => {
       expect(result.metadata).toEqual({})
     })
   })
+
+  // ─── WR-01: lookalike hostname rejection ──────────────────────────────────────
+
+  describe('WR-01: lookalike hostnames fall through to base draft', () => {
+    it('evil-google.com does NOT trigger Google Maps extractor', () => {
+      const url = 'https://evil-google.com/maps/place/Eiffel+Tower'
+      const result = extractMetadataFromUrl(url, 'place')
+      // Falls through to base draft: no title, no location, no coordinates
+      expect(result.title).toBeUndefined()
+      expect(result.location).toBeUndefined()
+      expect(result.metadata).toEqual({})
+    })
+
+    it('notimdb.com does NOT trigger IMDb extractor', () => {
+      const url = 'https://notimdb.com/title/tt0468569/'
+      const result = extractMetadataFromUrl(url, 'movie')
+      expect(result.metadata).toEqual({})
+    })
+
+    it('notgoodreads.com does NOT trigger Goodreads extractor', () => {
+      const url = 'https://notgoodreads.com/book/show/5470-the-pragmatic-programmer'
+      const result = extractMetadataFromUrl(url, 'book')
+      expect(result.title).toBeUndefined()
+    })
+
+    it('notamazon.com does NOT trigger Amazon extractor', () => {
+      const url = 'https://notamazon.com/Some-Book/dp/B09XYZ'
+      const result = extractMetadataFromUrl(url, 'book')
+      expect(result.title).toBeUndefined()
+    })
+
+    it('xpodcasts.apple.com does NOT trigger Apple Podcasts extractor', () => {
+      const url = 'https://xpodcasts.apple.com/us/podcast/the-daily/id1200361736'
+      const result = extractMetadataFromUrl(url, 'podcast')
+      expect(result.title).toBeUndefined()
+    })
+  })
 })

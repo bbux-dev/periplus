@@ -189,12 +189,26 @@ export function extractMetadataFromUrl(
 
   // Short-link check before general google.com check
   if (hostname === 'maps.app.goo.gl') return extractGoogleMapsShort(url)
-  if (hostname.includes('google.com') && parsed.pathname.startsWith('/maps'))
+  // google.com — allow www + any subdomain, but not evil-google.com
+  if (
+    (hostname === 'google.com' || hostname.endsWith('.google.com')) &&
+    parsed.pathname.startsWith('/maps')
+  )
     return extractGoogleMaps(url, parsed)
-  if (hostname.includes('imdb.com')) return extractImdb(url, parsed)
-  if (hostname.includes('goodreads.com')) return extractGoodreads(url, parsed)
-  if (hostname.includes('amazon.')) return extractAmazon(url, parsed, base)
-  if (hostname.includes('podcasts.apple.com'))
+  // imdb.com — www and mobile only; not notimdb.com
+  if (hostname === 'www.imdb.com' || hostname === 'm.imdb.com')
+    return extractImdb(url, parsed)
+  // goodreads.com — apex and www; not notgoodreads.com
+  if (hostname === 'goodreads.com' || hostname === 'www.goodreads.com')
+    return extractGoodreads(url, parsed)
+  // amazon — regional TLDs (amazon.com, amazon.co.uk, amazon.de …); not notamazon.com
+  if (
+    hostname === 'amazon.com' ||
+    /^(?:www\.)?amazon\.[a-z]{2,3}(?:\.[a-z]{2})?$/.test(hostname)
+  )
+    return extractAmazon(url, parsed, base)
+  // podcasts.apple.com — exact; not xpodcasts.apple.com
+  if (hostname === 'podcasts.apple.com')
     return extractApplePodcasts(url, parsed)
   if (hostname === 'open.spotify.com') return extractSpotify(url, parsed)
 
