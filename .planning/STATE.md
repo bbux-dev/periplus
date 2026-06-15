@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: Tracer Bullet — App Shell + DB-Backed Counter
 status: executing
-stopped_at: Completed 04-02-PLAN.md (extractMetadataFromUrl offline extractor)
-last_updated: "2026-06-15T21:49:01.235Z"
+stopped_at: Completed 04-04-PLAN.md (ReviewPage)
+last_updated: "2026-06-15T21:54:26.804Z"
 last_activity: 2026-06-15
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 14
-  completed_plans: 12
+  completed_plans: 13
   percent: 50
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 ## Current Position
 
 Phase: 04 (URL-First Capture) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-06-15
 
-Progress: [█████████░] 86%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -64,6 +64,7 @@ Progress: [█████████░] 86%
 | Phase 04-url-first-capture P01 | 4min | 2 tasks | 4 files |
 | Phase 04-url-first-capture P02 | 6min | 2 tasks | 2 files |
 | Phase 04-url-first-capture P03 | 2min | 2 tasks | 2 files |
+| Phase 04-url-first-capture P04 | 8min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,7 @@ architecture-template.md SPEC + spec.md:
 - [Phase ?]: [04-01] FormField error border via cn() className prop on Input — no wrapper div style
 - [Phase ?]: [04-02] _type parameter uses underscore prefix — satisfies noUnusedParameters:true while preserving public API; type-based fallback reserved for future plan
 - [Phase ?]: [04-02] slugToTitle shared for Goodreads, Amazon, Apple Podcasts — Amazon fixture confirms titlecase is authoritative over RESEARCH code sketch
+- [Phase ?]: [04-04] MemoryRouter v7 initialEntries object form verified: InitialEntry=string|Partial<Location>
 
 ### Pending Todos
 
@@ -109,6 +111,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-15T21:49:01.226Z
-Stopped at: Completed 04-02-PLAN.md (extractMetadataFromUrl offline extractor)
+Last session: 2026-06-15T21:54:26.794Z
+Stopped at: Completed 04-04-PLAN.md (ReviewPage)
 Resume file: None
