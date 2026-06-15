@@ -1,7 +1,7 @@
 import { render, screen, act } from '@testing-library/react'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { db } from './db'
-import { entriesRepository, useEntries } from './entriesRepository'
+import { entriesRepository, useEntries, useEntry } from './entriesRepository'
 import type { LifeLogEntry } from './db'
 
 beforeEach(async () => {
@@ -163,5 +163,32 @@ describe('useEntries reactive hook (SC2a)', () => {
 
     expect(await screen.findByText('My Reactive Entry')).toBeInTheDocument()
     expect(await screen.findByText('1 entries')).toBeInTheDocument()
+  })
+})
+
+// ─── useEntry reactive hook ───────────────────────────────────────────────────
+
+// Minimal test component: renders tri-state — Loading / Not found / entry title.
+function EntryDetailTest({ id }: { id: string }) {
+  const entry = useEntry(id)
+  if (entry === undefined) return <p>Loading</p>
+  if (entry === null) return <p>Not found</p>
+  return <p>{entry.title}</p>
+}
+
+describe('useEntry reactive hook', () => {
+  it('resolves to null (not found) for an unknown id', async () => {
+    render(<EntryDetailTest id="unknown-id-that-does-not-exist" />)
+    expect(await screen.findByText('Not found')).toBeInTheDocument()
+  })
+
+  it('resolves to the entry when an entry with the given id exists', async () => {
+    let createdId: string
+    await act(async () => {
+      const entry = await entriesRepository.create(makeEntryData({ title: 'Detail Target' }))
+      createdId = entry.id
+    })
+    render(<EntryDetailTest id={createdId!} />)
+    expect(await screen.findByText('Detail Target')).toBeInTheDocument()
   })
 })
