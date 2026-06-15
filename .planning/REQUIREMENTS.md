@@ -78,7 +78,7 @@ Committed prototype scope, kept on the roadmap and sequenced into later mileston
 
 - [ ] **VIEW-01**: Entry List screen lists all saved entries with filters All / Media / Trips / Expenditures
 - [ ] **VIEW-02**: Each list row shows title, type, occurred/recorded date, and amount when present
-- [ ] **VIEW-03**: Entry Detail screen shows the full entry including title, type, description, source URL, amount, location, tags, and a metadata JSON preview
+- [x] **VIEW-03**: Entry Detail screen shows the full entry including title, type, description, source URL, amount, location, tags, and a metadata JSON preview
 - [ ] **VIEW-04**: Saved entries persist after a page refresh
 - [ ] **EXP-01**: User can export all entries as JSON via `services/exportEntries.ts`
 
