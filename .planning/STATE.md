@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: Tracer Bullet — App Shell + DB-Backed Counter
-status: executing
-stopped_at: Completed 04-04-PLAN.md (ReviewPage)
-last_updated: "2026-06-15T22:57:12.183Z"
+status: verifying
+stopped_at: Completed 05-02-PLAN.md (ManualEntryPage + Phase 5 complete)
+last_updated: "2026-06-15T23:07:35.784Z"
 last_activity: 2026-06-15
 progress:
   total_phases: 6
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 16
-  completed_plans: 15
-  percent: 67
+  completed_plans: 16
+  percent: 83
 ---
 
 # Project State
@@ -21,16 +21,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-15)
 
 **Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 05 — Manual Entry
+**Current focus:** Phase 06 — Entry List, Detail & Export
 
 ## Current Position
 
-Phase: 05 (Manual Entry) — EXECUTING
-Plan: 2 of 2
-Status: Ready to execute
+Phase: 05 (Manual Entry) — COMPLETE
+Phase: 06 (Entry List, Detail & Export) — NOT STARTED
+Plan: 2 of 2 (Phase 5 done)
+Status: Phase 5 complete — Phase 6 not started
 Last activity: 2026-06-15
 
-Progress: [█████████░] 94%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -66,7 +67,8 @@ Progress: [█████████░] 94%
 | Phase 04-url-first-capture P03 | 2min | 2 tasks | 2 files |
 | Phase 04-url-first-capture P04 | 8min | 2 tasks | 2 files |
 | Phase 04-url-first-capture P05 | 10min | 2 tasks | 8 files |
-| Phase 05-manual-entry P01 | 12 | 2 tasks | 4 files |
+| Phase 05-manual-entry P01 | 12min | 2 tasks | 4 files |
+| Phase 05-manual-entry P02 | 8min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -94,6 +96,7 @@ architecture-template.md SPEC + spec.md:
 - [Phase ?]: [04-02] _type parameter uses underscore prefix — satisfies noUnusedParameters:true while preserving public API; type-based fallback reserved for future plan
 - [Phase ?]: [04-02] slugToTitle shared for Goodreads, Amazon, Apple Podcasts — Amazon fixture confirms titlecase is authoritative over RESEARCH code sketch
 - [Phase ?]: [04-04] MemoryRouter v7 initialEntries object form verified: InitialEntry=string|Partial<Location>
+- [Phase 05-02]: ManualEntryPage mirrors CaptureUrlPage guard structure (unknown-domain + unknown-type) for T-05-04 mitigation; PlaceholderPage retired from manual route; App.test.tsx heading updated from /manual entry/i to /add book/i
 
 ### Pending Todos
 
@@ -113,6 +116,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-15T22:57:12.172Z
-Stopped at: Completed 04-04-PLAN.md (ReviewPage)
+Last session: 2026-06-15T23:07:35.774Z
+Stopped at: Completed 05-02-PLAN.md (ManualEntryPage — Phase 5 complete)
 Resume file: None

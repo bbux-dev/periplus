@@ -19,7 +19,7 @@ Life Log is built bottom-up by dependency. **Milestone v0.1.0 is a tracer bullet
 - [x] **Phase 2: Data Layer & PWA Shell** — Dexie `LifeLogEntry` + repository with reactive reads, plus an installable, offline-capable PWA shell (completed 2026-06-15)
 - [x] **Phase 3: Navigation & Dashboard** — Home dashboard, category screens, and routing across all 7 screens (completed 2026-06-15)
 - [x] **Phase 4: URL-First Capture** — Default paste-URL → extract → review → save flow with offline create (completed 2026-06-15)
-- [ ] **Phase 5: Manual Entry** — Secondary `Enter Manually` path with type-specific forms
+- [x] **Phase 5: Manual Entry** — Secondary `Enter Manually` path with type-specific forms (completed 2026-06-15)
 - [ ] **Phase 6: Entry List, Detail & Export** — Browse, filter, inspect, and JSON-export all saved entries
 
 ## Phase Details
@@ -111,7 +111,7 @@ Plans:
 **Plans**: 2 plans (2 waves)
 Plans:
 - [x] 05-01-PLAN.md — ReviewDraft type + `entryFields.ts` config/buildReviewDraft (all 7 types) + ReviewPage Option A-light extension; Phase 4 tests preserved (Wave 1)
-- [ ] 05-02-PLAN.md — `ManualEntryPage` (renders ENTRY_FIELDS, builds draft → Review→Save) + App route swap + RTL/integration tests (MAN-01, MAN-02, MAN-03) (Wave 2)
+- [x] 05-02-PLAN.md — `ManualEntryPage` (renders ENTRY_FIELDS, builds draft → Review→Save) + App route swap + RTL/integration tests (MAN-01, MAN-02, MAN-03) (Wave 2)
 **UI hint**: yes
 
 ### Phase 6: Entry List, Detail & Export
@@ -138,5 +138,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Data Layer & PWA Shell | 3/3 | Complete   | 2026-06-15 |
 | 3. Navigation & Dashboard | 3/3 | Complete   | 2026-06-15 |
 | 4. URL-First Capture | 5/5 | Complete   | 2026-06-15 |
-| 5. Manual Entry | 1/2 | In Progress|  |
+| 5. Manual Entry | 2/2 | Complete   | 2026-06-15 |
 | 6. Entry List, Detail & Export | 0/TBD | Not started | - |

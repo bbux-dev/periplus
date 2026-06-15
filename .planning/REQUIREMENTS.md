@@ -70,7 +70,7 @@ Committed prototype scope, kept on the roadmap and sequenced into later mileston
 
 ### Manual Entry (MAN) — later _(Phase 5)_
 
-- [ ] **MAN-01**: Manual Entry screen is reachable only by clicking `Enter Manually`
+- [x] **MAN-01**: Manual Entry screen is reachable only by clicking `Enter Manually`
 - [x] **MAN-02**: Manual form shows fields appropriate to the entry type (common: title/description/occurredAt/tags; expense: amount/currency/category/merchant/notes; place: name/address/notes/tags; media: title/creator/date/rating/notes)
 - [x] **MAN-03**: Manually entered entries flow through Review → Save and persist as `LifeLogEntry`
 
