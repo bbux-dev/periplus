@@ -29,7 +29,7 @@ export function Button({
     <button
       className={cn(
         'inline-flex items-center justify-center rounded-md font-medium',
-        'transition-colors focus-visible:outline-none focus-visible:ring-2',
+        'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]',
         'disabled:pointer-events-none disabled:opacity-50',
         variantClasses[variant],
         sizeClasses[size],
