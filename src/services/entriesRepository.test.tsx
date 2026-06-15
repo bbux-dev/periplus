@@ -1,6 +1,7 @@
+import { render, screen, act } from '@testing-library/react'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { db } from './db'
-import { entriesRepository } from './entriesRepository'
+import { entriesRepository, useEntries } from './entriesRepository'
 import type { LifeLogEntry } from './db'
 
 beforeEach(async () => {
@@ -114,5 +115,46 @@ describe('entriesRepository: listUnsynced (SC3)', () => {
     expect(entries).toHaveLength(1)
     expect(entries[0].id).toBe(unsynced.id)
     expect(entries[0].title).toBe('Unsynced')
+  })
+})
+
+// ─── SC2a: useEntries reactive re-render ─────────────────────────────────────
+
+// Minimal test component that calls useEntries() and renders count + titles.
+// Mirrors the Counter.test.tsx act() + findByText pattern for useLiveQuery.
+function EntryListTest() {
+  const entries = useEntries()
+  if (entries === undefined) return <p>Loading...</p>
+  return (
+    <div>
+      <p>{entries.length} entries</p>
+      <ul>
+        {entries.map((e) => (
+          <li key={e.id}>{e.title}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+describe('useEntries reactive hook (SC2a)', () => {
+  it('initially shows 0 entries after Dexie opens', async () => {
+    render(<EntryListTest />)
+    // findByText waits for the async useLiveQuery re-render past the loading state
+    expect(await screen.findByText('0 entries')).toBeInTheDocument()
+  })
+
+  it('re-renders with new entry title after create() is called', async () => {
+    render(<EntryListTest />)
+    await screen.findByText('0 entries')
+
+    await act(async () => {
+      await entriesRepository.create(
+        makeEntryData({ title: 'My Reactive Entry' }),
+      )
+    })
+
+    expect(await screen.findByText('My Reactive Entry')).toBeInTheDocument()
+    expect(await screen.findByText('1 entries')).toBeInTheDocument()
   })
 })
