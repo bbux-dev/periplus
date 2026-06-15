@@ -196,17 +196,35 @@ describe('buildReviewDraft — tags splitting', () => {
 })
 
 describe('buildReviewDraft — date handling', () => {
-  it('converts YYYY-MM-DD date string to epoch ms', () => {
+  it('converts YYYY-MM-DD date string to LOCAL-midnight epoch ms (WR-03)', () => {
     const fields = ENTRY_FIELDS.show
+    const raw = '2024-01-15'
     const draft = buildReviewDraft(fields, {
       title: 'Breaking Bad',
       creator: '',
-      occurredAt: '2024-01-15',
+      occurredAt: raw,
       rating: '',
       description: '',
       tags: '',
     })
-    expect(draft.occurredAt).toBe(Date.parse('2024-01-15'))
+    // Stored epoch must equal local midnight, NOT UTC midnight.
+    // Date.parse(raw) is UTC midnight; Date.parse(`${raw}T00:00:00`) is local midnight.
+    expect(draft.occurredAt).toBe(new Date(`${raw}T00:00:00`).getTime())
+  })
+
+  it('round-trips: stored epoch formats back to the same YYYY-MM-DD in local tz (WR-03)', () => {
+    const fields = ENTRY_FIELDS.show
+    const raw = '2024-01-15'
+    const draft = buildReviewDraft(fields, {
+      title: 'Breaking Bad',
+      creator: '',
+      occurredAt: raw,
+      rating: '',
+      description: '',
+      tags: '',
+    })
+    // toLocaleDateString('en-CA') produces 'YYYY-MM-DD' in local tz — must match input
+    expect(new Date(draft.occurredAt!).toLocaleDateString('en-CA')).toBe(raw)
   })
 
   it('skips invalid date strings — occurredAt remains undefined', () => {

@@ -128,7 +128,9 @@ export function buildReviewDraft(
           break
         }
         case 'occurredAt': {
-          const t = Date.parse(raw)   // 'YYYY-MM-DD' → epoch ms (UTC midnight)
+          // Append T00:00:00 so the spec treats this as LOCAL midnight, not UTC midnight.
+          // Date.parse('YYYY-MM-DD') is UTC midnight per ECMAScript — wrong in UTC-offset zones.
+          const t = Date.parse(`${raw}T00:00:00`)
           if (!isNaN(t)) draft.occurredAt = t
           break
         }

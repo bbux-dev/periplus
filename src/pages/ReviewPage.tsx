@@ -48,9 +48,10 @@ export function ReviewPage() {
   const [isSaving, setIsSaving] = useState(false)
 
   // NEW: Manual-entry fields threaded from ReviewDraft → LifeLogEntry
+  // WR-03: use toLocaleDateString('en-CA') → 'YYYY-MM-DD' in local tz (toISOString is UTC)
   const [occurredAt, setOccurredAt] = useState(
     initialDraft?.occurredAt
-      ? new Date(initialDraft.occurredAt).toISOString().split('T')[0]
+      ? new Date(initialDraft.occurredAt).toLocaleDateString('en-CA')
       : '',
   )
   const [amount, setAmount] = useState(
@@ -86,7 +87,8 @@ export function ReviewPage() {
     const safeSourceUrl = sourceUrl && isSafeUrl(sourceUrl) ? sourceUrl : undefined
     // Parse manual-entry numeric + date fields
     const parsedAmount = parseFloat(amount)
-    const parsedDate   = occurredAt ? Date.parse(occurredAt) : NaN
+    // WR-03: local midnight — appending T00:00:00 makes the spec parse as local, not UTC
+    const parsedDate   = occurredAt ? Date.parse(`${occurredAt}T00:00:00`) : NaN
     const parsedTags   = tags.split(',').map((t) => t.trim()).filter(Boolean)
     // Build the full Omit<LifeLogEntry, 'id'> — every required field present (Pitfall 5)
     const entry = {
