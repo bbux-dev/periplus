@@ -125,7 +125,13 @@ Plans:
   3. The Entry Detail screen shows the full entry including a metadata JSON preview
   4. Saved entries are still present after a page refresh
   5. The user can export all entries as a JSON file
-**Plans**: TBD
+**Plans**: 6 plans (3 waves)
+- [ ] 06-01-PLAN.md — Extract isSafeUrl to shared services/urlUtils.ts (+ update ReviewPage)
+- [ ] 06-02-PLAN.md — Add useEntry(id) tri-state reactive hook to entriesRepository
+- [ ] 06-03-PLAN.md — exportEntries.ts: pure buildExportJson + mockable triggerDownload (EXP-01)
+- [ ] 06-04-PLAN.md — EntryListPage (reactive, filterable list + export) + Dashboard link (VIEW-01/02/04)
+- [ ] 06-05-PLAN.md — EntryDetailPage (full entry + metadata JSON + safe sourceUrl + not-found guard) (VIEW-03)
+- [ ] 06-06-PLAN.md — Wire /entries + /entries/:id routes in App.tsx to the real pages
 
 ## Progress
 
@@ -139,4 +145,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Navigation & Dashboard | 3/3 | Complete   | 2026-06-15 |
 | 4. URL-First Capture | 5/5 | Complete   | 2026-06-15 |
 | 5. Manual Entry | 2/2 | Complete   | 2026-06-15 |
-| 6. Entry List, Detail & Export | 0/TBD | Not started | - |
+| 6. Entry List, Detail & Export | 0/6 | Not started | - |
