@@ -1,3 +1,4 @@
+import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from './db'
 import type { LifeLogEntry } from './db'
 
@@ -47,4 +48,26 @@ export const entriesRepository = {
   async delete(id: string): Promise<void> {
     await db.entries.delete(id)
   },
+}
+
+// ─── Reactive hook (DATA-05) ─────────────────────────────────────────────────
+
+/**
+ * Reactive hook for components: returns all entries ordered by recordedAt descending.
+ *
+ * Returns `undefined` while Dexie is opening (first render), then `LifeLogEntry[]`.
+ * Callers MUST handle `undefined` to distinguish "loading" from "empty array".
+ * Do NOT provide a default [] — losing the loading state breaks skeleton UI.
+ *
+ * @example
+ *   const entries = useEntries()
+ *   if (!entries) return <p>Loading...</p>
+ *   return <ul>{entries.map(e => <li key={e.id}>{e.title}</li>)}</ul>
+ */
+export function useEntries(): LifeLogEntry[] | undefined {
+  return useLiveQuery(
+    () => db.entries.orderBy('recordedAt').reverse().toArray(),
+    [],
+    // No default value: callers distinguish undefined (loading) from [] (empty)
+  )
 }
