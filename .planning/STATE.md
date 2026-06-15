@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: Tracer Bullet — App Shell + DB-Backed Counter
-status: verifying
-stopped_at: Completed 02-02-PLAN.md (Dexie v2 schema + LifeLogEntry + entriesRepository)
-last_updated: "2026-06-15T19:47:38.255Z"
-last_activity: 2026-06-15
+status: executing
+stopped_at: Completed 03-01-PLAN.md (navigation.ts config — NAVIGATION + getDomainConfig)
+last_updated: "2026-06-15T21:00:00.000Z"
+last_activity: 2026-06-15 -- Phase 03 Plan 01 complete (navigation config module)
 progress:
   total_phases: 6
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 9
+  completed_plans: 7
   percent: 33
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-15)
 
 **Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 02 — Data Layer & PWA Shell
+**Current focus:** Phase 03 — Navigation & Dashboard
 
 ## Current Position
 
-Phase: 02 (Data Layer & PWA Shell) — EXECUTING
-Plan: 3 of 3
-Status: Phase complete — ready for verification
-Last activity: 2026-06-15
+Phase: 03 (Navigation & Dashboard) — EXECUTING
+Plan: 2 of 3
+Status: Executing Phase 03
+Last activity: 2026-06-15 -- Phase 03 Plan 01 complete (navigation config module)
 
 Progress: [██████████] 100%
 
@@ -58,6 +58,7 @@ Progress: [██████████] 100%
 | Phase 02-data-layer-pwa-shell P01 | 2min | 2 tasks | 8 files |
 | Phase 02-data-layer-pwa-shell P02 | 6min | 3 tasks | 4 files |
 | Phase 02-data-layer-pwa-shell P03 | 8min | 3 tasks | 11 files |
+| Phase 03-navigation-dashboard P01 | 5min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,7 @@ architecture-template.md SPEC + spec.md:
 - [Phase ?]: publicEnv = {} as const placeholder — no VITE_* vars in Phase 2; future phases extend with non-secret keys only (T-02-01 accept)
 - [Phase ?]: Phase 02-02: LifeLogEntry co-located in db.ts; syncedAt: number | null for sync seam; useEntries returns undefined (no default); test renamed .tsx for JSX
 - [Phase ?]: 02-03
+- [Phase 03-01]: getDomainConfig uses Array.find with strict equality (no eval); 'expense' domain ambiguity resolved at domain-config level (both trips and expenditures have expense type)
 
 ### Pending Todos
 
