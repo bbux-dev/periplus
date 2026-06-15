@@ -64,15 +64,15 @@ Committed prototype scope, kept on the roadmap and sequenced into later mileston
 - [x] **CAPT-01**: After choosing an entry type, the URL Capture screen is shown by default (title `Add {Entry Type}`, URL input, `Import from URL`, `Enter Manually`)
 - [x] **CAPT-02**: User pastes a URL, app infers metadata, and navigates to the Review Entry screen
 - [ ] **CAPT-03**: `services/extractMetadataFromUrl(url, type)` returns a partial draft using URL/domain heuristics for `google_maps`, `imdb`, `book_url`, `podcast_url`
-- [ ] **CAPT-04**: If extraction yields little/fails, the URL is preserved and Review still opens with whatever fields are available
-- [ ] **CAPT-05**: Review Entry screen lets the user edit all visible fields; Save persists a `LifeLogEntry` and navigates to detail/category; Cancel discards
+- [x] **CAPT-04**: If extraction yields little/fails, the URL is preserved and Review still opens with whatever fields are available
+- [x] **CAPT-05**: Review Entry screen lets the user edit all visible fields; Save persists a `LifeLogEntry` and navigates to detail/category; Cancel discards
 - [x] **CAPT-06**: An `Enter Manually` button is clearly visible as a secondary action; manual entry is NOT the default path
 
 ### Manual Entry (MAN) — later _(Phase 5)_
 
 - [ ] **MAN-01**: Manual Entry screen is reachable only by clicking `Enter Manually`
-- [ ] **MAN-02**: Manual form shows fields appropriate to the entry type (common: title/description/occurredAt/tags; expense: amount/currency/category/merchant/notes; place: name/address/notes/tags; media: title/creator/date/rating/notes)
-- [ ] **MAN-03**: Manually entered entries flow through Review → Save and persist as `LifeLogEntry`
+- [x] **MAN-02**: Manual form shows fields appropriate to the entry type (common: title/description/occurredAt/tags; expense: amount/currency/category/merchant/notes; place: name/address/notes/tags; media: title/creator/date/rating/notes)
+- [x] **MAN-03**: Manually entered entries flow through Review → Save and persist as `LifeLogEntry`
 
 ### View & Export (VIEW) — later _(Phase 6)_
 
