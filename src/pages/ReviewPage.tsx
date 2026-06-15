@@ -6,18 +6,9 @@ import { useBackOrHome } from '../hooks/useBackOrHome'
 import { FormField } from '../components/ui/FormField'
 import { Button } from '../components/ui/Button'
 import { entriesRepository } from '../services/entriesRepository'
+import { isSafeUrl } from '../services/urlUtils'
 import type { ReviewDraft } from '../services/extractMetadataFromUrl'
 import type { EntryDomain, EntryType } from '../services/db'
-
-/** Returns true only for http: and https: URLs — guards against javascript: XSS vectors. */
-function isSafeUrl(raw: string): boolean {
-  try {
-    const { protocol } = new URL(raw)
-    return protocol === 'http:' || protocol === 'https:'
-  } catch {
-    return false
-  }
-}
 
 export function ReviewPage() {
   const { domain = '', type = '' } = useParams<{ domain: string; type: string }>()
