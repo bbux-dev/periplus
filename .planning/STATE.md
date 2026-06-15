@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: Tracer Bullet — App Shell + DB-Backed Counter
 status: executing
-stopped_at: Completed 04-01-PLAN.md (Input + FormField primitives)
-last_updated: "2026-06-15T21:36:21.473Z"
+stopped_at: Completed 04-02-PLAN.md (extractMetadataFromUrl offline extractor)
+last_updated: "2026-06-15T22:00:00.000Z"
 last_activity: 2026-06-15
 progress:
   total_phases: 6
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 ## Current Position
 
 Phase: 04 (URL-First Capture) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-06-15
 
@@ -62,6 +62,7 @@ Progress: [███████░░░] 71%
 | Phase 03-navigation-dashboard P02 | 480 | 2 tasks | 4 files |
 | Phase 03-navigation-dashboard P03 | 10min | 4 tasks | 6 files |
 | Phase 04-url-first-capture P01 | 4min | 2 tasks | 4 files |
+| Phase 04-url-first-capture P02 | 6min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,8 @@ architecture-template.md SPEC + spec.md:
 - [Phase 03-02]: DashboardPage uses bare MemoryRouter in tests (no routing hooks, only Link); DomainPage tests use initialEntries with two entries so navigate(-1) has a prior entry; unknown domain renders text content — no throw, no dangerouslySetInnerHTML
 - [Phase ?]: [04-01] aria-invalid=!!error||undefined omits attribute when no error
 - [Phase ?]: [04-01] FormField error border via cn() className prop on Input — no wrapper div style
+- [Phase ?]: [04-02] _type parameter uses underscore prefix — satisfies noUnusedParameters:true while preserving public API; type-based fallback reserved for future plan
+- [Phase ?]: [04-02] slugToTitle shared for Goodreads, Amazon, Apple Podcasts — Amazon fixture confirms titlecase is authoritative over RESEARCH code sketch
 
 ### Pending Todos
 
@@ -105,6 +108,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-15T21:36:21.463Z
-Stopped at: Completed 04-01-PLAN.md (Input + FormField primitives)
+Last session: 2026-06-15T22:00:00.000Z
+Stopped at: Completed 04-02-PLAN.md (extractMetadataFromUrl offline extractor)
 Resume file: None
