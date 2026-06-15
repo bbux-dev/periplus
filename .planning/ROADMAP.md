@@ -18,7 +18,7 @@ Life Log is built bottom-up by dependency. **Milestone v0.1.0 is a tracer bullet
 - [x] **Phase 1: Foundation & App Shell** — Scaffold the locked stack into a runnable app with a "Life Log" welcome screen and a DB-backed counter tracer _(v0.1.0)_
 - [x] **Phase 2: Data Layer & PWA Shell** — Dexie `LifeLogEntry` + repository with reactive reads, plus an installable, offline-capable PWA shell (completed 2026-06-15)
 - [x] **Phase 3: Navigation & Dashboard** — Home dashboard, category screens, and routing across all 7 screens (completed 2026-06-15)
-- [ ] **Phase 4: URL-First Capture** — Default paste-URL → extract → review → save flow with offline create
+- [x] **Phase 4: URL-First Capture** — Default paste-URL → extract → review → save flow with offline create (completed 2026-06-15)
 - [ ] **Phase 5: Manual Entry** — Secondary `Enter Manually` path with type-specific forms
 - [ ] **Phase 6: Entry List, Detail & Export** — Browse, filter, inspect, and JSON-export all saved entries
 
@@ -95,7 +95,7 @@ Plans:
 - [x] 04-02-PLAN.md — `extractMetadataFromUrl` pure offline extractor + 16-fixture unit suite (CAPT-03, CAPT-04) (Wave 1)
 - [x] 04-03-PLAN.md — `CaptureUrlPage` (URL input, Import, Enter Manually) + RTL tests (CAPT-01, CAPT-02, CAPT-06) (Wave 2)
 - [x] 04-04-PLAN.md — `ReviewPage` (edit/save/cancel/guard) + RTL + fake-indexeddb tests (CAPT-04, CAPT-05) (Wave 2)
-- [ ] 04-05-PLAN.md — App.tsx rewiring, counter/EntryTypePage removal, end-to-end capture→review→save test (CAPT-01) (Wave 3)
+- [x] 04-05-PLAN.md — App.tsx rewiring, counter/EntryTypePage removal, end-to-end capture→review→save test (CAPT-01) (Wave 3)
 **UI hint**: yes
 
 ### Phase 5: Manual Entry
@@ -134,6 +134,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Foundation & App Shell | 3/3 | Complete | 2026-06-15 |
 | 2. Data Layer & PWA Shell | 3/3 | Complete   | 2026-06-15 |
 | 3. Navigation & Dashboard | 3/3 | Complete   | 2026-06-15 |
-| 4. URL-First Capture | 4/5 | In Progress|  |
+| 4. URL-First Capture | 5/5 | Complete   | 2026-06-15 |
 | 5. Manual Entry | 0/TBD | Not started | - |
 | 6. Entry List, Detail & Export | 0/TBD | Not started | - |
