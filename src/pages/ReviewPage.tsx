@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { ChevronLeftIcon } from '@heroicons/react/24/outline'
 import { getDomainConfig } from '../config/navigation'
@@ -43,6 +43,9 @@ export function ReviewPage() {
   const [description, setDescription] = useState(initialDraft?.description ?? '')
   const [sourceUrl, setSourceUrl] = useState(initialDraft?.sourceUrl ?? '')
   const [saveError, setSaveError] = useState<string | null>(null)
+  // WR-02: synchronous in-flight guard (ref) + UI disabled state (useState)
+  const savingRef = useRef(false)
+  const [isSaving, setIsSaving] = useState(false)
 
   // NEW: Manual-entry fields threaded from ReviewDraft → LifeLogEntry
   const [occurredAt, setOccurredAt] = useState(
@@ -74,6 +77,10 @@ export function ReviewPage() {
   }
 
   const handleSave = async () => {
+    // WR-02: prevent duplicate saves from rapid double-clicks
+    if (savingRef.current) return
+    savingRef.current = true
+    setIsSaving(true)
     setSaveError(null)
     // Validate sourceUrl scheme — never persist javascript: or other unsafe protocols
     const safeSourceUrl = sourceUrl && isSafeUrl(sourceUrl) ? sourceUrl : undefined
@@ -94,8 +101,8 @@ export function ReviewPage() {
       ...(safeSourceUrl         ? { sourceUrl: safeSourceUrl }   : {}),
       ...(location_             ? { location: location_ }         : {}),
       ...(description           ? { description }                 : {}),
-      ...(!isNaN(parsedAmount)  ? { amount: parsedAmount }        : {}),  // NEW
-      ...(!isNaN(parsedDate)    ? { occurredAt: parsedDate }      : {}),  // NEW
+      ...(!isNaN(parsedAmount)  ? { amount: parsedAmount }        : {}),
+      ...(!isNaN(parsedDate)    ? { occurredAt: parsedDate }      : {}),
     }
     try {
       await entriesRepository.create(entry)
@@ -103,6 +110,9 @@ export function ReviewPage() {
     } catch (err) {
       setSaveError('Save failed. Please try again.')
       console.error('[ReviewPage] save failed:', err)
+    } finally {
+      savingRef.current = false
+      setIsSaving(false)
     }
   }
 
@@ -182,8 +192,8 @@ export function ReviewPage() {
         {saveError && (
           <p role="alert" className="text-sm text-red-500">{saveError}</p>
         )}
-        <Button variant="primary" onClick={handleSave}>
-          Save
+        <Button variant="primary" onClick={handleSave} disabled={isSaving}>
+          {isSaving ? 'Saving…' : 'Save'}
         </Button>
         <Button variant="secondary" onClick={handleCancel}>
           Cancel

@@ -331,6 +331,53 @@ describe('ReviewPage — WR-02: unsafe sourceUrl scheme is not saved', () => {
   })
 })
 
+// ─── WR-02: isSaving prevents duplicate entries on double-click ──────────────
+
+describe('ReviewPage — WR-02: double-click Save creates exactly one entry', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('rapid double-click on Save results in exactly ONE entry in IndexedDB', async () => {
+    const user = userEvent.setup()
+    const draft: ExtractedDraft = {
+      sourceUrl: 'https://example.com',
+      title: 'Single Entry',
+      metadata: {},
+    }
+    renderWithDraft('trips', 'place', draft)
+
+    // Hold the first save in-flight so the second click fires while isSaving=true
+    let resolveHold!: () => void
+    const holdPromise = new Promise<void>((resolve) => { resolveHold = resolve })
+    const realCreate = entriesRepository.create.bind(entriesRepository)
+    let callCount = 0
+    vi.spyOn(entriesRepository, 'create').mockImplementation(async (entry) => {
+      callCount++
+      await holdPromise
+      return realCreate(entry)
+    })
+
+    const saveButton = await screen.findByRole('button', { name: 'Save' })
+
+    // First click — triggers handleSave; create is held by holdPromise
+    await user.click(saveButton)
+    // isSaving is now true: button is disabled and shows 'Saving…'
+    expect(saveButton).toBeDisabled()
+
+    // Second click on disabled button — userEvent does not fire on disabled elements
+    await user.click(saveButton)
+    expect(callCount).toBe(1)
+
+    // Release the deferred save — write to fake-indexeddb, navigate
+    resolveHold()
+    await screen.findByTestId('domain-probe')
+
+    const entries = await entriesRepository.list()
+    expect(entries).toHaveLength(1)
+  })
+})
+
 // ─── IN-02: domain validity guard in ReviewPage ───────────────────────────────
 
 describe('ReviewPage — IN-02: unknown domain shows graceful error', () => {
