@@ -39,7 +39,8 @@ describe('App — all 6 routes reachable (SC3/NAV-03)', () => {
     { path: '/d/media/book',         expectedHeading: /add book/i },
     // /d/media/book/review has no location.state draft → guard redirects to /d/media/book
     { path: '/d/media/book/review',  expectedHeading: /add book/i },
-    { path: '/d/media/book/manual',  expectedHeading: /manual entry/i },
+    // ManualEntryPage replaced PlaceholderPage — heading is now "Add Book"
+    { path: '/d/media/book/manual',  expectedHeading: /add book/i },
     { path: '/entries',              expectedHeading: /entry list/i },
     { path: '/entries/abc',          expectedHeading: /entry detail/i },
   ]

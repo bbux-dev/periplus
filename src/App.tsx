@@ -3,6 +3,7 @@ import { DashboardPage }   from './pages/DashboardPage'
 import { DomainPage }      from './pages/DomainPage'
 import { CaptureUrlPage }  from './pages/CaptureUrlPage'
 import { ReviewPage }      from './pages/ReviewPage'
+import { ManualEntryPage } from './pages/ManualEntryPage'
 import { PlaceholderPage } from './pages/PlaceholderPage'
 
 function App() {
@@ -16,8 +17,8 @@ function App() {
       <Route path="/d/:domain/:type"         element={<CaptureUrlPage />} />
       <Route path="/d/:domain/:type/review"  element={<ReviewPage />} />
 
-      {/* Phase 5 stub — Manual Entry */}
-      <Route path="/d/:domain/:type/manual"  element={<PlaceholderPage title="Manual Entry" />} />
+      {/* Phase 5 — Manual Entry */}
+      <Route path="/d/:domain/:type/manual"  element={<ManualEntryPage />} />
 
       {/* Phase 6 stubs — Entry List + Detail */}
       <Route path="/entries"    element={<PlaceholderPage title="Entry List" />} />
