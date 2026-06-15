@@ -749,22 +749,22 @@ The manifest requires `pwa-192x192.png` and `pwa-512x512.png` in the `public/` d
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **PNG icon generation mechanism**
    - What we know: 192×192 and 512×512 PNGs must exist in `public/` as valid PNG binaries
    - What's unclear: Whether to generate them with a Node script, a devDependency, or commit pre-made assets
-   - Recommendation: Planner should include a task to generate minimal placeholder PNGs programmatically. A simple approach: use a small Node script that writes a minimal valid PNG header+body for a solid-color square. Alternatively, commit two pre-made 1-color PNG files from any image tool.
+   - RESOLVED: Planner should include a task to generate minimal placeholder PNGs programmatically. A simple approach: use a small Node script that writes a minimal valid PNG header+body for a solid-color square. Alternatively, commit two pre-made 1-color PNG files from any image tool.
 
 2. **LifeLogEntry type location**
    - What we know: The interface is needed by both `db.ts` (EntityTable generic) and `entriesRepository.ts` (function signatures)
    - What's unclear: Whether to define it in `src/types/lifeLogEntry.ts` or co-located in `src/services/db.ts`
-   - Recommendation: Define in `src/services/db.ts` alongside the Dexie class for Phase 2 (keeps all data-layer types together). If type exports grow unwieldy, refactor to `src/types/` in Phase 3.
+   - RESOLVED: Define in `src/services/db.ts` alongside the Dexie class for Phase 2 (keeps all data-layer types together). If type exports grow unwieldy, refactor to `src/types/` in Phase 3.
 
 3. **Counter removal timing**
    - What we know: Phase 1 counter is explicitly preserved ("removal not required here unless it conflicts")
    - What's unclear: Whether leaving the counter in `WelcomePage.tsx` is confusing alongside the new data layer
-   - Recommendation: Leave the counter in place for Phase 2. Remove it when the first real entry capture UI lands (Phase 4). The counter does not conflict with `entries`/`settings` stores.
+   - RESOLVED: Leave the counter in place for Phase 2. Remove it when the first real entry capture UI lands (Phase 4). The counter does not conflict with `entries`/`settings` stores.
 
 ---
 
