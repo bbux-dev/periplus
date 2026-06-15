@@ -104,7 +104,8 @@ function extractImdb(url: string, parsed: URL): ExtractedDraft {
 function extractGoodreads(url: string, parsed: URL): ExtractedDraft {
   const match = parsed.pathname.match(/\/book\/show\/\d+-(.+)/)
   const slug = match?.[1]
-  const title = slug ? slugToTitle(slug) : undefined
+  // decodeURIComponent for symmetry with extractAmazon — handles non-ASCII book titles
+  const title = slug ? slugToTitle(decodeURIComponent(slug)) : undefined
   return { sourceUrl: url, title, metadata: {} }
 }
 

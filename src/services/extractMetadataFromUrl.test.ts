@@ -99,6 +99,16 @@ describe('extractMetadataFromUrl', () => {
       expect(result.metadata).toEqual({})
     })
 
+    it('IN-01: decodes percent-encoded non-ASCII slug on Goodreads (é)', () => {
+      // URL.pathname preserves percent-encoding; decodeURIComponent converts it
+      const url =
+        'https://www.goodreads.com/book/show/12345-le-p%C3%A9tit-prince'
+      const result = extractMetadataFromUrl(url, 'book')
+      expect(result.sourceUrl).toBe(url)
+      // Should decode %C3%A9 → é and title-case: "Le Pétit Prince"
+      expect(result.title).toBe('Le Pétit Prince')
+    })
+
     it('extracts titlecased title from Amazon URL with slug before /dp/', () => {
       const url =
         'https://www.amazon.com/Pragmatic-Programmer-journey-mastery-Anniversary/dp/0135957052/'
