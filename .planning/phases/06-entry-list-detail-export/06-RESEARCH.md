@@ -664,7 +664,7 @@ No file is touched by more than one plan in the same wave.
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Where should isSafeUrl live?**
    - What we know: it currently is a module-private function in ReviewPage.tsx; EntryDetailPage also needs it.
