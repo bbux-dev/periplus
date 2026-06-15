@@ -39,9 +39,14 @@ export const entriesRepository = {
     return db.entries.filter((e) => e.syncedAt == null).toArray()
   },
 
-  /** Applies partial changes to an existing entry by id. */
-  async update(id: string, changes: Partial<Omit<LifeLogEntry, 'id'>>): Promise<void> {
-    await db.entries.update(id, changes)
+  /**
+   * Applies partial changes to an existing entry by id.
+   * Returns the Dexie update count: 1 if the entry was found and updated,
+   * 0 if the id did not exist (e.g. concurrent delete from another tab).
+   * Callers should check the count when data integrity matters.
+   */
+  async update(id: string, changes: Partial<Omit<LifeLogEntry, 'id'>>): Promise<number> {
+    return db.entries.update(id, changes)
   },
 
   /** Permanently removes the entry with the given id. */

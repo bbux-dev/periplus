@@ -66,18 +66,25 @@ describe('entriesRepository: list', () => {
 // ─── update ───────────────────────────────────────────────────────────────────
 
 describe('entriesRepository: update', () => {
-  it('update changes the specified field and get reflects the new value', async () => {
+  it('update returns 1 and changes the specified field', async () => {
     const entry = await entriesRepository.create(makeEntryData())
-    await entriesRepository.update(entry.id, { title: 'Updated Title' })
+    const count = await entriesRepository.update(entry.id, { title: 'Updated Title' })
+    expect(count).toBe(1)
     const updated = await entriesRepository.get(entry.id)
     expect(updated?.title).toBe('Updated Title')
   })
 
   it('update does not change unspecified fields', async () => {
     const entry = await entriesRepository.create(makeEntryData({ domain: 'trips' }))
-    await entriesRepository.update(entry.id, { title: 'New Title' })
+    const count = await entriesRepository.update(entry.id, { title: 'New Title' })
+    expect(count).toBe(1)
     const updated = await entriesRepository.get(entry.id)
     expect(updated?.domain).toBe('trips')
+  })
+
+  it('update returns 0 for a non-existent id (silent no-op detection)', async () => {
+    const count = await entriesRepository.update('non-existent-id', { title: 'Ghost' })
+    expect(count).toBe(0)
   })
 })
 
