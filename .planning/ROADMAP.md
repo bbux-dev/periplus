@@ -71,7 +71,11 @@ Plans:
   2. Selecting a root node shows its entry types (Show/Movie/Book/Podcast, Place/Event/Expense, Expense)
   3. Every screen is reachable through the router on a phone-sized layout
   4. Browser back returns to the previous screen in the navigation tree
-**Plans**: TBD
+**Plans**: 3 plans (3 waves)
+Plans:
+- [ ] 03-01-PLAN.md — navigation.ts config (NAVIGATION + getDomainConfig) derived from db.ts taxonomy, unit-tested (Wave 1)
+- [ ] 03-02-PLAN.md — DashboardPage (3 root tiles) + DomainPage (entry-type tiles + Back), RTL-tested (Wave 2)
+- [ ] 03-03-PLAN.md — EntryTypePage + PlaceholderPage stubs, full 7-route App.tsx wiring, full-app routing/back-nav test (Wave 3)
 **UI hint**: yes
 
 ### Phase 4: URL-First Capture
@@ -123,7 +127,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Foundation & App Shell | 3/3 | Complete | 2026-06-15 |
 | 2. Data Layer & PWA Shell | 3/3 | Complete   | 2026-06-15 |
-| 3. Navigation & Dashboard | 0/TBD | Not started | - |
+| 3. Navigation & Dashboard | 0/3 | Planned | - |
 | 4. URL-First Capture | 0/TBD | Not started | - |
 | 5. Manual Entry | 0/TBD | Not started | - |
 | 6. Entry List, Detail & Export | 0/TBD | Not started | - |
