@@ -108,7 +108,10 @@ Plans:
   2. The manual form shows fields appropriate to the entry type (e.g. amount/currency for expenses, name/address for places, creator for media)
   3. A user can create a Media Book entry manually and it saves
   4. A user can create a Trip Expense and an Expenditure Expense manually
-**Plans**: TBD
+**Plans**: 2 plans (2 waves)
+Plans:
+- [ ] 05-01-PLAN.md — ReviewDraft type + `entryFields.ts` config/buildReviewDraft (all 7 types) + ReviewPage Option A-light extension; Phase 4 tests preserved (Wave 1)
+- [ ] 05-02-PLAN.md — `ManualEntryPage` (renders ENTRY_FIELDS, builds draft → Review→Save) + App route swap + RTL/integration tests (MAN-01, MAN-02, MAN-03) (Wave 2)
 **UI hint**: yes
 
 ### Phase 6: Entry List, Detail & Export
@@ -135,5 +138,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Data Layer & PWA Shell | 3/3 | Complete   | 2026-06-15 |
 | 3. Navigation & Dashboard | 3/3 | Complete   | 2026-06-15 |
 | 4. URL-First Capture | 5/5 | Complete   | 2026-06-15 |
-| 5. Manual Entry | 0/TBD | Not started | - |
+| 5. Manual Entry | 0/2 | Not started | - |
 | 6. Entry List, Detail & Export | 0/TBD | Not started | - |
