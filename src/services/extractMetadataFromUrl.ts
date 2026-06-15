@@ -9,6 +9,24 @@ export interface ExtractedDraft {
   metadata: Record<string, unknown>  // domain-specific extras (imdbId, coordinates, …)
 }
 
+/**
+ * Richer draft contract shared by both URL-capture and manual-entry flows.
+ *
+ * ExtractedDraft is structurally assignable to ReviewDraft: `sourceUrl: string`
+ * satisfies `sourceUrl?: string`; all new ReviewDraft fields are optional.
+ * This means Phase 4 CaptureUrlPage → ReviewPage tests require no changes.
+ */
+export interface ReviewDraft {
+  sourceUrl?: string      // URL-captured: always set; manual entries: absent
+  title?: string
+  location?: string
+  description?: string    // pre-populated from manual form's notes/description field
+  occurredAt?: number     // epoch ms; manual form date input → Date.parse()
+  amount?: number         // expense entries; MUST map to LifeLogEntry.amount (core)
+  tags?: string[]         // manual form tags field (comma-split)
+  metadata: Record<string, unknown>  // type-specific extras (currency, creator, rating, …)
+}
+
 // ─── Shared helpers ───────────────────────────────────────────────────────────
 
 /**
