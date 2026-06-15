@@ -54,10 +54,10 @@ Committed prototype scope, kept on the roadmap and sequenced into later mileston
 
 ### Navigation & Screens (NAV) — later _(Phase 3)_
 
-- [ ] **NAV-01**: Home Dashboard shows three root nodes — Media, Trips, Expenditures
-- [ ] **NAV-02**: Category screen shows the entry types for the selected root (Media: Show/Movie/Book/Podcast; Trips: Place/Event/Expense; Expenditures: Expense)
+- [x] **NAV-01**: Home Dashboard shows three root nodes — Media, Trips, Expenditures
+- [x] **NAV-02**: Category screen shows the entry types for the selected root (Media: Show/Movie/Book/Podcast; Trips: Place/Event/Expense; Expenditures: Expense)
 - [ ] **NAV-03**: `react-router-dom` v7 route table covers all 7 screens (Dashboard, Category, URL Capture, Manual Entry, Review, Entry List, Entry Detail)
-- [ ] **NAV-04**: Layout is mobile-first and usable on phone-sized screens
+- [x] **NAV-04**: Layout is mobile-first and usable on phone-sized screens
 
 ### URL-First Capture (CAPT) — later _(Phase 4)_
 
