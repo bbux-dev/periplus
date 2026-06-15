@@ -9,6 +9,16 @@ import { entriesRepository } from '../services/entriesRepository'
 import type { ExtractedDraft } from '../services/extractMetadataFromUrl'
 import type { EntryDomain, EntryType } from '../services/db'
 
+/** Returns true only for http: and https: URLs — guards against javascript: XSS vectors. */
+function isSafeUrl(raw: string): boolean {
+  try {
+    const { protocol } = new URL(raw)
+    return protocol === 'http:' || protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
 export function ReviewPage() {
   const { domain = '', type = '' } = useParams<{ domain: string; type: string }>()
   const navigate = useNavigate()
@@ -40,6 +50,8 @@ export function ReviewPage() {
 
   const handleSave = async () => {
     setSaveError(null)
+    // Validate sourceUrl scheme — never persist javascript: or other unsafe protocols
+    const safeSourceUrl = sourceUrl && isSafeUrl(sourceUrl) ? sourceUrl : undefined
     // Build the full Omit<LifeLogEntry, 'id'> — every required field present (Pitfall 5)
     const entry = {
       domain: domain as EntryDomain,
@@ -50,7 +62,7 @@ export function ReviewPage() {
       metadata: initialDraft.metadata ?? {},
       syncedAt: null as number | null,
       // Optional fields — omit when empty
-      ...(sourceUrl ? { sourceUrl } : {}),
+      ...(safeSourceUrl ? { sourceUrl: safeSourceUrl } : {}),
       ...(location_ ? { location: location_ } : {}),
       ...(description ? { description } : {}),
     }

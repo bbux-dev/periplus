@@ -286,6 +286,51 @@ describe('ReviewPage — CR-01: save failure surfaces error, no navigation', () 
   })
 })
 
+// ─── WR-02: javascript: sourceUrl is not persisted ───────────────────────────
+
+describe('ReviewPage — WR-02: unsafe sourceUrl scheme is not saved', () => {
+  it('does not persist a javascript: sourceUrl — drops it before saving', async () => {
+    const user = userEvent.setup()
+    const draft: ExtractedDraft = {
+      sourceUrl: 'javascript:alert(1)',
+      title: 'Malicious Entry',
+      metadata: {},
+    }
+    renderWithDraft('trips', 'place', draft)
+
+    await screen.findByRole('button', { name: 'Save' })
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    // Navigation happens normally (entry is saved, just without sourceUrl)
+    await screen.findByTestId('domain-probe')
+
+    const entries = await entriesRepository.list()
+    expect(entries).toHaveLength(1)
+    // sourceUrl must NOT be the javascript: value
+    expect(entries[0].sourceUrl).toBeUndefined()
+  })
+
+  it('preserves a valid https: sourceUrl unchanged', async () => {
+    const user = userEvent.setup()
+    const safeUrl = 'https://example.com/page'
+    const draft: ExtractedDraft = {
+      sourceUrl: safeUrl,
+      title: 'Safe Entry',
+      metadata: {},
+    }
+    renderWithDraft('trips', 'place', draft)
+
+    await screen.findByRole('button', { name: 'Save' })
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    await screen.findByTestId('domain-probe')
+
+    const entries = await entriesRepository.list()
+    expect(entries).toHaveLength(1)
+    expect(entries[0].sourceUrl).toBe(safeUrl)
+  })
+})
+
 // ─── Guard: no draft → redirect to capture ───────────────────────────────────
 
 describe('ReviewPage — guard: no draft redirects to capture', () => {
