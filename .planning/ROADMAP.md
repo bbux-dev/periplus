@@ -15,7 +15,7 @@ Life Log is built bottom-up by dependency. **Milestone v0.1.0 is a tracer bullet
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 1: Foundation & App Shell** — Scaffold the locked stack into a runnable app with a "Life Log" welcome screen and a DB-backed counter tracer _(v0.1.0)_
+- [x] **Phase 1: Foundation & App Shell** — Scaffold the locked stack into a runnable app with a "Life Log" welcome screen and a DB-backed counter tracer _(v0.1.0)_
 - [ ] **Phase 2: Data Layer & PWA Shell** — Dexie `LifeLogEntry` + repository with reactive reads, plus an installable, offline-capable PWA shell
 - [ ] **Phase 3: Navigation & Dashboard** — Home dashboard, category screens, and routing across all 7 screens
 - [ ] **Phase 4: URL-First Capture** — Default paste-URL → extract → review → save flow with offline create
@@ -38,7 +38,7 @@ Life Log is built bottom-up by dependency. **Milestone v0.1.0 is a tracer bullet
 Plans:
 - [x] 01-01-PLAN.md — Scaffold the locked stack, wire Tailwind v4, build the directory skeleton, stand up the test harness (Wave 1)
 - [x] 01-02-PLAN.md — cn helper + Button primitive and the Dexie counter store, unit-tested (Wave 2)
-- [ ] 01-03-PLAN.md — "Life Log" welcome screen + routing and the reactive Counter tracer (Wave 3)
+- [x] 01-03-PLAN.md — "Life Log" welcome screen + routing and the reactive Counter tracer (Wave 3)
 **UI hint**: yes
 **Note**: The counter is a throwaway tracer demo, not a product requirement — it is removed once real capture lands.
 
@@ -115,7 +115,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & App Shell | 2/3 | In Progress|  |
+| 1. Foundation & App Shell | 3/3 | Complete | 2026-06-15 |
 | 2. Data Layer & PWA Shell | 0/TBD | Not started | - |
 | 3. Navigation & Dashboard | 0/TBD | Not started | - |
 | 4. URL-First Capture | 0/TBD | Not started | - |
