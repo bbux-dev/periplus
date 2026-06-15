@@ -2,6 +2,8 @@
   "workflow": {
     "skip_discuss": true,
     "ui_phase": false,
-    "ui_review": false
+    "ui_review": false,
+    "use_worktrees": false,
+    "_auto_chain_active": false
   }
 }

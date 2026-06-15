@@ -15,8 +15,8 @@ real capture lands.
 
 ### Foundation & Architecture (SETUP)
 
-- [ ] **SETUP-01**: Single Vite 7 + React 19 + TypeScript 5.9 app scaffolds at repo root with project references (`tsconfig.json` → `tsconfig.app.json` + `tsconfig.node.json`)
-- [ ] **SETUP-02**: Tailwind CSS v4 wired via `@tailwindcss/vite` with theme tokens in `index.css`, and the template directory layout in place (`pages`, `components/ui`, `services`, `state/common`, `config`, `pwa`, `assets`)
+- [x] **SETUP-01**: Single Vite 7 + React 19 + TypeScript 5.9 app scaffolds at repo root with project references (`tsconfig.json` → `tsconfig.app.json` + `tsconfig.node.json`)
+- [x] **SETUP-02**: Tailwind CSS v4 wired via `@tailwindcss/vite` with theme tokens in `index.css`, and the template directory layout in place (`pages`, `components/ui`, `services`, `state/common`, `config`, `pwa`, `assets`)
 - [ ] **SETUP-03**: `components/ui/` contains the `cn` helper and a `Button` primitive referencing CSS custom-property theme tokens (enough for the counter's icon buttons)
 
 ### App Shell (SHELL)
