@@ -13,17 +13,23 @@ export function Counter() {
 
   const value = counter?.value ?? 0
 
-  const increment = () =>
-    db.transaction('rw', db.counter, async () => {
+  const increment = () => {
+    void db.transaction('rw', db.counter, async () => {
       const current = await db.counter.get(1)
       await db.counter.put({ id: 1, value: (current?.value ?? 0) + 1 })
+    }).catch((err) => {
+      console.error('Counter increment failed:', err)
     })
+  }
 
-  const decrement = () =>
-    db.transaction('rw', db.counter, async () => {
+  const decrement = () => {
+    void db.transaction('rw', db.counter, async () => {
       const current = await db.counter.get(1)
       await db.counter.put({ id: 1, value: (current?.value ?? 0) - 1 })
+    }).catch((err) => {
+      console.error('Counter decrement failed:', err)
     })
+  }
 
   return (
     <div className="flex items-center gap-4">
