@@ -26,9 +26,20 @@ describe('EntryTypePage', () => {
     expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument()
   })
 
-  it('falls back to raw type string for an unknown type (no crash)', async () => {
+  it('falls back to raw type string for an unknown type on a valid domain (no crash)', async () => {
     renderAtPath('/d/media/bogus_type')
     expect(await screen.findByText(/bogus_type/i)).toBeInTheDocument()
+    // Must still show the Add heading, not an error (domain is valid)
+    expect(screen.getByRole('heading', { name: /add bogus_type/i })).toBeInTheDocument()
+  })
+
+  it('renders unknown-domain error for /d/bogus/show — no Add heading (WR-04)', async () => {
+    renderAtPath('/d/bogus/show')
+    expect(await screen.findByText(/unknown domain/i)).toBeInTheDocument()
+    // Must NOT render an Add screen for an invalid domain
+    expect(screen.queryByRole('heading', { name: /add/i })).not.toBeInTheDocument()
+    // Must have a Back affordance
+    expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument()
   })
 
   it('Back button navigates to parent domain page when no prior in-app history', async () => {
