@@ -71,6 +71,52 @@ describe('ManualEntryPage — MAN-02 per-type field rendering', () => {
   })
 })
 
+// ─── WR-01: required field validation ────────────────────────────────────────
+
+describe('ManualEntryPage — WR-01: required field validation', () => {
+  it('blocks navigation and shows error when required field is empty', async () => {
+    const user = userEvent.setup()
+    render(
+      <MemoryRouter initialEntries={['/d/media/book/manual']}>
+        <Routes>
+          <Route path="/d/:domain/:type/manual" element={<ManualEntryPage />} />
+          <Route path="/d/:domain/:type/review" element={<div data-testid="review-probe">Review</div>} />
+        </Routes>
+      </MemoryRouter>,
+    )
+
+    // Leave the required Title field empty
+    await screen.findByRole('button', { name: 'Review' })
+    await user.click(screen.getByRole('button', { name: 'Review' }))
+
+    // Navigation must NOT have happened
+    expect(screen.queryByTestId('review-probe')).not.toBeInTheDocument()
+
+    // Validation error must appear
+    const alert = await screen.findByRole('alert')
+    expect(alert).toHaveTextContent(/required/i)
+    expect(alert).toHaveTextContent(/title/i)
+  })
+
+  it('allows navigation when required field is filled', async () => {
+    const user = userEvent.setup()
+    render(
+      <MemoryRouter initialEntries={['/d/media/book/manual']}>
+        <Routes>
+          <Route path="/d/:domain/:type/manual" element={<ManualEntryPage />} />
+          <Route path="/d/:domain/:type/review" element={<div data-testid="review-probe">Review</div>} />
+        </Routes>
+      </MemoryRouter>,
+    )
+
+    const titleInput = await screen.findByLabelText('Title')
+    await user.type(titleInput, 'Dune')
+    await user.click(screen.getByRole('button', { name: 'Review' }))
+
+    expect(await screen.findByTestId('review-probe')).toBeInTheDocument()
+  })
+})
+
 // ─── Guards: unknown domain / type ───────────────────────────────────────────
 
 describe('ManualEntryPage — guards', () => {
