@@ -53,7 +53,13 @@ Plans:
   3. An "unsynced entries" query returns local entries, proving the future-sync seam exists
   4. The app is installable (web manifest + registered service worker) and the app shell opens while offline
   5. A new entry can be created and persisted while offline
-**Plans**: TBD
+**Plans**: 3 plans (1 wave — all parallel, zero file overlap)
+Plans:
+- [ ] 02-01-PLAN.md — SETUP-04 shared primitives: requestState, assertNever, appBrand, publicEnv (+ co-located tests) (Wave 1)
+- [ ] 02-02-PLAN.md — Dexie v2 schema + LifeLogEntry model + entriesRepository CRUD/listUnsynced/useEntries (Wave 1)
+- [ ] 02-03-PLAN.md — vite-plugin-pwa: createPwaOptions factory, manifest + service worker, SW registration, PWA icons (Wave 1)
+**UI hint**: no
+**Note**: SC2b (cross-refresh), SC4c (offline shell), SC5 (offline create) are MANUAL-ONLY verifications — build-artifact assertions are the automated proxy. The Phase 1 counter is preserved (not removed in Phase 2).
 
 ### Phase 3: Navigation & Dashboard
 **Milestone**: v0.2.0+
@@ -116,7 +122,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & App Shell | 3/3 | Complete | 2026-06-15 |
-| 2. Data Layer & PWA Shell | 0/TBD | Not started | - |
+| 2. Data Layer & PWA Shell | 0/3 | Planned | - |
 | 3. Navigation & Dashboard | 0/TBD | Not started | - |
 | 4. URL-First Capture | 0/TBD | Not started | - |
 | 5. Manual Entry | 0/TBD | Not started | - |
