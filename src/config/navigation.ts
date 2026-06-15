@@ -28,6 +28,10 @@ export interface DomainConfig {
   types: EntryTypeConfig[]
 }
 
+// NOTE: 'expense' intentionally appears in both 'trips' and 'expenditures' (see db.ts).
+// All type lookups MUST be scoped to a specific domain's .types array.
+// A flat cross-domain lookup — e.g. NAVIGATION.flatMap(d => d.types).find(t => t.type === 'expense')
+// — would silently return only the 'trips' instance and miss 'expenditures'. Keep lookups domain-scoped.
 export const NAVIGATION: DomainConfig[] = [
   {
     domain: 'media',
