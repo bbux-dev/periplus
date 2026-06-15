@@ -1,18 +1,18 @@
 import { type ButtonHTMLAttributes } from 'react'
 import { cn } from './cn'
 
-const variantClasses: Record<string, string> = {
+const variantClasses = {
   primary:   'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:opacity-90',
   secondary: 'bg-transparent border border-[var(--color-border)] hover:bg-[var(--color-muted)]',
   ghost:     'bg-transparent hover:bg-[var(--color-muted)]',
-}
+} as const
 
-const sizeClasses: Record<string, string> = {
+const sizeClasses = {
   sm:   'h-8 px-3 text-sm',
   md:   'h-10 px-4',
   lg:   'h-12 px-6 text-lg',
   icon: 'h-10 w-10 p-0',
-}
+} as const
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: keyof typeof variantClasses
