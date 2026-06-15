@@ -8,7 +8,7 @@ const THEME_COLOR = '#1e40af' // matches --color-primary in index.css
 export function createPwaOptions(): Partial<VitePWAOptions> {
   return {
     registerType: 'autoUpdate',
-    includeAssets: ['favicon.ico', 'vite.svg'],
+    includeAssets: ['favicon.ico'],
     manifest: {
       name: APP_NAME,
       short_name: APP_NAME,
