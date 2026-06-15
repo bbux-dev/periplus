@@ -331,6 +331,33 @@ describe('ReviewPage — WR-02: unsafe sourceUrl scheme is not saved', () => {
   })
 })
 
+// ─── IN-02: domain validity guard in ReviewPage ───────────────────────────────
+
+describe('ReviewPage — IN-02: unknown domain shows graceful error', () => {
+  it('renders an unknown-domain error for an invalid domain instead of the form', async () => {
+    const draft: ExtractedDraft = {
+      sourceUrl: 'https://example.com',
+      title: 'Some Entry',
+      metadata: {},
+    }
+    render(
+      <MemoryRouter
+        initialEntries={[
+          { pathname: '/d/fakeDomain/place/review', state: { draft } },
+        ]}
+      >
+        <Routes>
+          <Route path="/d/:domain/:type/review" element={<ReviewPage />} />
+        </Routes>
+      </MemoryRouter>,
+    )
+    expect(await screen.findByText(/unknown domain/i)).toBeInTheDocument()
+    expect(screen.getByText('fakeDomain')).toBeInTheDocument()
+    // Save button must NOT be present
+    expect(screen.queryByRole('button', { name: /save/i })).not.toBeInTheDocument()
+  })
+})
+
 // ─── Guard: no draft → redirect to capture ───────────────────────────────────
 
 describe('ReviewPage — guard: no draft redirects to capture', () => {
