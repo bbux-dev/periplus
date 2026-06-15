@@ -47,6 +47,27 @@ export function CaptureUrlPage() {
     )
   }
 
+  // Guard: unknown type within the domain — prevents persisting an invalid EntryType
+  if (!typeConfig) {
+    return (
+      <div className="min-h-screen flex flex-col px-6 py-8 bg-[var(--color-background)] text-[var(--color-foreground)]">
+        <div className="w-full max-w-sm mx-auto flex flex-col gap-4">
+          <button
+            onClick={goBack}
+            className="flex items-center gap-1 text-[var(--color-primary)] mb-2 -ml-1"
+            aria-label="Go back"
+          >
+            <ChevronLeftIcon className="h-5 w-5" />
+            <span className="text-sm font-medium">Back</span>
+          </button>
+          <p>
+            Unknown type: <strong>{type}</strong> in domain <strong>{domain}</strong>
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen flex flex-col px-6 py-8 bg-[var(--color-background)] text-[var(--color-foreground)]">
       <div className="w-full max-w-sm mx-auto flex flex-col gap-4">

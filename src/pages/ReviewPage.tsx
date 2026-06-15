@@ -44,6 +44,13 @@ export function ReviewPage() {
   const [sourceUrl, setSourceUrl] = useState(initialDraft?.sourceUrl ?? '')
   const [saveError, setSaveError] = useState<string | null>(null)
 
+  // Guard: unknown type — mirrors CaptureUrlPage behavior (WR-03)
+  if (!typeConfig) {
+    return (
+      <p>Unknown type: <strong>{type}</strong> in domain <strong>{domain}</strong></p>
+    )
+  }
+
   if (!initialDraft) {
     return null
   }

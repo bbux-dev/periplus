@@ -122,4 +122,14 @@ describe('CaptureUrlPage', () => {
     await user.click(screen.getByRole('button', { name: /enter manually/i }))
     expect(await screen.findByTestId('manual-route-reached')).toBeInTheDocument()
   })
+
+  // WR-03: unknown type shows graceful error, not the capture form
+  it('renders an unknown-type error for /d/media/faketype instead of the capture form', async () => {
+    renderAtPath('/d/media/faketype')
+    // Error message should appear
+    expect(await screen.findByText(/unknown type/i)).toBeInTheDocument()
+    expect(screen.getByText('faketype')).toBeInTheDocument()
+    // Import button must NOT be rendered (form is suppressed)
+    expect(screen.queryByRole('button', { name: /import from url/i })).not.toBeInTheDocument()
+  })
 })
