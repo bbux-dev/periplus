@@ -61,12 +61,12 @@ Committed prototype scope, kept on the roadmap and sequenced into later mileston
 
 ### URL-First Capture (CAPT) — later _(Phase 4)_
 
-- [ ] **CAPT-01**: After choosing an entry type, the URL Capture screen is shown by default (title `Add {Entry Type}`, URL input, `Import from URL`, `Enter Manually`)
-- [ ] **CAPT-02**: User pastes a URL, app infers metadata, and navigates to the Review Entry screen
+- [x] **CAPT-01**: After choosing an entry type, the URL Capture screen is shown by default (title `Add {Entry Type}`, URL input, `Import from URL`, `Enter Manually`)
+- [x] **CAPT-02**: User pastes a URL, app infers metadata, and navigates to the Review Entry screen
 - [ ] **CAPT-03**: `services/extractMetadataFromUrl(url, type)` returns a partial draft using URL/domain heuristics for `google_maps`, `imdb`, `book_url`, `podcast_url`
 - [ ] **CAPT-04**: If extraction yields little/fails, the URL is preserved and Review still opens with whatever fields are available
 - [ ] **CAPT-05**: Review Entry screen lets the user edit all visible fields; Save persists a `LifeLogEntry` and navigates to detail/category; Cancel discards
-- [ ] **CAPT-06**: An `Enter Manually` button is clearly visible as a secondary action; manual entry is NOT the default path
+- [x] **CAPT-06**: An `Enter Manually` button is clearly visible as a secondary action; manual entry is NOT the default path
 
 ### Manual Entry (MAN) — later _(Phase 5)_
 
