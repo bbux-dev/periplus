@@ -6,7 +6,7 @@ import { useBackOrHome } from '../hooks/useBackOrHome'
 import { FormField } from '../components/ui/FormField'
 import { Button } from '../components/ui/Button'
 import { entriesRepository } from '../services/entriesRepository'
-import type { ExtractedDraft } from '../services/extractMetadataFromUrl'
+import type { ReviewDraft } from '../services/extractMetadataFromUrl'
 import type { EntryDomain, EntryType } from '../services/db'
 
 /** Returns true only for http: and https: URLs — guards against javascript: XSS vectors. */
@@ -27,7 +27,7 @@ export function ReviewPage() {
   const config = getDomainConfig(domain)
   const typeConfig = config?.types.find((t) => t.type === type)
 
-  const initialDraft = (location.state as { draft?: ExtractedDraft } | null)?.draft
+  const initialDraft = (location.state as { draft?: ReviewDraft } | null)?.draft
 
   // Guard: no draft (direct navigation / refresh) — Pitfall 3 / T-04-09
   useEffect(() => {
@@ -40,9 +40,20 @@ export function ReviewPage() {
   // Return null while guard redirect fires — hooks-safe (useState called unconditionally below)
   const [title, setTitle] = useState(initialDraft?.title ?? '')
   const [location_, setLocation_] = useState(initialDraft?.location ?? '')
-  const [description, setDescription] = useState('')
+  const [description, setDescription] = useState(initialDraft?.description ?? '')
   const [sourceUrl, setSourceUrl] = useState(initialDraft?.sourceUrl ?? '')
   const [saveError, setSaveError] = useState<string | null>(null)
+
+  // NEW: Manual-entry fields threaded from ReviewDraft → LifeLogEntry
+  const [occurredAt, setOccurredAt] = useState(
+    initialDraft?.occurredAt
+      ? new Date(initialDraft.occurredAt).toISOString().split('T')[0]
+      : '',
+  )
+  const [amount, setAmount] = useState(
+    initialDraft?.amount != null ? String(initialDraft.amount) : '',
+  )
+  const [tags, setTags] = useState(initialDraft?.tags?.join(', ') ?? '')
 
   // Guard: unknown domain — mirrors CaptureUrlPage behavior (IN-02)
   if (!config) {
@@ -66,19 +77,25 @@ export function ReviewPage() {
     setSaveError(null)
     // Validate sourceUrl scheme — never persist javascript: or other unsafe protocols
     const safeSourceUrl = sourceUrl && isSafeUrl(sourceUrl) ? sourceUrl : undefined
+    // Parse manual-entry numeric + date fields
+    const parsedAmount = parseFloat(amount)
+    const parsedDate   = occurredAt ? Date.parse(occurredAt) : NaN
+    const parsedTags   = tags.split(',').map((t) => t.trim()).filter(Boolean)
     // Build the full Omit<LifeLogEntry, 'id'> — every required field present (Pitfall 5)
     const entry = {
       domain: domain as EntryDomain,
       type: type as EntryType,
       title: title.trim() || 'Untitled',
       recordedAt: Date.now(),
-      tags: [] as string[],
+      tags: parsedTags,                                                    // was hardcoded []
       metadata: initialDraft.metadata ?? {},
       syncedAt: null as number | null,
       // Optional fields — omit when empty
-      ...(safeSourceUrl ? { sourceUrl: safeSourceUrl } : {}),
-      ...(location_ ? { location: location_ } : {}),
-      ...(description ? { description } : {}),
+      ...(safeSourceUrl         ? { sourceUrl: safeSourceUrl }   : {}),
+      ...(location_             ? { location: location_ }         : {}),
+      ...(description           ? { description }                 : {}),
+      ...(!isNaN(parsedAmount)  ? { amount: parsedAmount }        : {}),  // NEW
+      ...(!isNaN(parsedDate)    ? { occurredAt: parsedDate }      : {}),  // NEW
     }
     try {
       await entriesRepository.create(entry)
@@ -134,6 +151,33 @@ export function ReviewPage() {
           placeholder="https://..."
           value={sourceUrl}
           onChange={(e) => setSourceUrl(e.target.value)}
+        />
+        {/* Always shown — useful for all types */}
+        <FormField
+          id="review-occurred-at"
+          label="Date"
+          type="date"
+          value={occurredAt}
+          onChange={(e) => setOccurredAt(e.target.value)}
+        />
+        {/* Shown only when this is an expense or the draft already carries an amount */}
+        {(type === 'expense' || initialDraft?.amount != null) && (
+          <FormField
+            id="review-amount"
+            label="Amount"
+            type="number"
+            placeholder="0.00"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+        )}
+        {/* Always shown — useful for all types */}
+        <FormField
+          id="review-tags"
+          label="Tags"
+          placeholder="tag1, tag2"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
         />
         {saveError && (
           <p role="alert" className="text-sm text-red-500">{saveError}</p>
