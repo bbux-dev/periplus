@@ -34,7 +34,11 @@ Life Log is built bottom-up by dependency. **Milestone v0.1.0 is a tracer bullet
   2. `tsc -b && vite build` succeeds with the template directory layout (`pages`, `components/ui`, `services`, `state/common`, `config`, `pwa`, `assets`) and the `cn` helper + `Button` primitive present
   3. Tapping the + / − heroicon buttons increments/decrements the counter, and the displayed value updates reactively (`useLiveQuery`)
   4. The counter value is persisted in a Dexie/IndexedDB store and survives a full page refresh
-**Plans**: TBD
+**Plans**: 3 plans (3 waves)
+Plans:
+- [ ] 01-01-PLAN.md — Scaffold the locked stack, wire Tailwind v4, build the directory skeleton, stand up the test harness (Wave 1)
+- [ ] 01-02-PLAN.md — cn helper + Button primitive and the Dexie counter store, unit-tested (Wave 2)
+- [ ] 01-03-PLAN.md — "Life Log" welcome screen + routing and the reactive Counter tracer (Wave 3)
 **UI hint**: yes
 **Note**: The counter is a throwaway tracer demo, not a product requirement — it is removed once real capture lands.
 
@@ -103,7 +107,6 @@ Life Log is built bottom-up by dependency. **Milestone v0.1.0 is a tracer bullet
   4. Saved entries are still present after a page refresh
   5. The user can export all entries as a JSON file
 **Plans**: TBD
-**UI hint**: yes
 
 ## Progress
 
@@ -112,7 +115,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & App Shell | 0/TBD | Not started | - |
+| 1. Foundation & App Shell | 0/3 | Planned | - |
 | 2. Data Layer & PWA Shell | 0/TBD | Not started | - |
 | 3. Navigation & Dashboard | 0/TBD | Not started | - |
 | 4. URL-First Capture | 0/TBD | Not started | - |
