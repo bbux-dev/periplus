@@ -1,10 +1,11 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { ChevronLeftIcon } from '@heroicons/react/24/outline'
 import { getDomainConfig } from '../config/navigation'
+import { useBackOrHome } from '../hooks/useBackOrHome'
 
 export function EntryTypePage() {
   const { domain = '', type = '' } = useParams<{ domain: string; type: string }>()
-  const navigate = useNavigate()
+  const goBack = useBackOrHome(`/d/${domain}`)
   const config = getDomainConfig(domain)
   const typeConfig = config?.types.find((t) => t.type === type)
 
@@ -12,7 +13,7 @@ export function EntryTypePage() {
     <div className="min-h-screen flex flex-col px-6 py-8 bg-[var(--color-background)] text-[var(--color-foreground)]">
       <div className="w-full max-w-sm mx-auto flex flex-col gap-4">
         <button
-          onClick={() => navigate(-1)}
+          onClick={goBack}
           className="flex items-center gap-1 text-[var(--color-primary)] mb-2 -ml-1"
           aria-label="Go back"
         >

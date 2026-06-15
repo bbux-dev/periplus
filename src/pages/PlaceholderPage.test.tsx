@@ -31,18 +31,20 @@ describe('PlaceholderPage', () => {
     expect(await screen.findByRole('heading', { name: /manual entry/i })).toBeInTheDocument()
   })
 
-  it('Back button calls navigate(-1)', async () => {
+  it('Back button navigates to fallback path (/) when no prior in-app history', async () => {
+    // jsdom always has window.history.length === 1, so the hook's fallback path fires.
+    // A single-entry MemoryRouter simulates the PWA deep-link scenario.
     const user = userEvent.setup()
     render(
-      <MemoryRouter initialEntries={['/prev', '/test']} initialIndex={1}>
+      <MemoryRouter initialEntries={['/test']}>
         <Routes>
-          <Route path="/prev" element={<div>Previous Page</div>} />
+          <Route path="/" element={<div>Home</div>} />
           <Route path="/test" element={<PlaceholderPage title="Review" />} />
         </Routes>
       </MemoryRouter>
     )
     await screen.findByRole('heading', { name: /review/i })
     await user.click(screen.getByRole('button', { name: /go back/i }))
-    expect(await screen.findByText('Previous Page')).toBeInTheDocument()
+    expect(await screen.findByText('Home')).toBeInTheDocument()
   })
 })
