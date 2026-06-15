@@ -32,12 +32,14 @@ export function ReviewPage() {
   const [location_, setLocation_] = useState(initialDraft?.location ?? '')
   const [description, setDescription] = useState('')
   const [sourceUrl, setSourceUrl] = useState(initialDraft?.sourceUrl ?? '')
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   if (!initialDraft) {
     return null
   }
 
   const handleSave = async () => {
+    setSaveError(null)
     // Build the full Omit<LifeLogEntry, 'id'> — every required field present (Pitfall 5)
     const entry = {
       domain: domain as EntryDomain,
@@ -52,8 +54,13 @@ export function ReviewPage() {
       ...(location_ ? { location: location_ } : {}),
       ...(description ? { description } : {}),
     }
-    await entriesRepository.create(entry)
-    navigate(`/d/${domain}`)
+    try {
+      await entriesRepository.create(entry)
+      navigate(`/d/${domain}`)
+    } catch (err) {
+      setSaveError('Save failed. Please try again.')
+      console.error('[ReviewPage] save failed:', err)
+    }
   }
 
   const handleCancel = () => {
@@ -102,7 +109,10 @@ export function ReviewPage() {
           value={sourceUrl}
           onChange={(e) => setSourceUrl(e.target.value)}
         />
-        <Button variant="primary" onClick={() => { void handleSave() }}>
+        {saveError && (
+          <p role="alert" className="text-sm text-red-500">{saveError}</p>
+        )}
+        <Button variant="primary" onClick={handleSave}>
           Save
         </Button>
         <Button variant="secondary" onClick={handleCancel}>

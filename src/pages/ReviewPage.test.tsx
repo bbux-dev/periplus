@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { db } from '../services/db'
 import { entriesRepository } from '../services/entriesRepository'
 import { ReviewPage } from './ReviewPage'
@@ -243,6 +243,44 @@ describe('ReviewPage — CAPT-05 cancel discards draft', () => {
     await screen.findByTestId('previous-probe')
 
     // No entry was created
+    const entries = await entriesRepository.list()
+    expect(entries).toHaveLength(0)
+  })
+})
+
+// ─── CR-01: Save error surfaces to user, no navigation on failure ─────────────
+
+describe('ReviewPage — CR-01: save failure surfaces error, no navigation', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('shows an error alert and does not navigate when entriesRepository.create rejects', async () => {
+    const user = userEvent.setup()
+    const draft: ExtractedDraft = {
+      sourceUrl: 'https://www.imdb.com/title/tt0468569/',
+      title: 'The Dark Knight',
+      metadata: { imdbId: 'tt0468569' },
+    }
+
+    // Spy on create and make it reject
+    vi.spyOn(entriesRepository, 'create').mockRejectedValueOnce(
+      new Error('QuotaExceededError'),
+    )
+
+    renderWithDraft('media', 'movie', draft)
+
+    await screen.findByRole('button', { name: 'Save' })
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    // Error message must appear
+    const alert = await screen.findByRole('alert')
+    expect(alert).toHaveTextContent(/save failed/i)
+
+    // Domain probe must NOT appear — navigation was suppressed
+    expect(screen.queryByTestId('domain-probe')).not.toBeInTheDocument()
+
+    // DB: no entry was created
     const entries = await entriesRepository.list()
     expect(entries).toHaveLength(0)
   })
