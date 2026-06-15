@@ -48,6 +48,21 @@ describe('App — all 7 routes reachable (SC3/NAV-03)', () => {
   )
 })
 
+// ─── WR-02: Catch-all 404 route ──────────────────────────────────────────────
+
+describe('App — catch-all 404 route (WR-02)', () => {
+  it('renders "Page Not Found" for an unknown path', async () => {
+    renderAt('/some/unknown/path')
+    expect(await screen.findByRole('heading', { name: /page not found/i })).toBeInTheDocument()
+  })
+
+  it('not-found page has a Back/home affordance (Go back button)', async () => {
+    renderAt('/does-not-exist')
+    await screen.findByRole('heading', { name: /page not found/i })
+    expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument()
+  })
+})
+
 // ─── W-01: Unknown :type falls back to raw string, no crash ──────────────────
 
 describe('App — unknown route params (W-01)', () => {

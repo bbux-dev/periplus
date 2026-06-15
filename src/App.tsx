@@ -22,6 +22,9 @@ function App() {
       {/* Phase 6 stubs — Entry List + Detail */}
       <Route path="/entries"    element={<PlaceholderPage title="Entry List" />} />
       <Route path="/entries/:id" element={<PlaceholderPage title="Entry Detail" />} />
+
+      {/* Catch-all: unknown paths show a graceful not-found page */}
+      <Route path="*" element={<PlaceholderPage title="Page Not Found" />} />
     </Routes>
   )
 }
