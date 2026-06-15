@@ -20,6 +20,13 @@ describe('createPwaOptions', () => {
     expect(sizes).toContain('512x512')
   })
 
+  it('has at least one maskable icon (required for Chrome PWA installability audit)', () => {
+    const { manifest } = createPwaOptions()
+    if (!manifest) return
+    const hasMaskable = manifest.icons?.some((i) => i.purpose?.includes('maskable'))
+    expect(hasMaskable).toBe(true)
+  })
+
   it('workbox config has navigateFallback for SPA offline', () => {
     expect(createPwaOptions().workbox?.navigateFallback).toBe('/index.html')
   })
