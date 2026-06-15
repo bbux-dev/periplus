@@ -75,14 +75,34 @@ describe('DomainPage — Back navigation', () => {
 })
 
 describe('DomainPage — unknown domain', () => {
-  it('renders a graceful message for an unknown :domain without crashing', async () => {
-    render(
+  function renderUnknownDomain() {
+    return render(
       <MemoryRouter initialEntries={['/d/nope']}>
         <Routes>
+          <Route path="/" element={<DashboardPage />} />
           <Route path="/d/:domain" element={<DomainPage />} />
         </Routes>
       </MemoryRouter>
     )
+  }
+
+  it('renders a graceful message for an unknown :domain without crashing', async () => {
+    renderUnknownDomain()
     expect(await screen.findByText(/unknown domain/i)).toBeInTheDocument()
+  })
+
+  it('unknown-domain error state includes a Back affordance for recovery (WR-03)', async () => {
+    renderUnknownDomain()
+    await screen.findByText(/unknown domain/i)
+    expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument()
+  })
+
+  it('Back button on unknown-domain error navigates to Dashboard (WR-03)', async () => {
+    const user = userEvent.setup()
+    renderUnknownDomain()
+    await screen.findByText(/unknown domain/i)
+    await user.click(screen.getByRole('button', { name: /go back/i }))
+    // fallback to '/' — Dashboard shows domain tiles
+    expect(await screen.findByText('Media')).toBeInTheDocument()
   })
 })
