@@ -8,10 +8,14 @@ describe('createPwaOptions', () => {
 
   it('manifest has required PWA fields', () => {
     const { manifest } = createPwaOptions()
-    expect(manifest?.name).toBeTruthy()
-    expect(manifest?.short_name).toBeTruthy()
-    expect(manifest?.icons).toHaveLength(2)
-    const sizes = manifest?.icons?.map((i) => i.sizes)
+    // manifest is false | Partial<ManifestOptions> per vite-plugin-pwa types;
+    // our factory always returns an object — guard to narrow the type.
+    expect(manifest).toBeTruthy()
+    if (!manifest) return
+    expect(manifest.name).toBeTruthy()
+    expect(manifest.short_name).toBeTruthy()
+    expect(manifest.icons).toHaveLength(2)
+    const sizes = manifest.icons?.map((i) => i.sizes)
     expect(sizes).toContain('192x192')
     expect(sizes).toContain('512x512')
   })
