@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: Tracer Bullet — App Shell + DB-Backed Counter
-status: verifying
-stopped_at: Completed 03-02-PLAN.md (DashboardPage + DomainPage)
-last_updated: "2026-06-15T20:43:14.111Z"
+status: executing
+stopped_at: Completed 04-01-PLAN.md (Input + FormField primitives)
+last_updated: "2026-06-15T21:36:21.473Z"
 last_activity: 2026-06-15
 progress:
   total_phases: 6
   completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
+  total_plans: 14
+  completed_plans: 10
   percent: 50
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-15)
 
 **Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 03 — Navigation & Dashboard
+**Current focus:** Phase 04 — URL-First Capture
 
 ## Current Position
 
-Phase: 03 (Navigation & Dashboard) — EXECUTING
-Plan: 3 of 3
-Status: Phase complete — ready for verification
+Phase: 04 (URL-First Capture) — EXECUTING
+Plan: 2 of 5
+Status: Ready to execute
 Last activity: 2026-06-15
 
-Progress: [██████████] 100%
+Progress: [███████░░░] 71%
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Progress: [██████████] 100%
 | Phase 03-navigation-dashboard P01 | 5min | 2 tasks | 2 files |
 | Phase 03-navigation-dashboard P02 | 480 | 2 tasks | 4 files |
 | Phase 03-navigation-dashboard P03 | 10min | 4 tasks | 6 files |
+| Phase 04-url-first-capture P01 | 4min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,8 @@ architecture-template.md SPEC + spec.md:
 - [Phase ?]: 02-03
 - [Phase 03-01]: getDomainConfig uses Array.find with strict equality (no eval); 'expense' domain ambiguity resolved at domain-config level (both trips and expenditures have expense type)
 - [Phase 03-02]: DashboardPage uses bare MemoryRouter in tests (no routing hooks, only Link); DomainPage tests use initialEntries with two entries so navigate(-1) has a prior entry; unknown domain renders text content — no throw, no dangerouslySetInnerHTML
+- [Phase ?]: [04-01] aria-invalid=!!error||undefined omits attribute when no error
+- [Phase ?]: [04-01] FormField error border via cn() className prop on Input — no wrapper div style
 
 ### Pending Todos
 
@@ -102,6 +105,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-15T20:43:14.099Z
-Stopped at: Completed 03-02-PLAN.md (DashboardPage + DomainPage)
+Last session: 2026-06-15T21:36:21.463Z
+Stopped at: Completed 04-01-PLAN.md (Input + FormField primitives)
 Resume file: None

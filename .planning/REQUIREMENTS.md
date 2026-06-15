@@ -34,7 +34,7 @@ Committed prototype scope, kept on the roadmap and sequenced into later mileston
 ### Foundation & Architecture (SETUP) — later
 
 - [x] **SETUP-04**: `state/common/` (`requestState.ts`, `assertNever.ts`) and `config/` (`appBrand.ts`, `publicEnv.ts`) modules exist with co-located Vitest tests _(Phase 2)_
-- [ ] **SETUP-05**: `components/ui/` adds the `Input` and `FormField` primitives for entry forms _(Phase 4)_
+- [x] **SETUP-05**: `components/ui/` adds the `Input` and `FormField` primitives for entry forms _(Phase 4)_
 
 ### PWA & Offline (PWA) — later _(Phase 2)_
 

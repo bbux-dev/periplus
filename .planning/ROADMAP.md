@@ -91,7 +91,7 @@ Plans:
   5. The `Input` and `FormField` primitives back the capture/review forms
 **Plans**: 5 plans (3 waves)
 Plans:
-- [ ] 04-01-PLAN.md — `Input` + `FormField` UI primitives (SETUP-05), accessibility-focused RTL tests (Wave 1)
+- [x] 04-01-PLAN.md — `Input` + `FormField` UI primitives (SETUP-05), accessibility-focused RTL tests (Wave 1)
 - [ ] 04-02-PLAN.md — `extractMetadataFromUrl` pure offline extractor + 16-fixture unit suite (CAPT-03, CAPT-04) (Wave 1)
 - [ ] 04-03-PLAN.md — `CaptureUrlPage` (URL input, Import, Enter Manually) + RTL tests (CAPT-01, CAPT-02, CAPT-06) (Wave 2)
 - [ ] 04-04-PLAN.md — `ReviewPage` (edit/save/cancel/guard) + RTL + fake-indexeddb tests (CAPT-04, CAPT-05) (Wave 2)
@@ -134,6 +134,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Foundation & App Shell | 3/3 | Complete | 2026-06-15 |
 | 2. Data Layer & PWA Shell | 3/3 | Complete   | 2026-06-15 |
 | 3. Navigation & Dashboard | 3/3 | Complete   | 2026-06-15 |
-| 4. URL-First Capture | 0/5 | Planned | - |
+| 4. URL-First Capture | 1/5 | In Progress|  |
 | 5. Manual Entry | 0/TBD | Not started | - |
 | 6. Entry List, Detail & Export | 0/TBD | Not started | - |
