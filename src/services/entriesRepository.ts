@@ -55,7 +55,7 @@ export const entriesRepository = {
   },
 }
 
-// ─── Reactive hook (DATA-05) ─────────────────────────────────────────────────
+// ─── Reactive hooks (DATA-05) ────────────────────────────────────────────────
 
 /**
  * Reactive hook for components: returns all entries ordered by recordedAt descending.
@@ -74,5 +74,36 @@ export function useEntries(): LifeLogEntry[] | undefined {
     () => db.entries.orderBy('recordedAt').reverse().toArray(),
     [],
     // No default value: callers distinguish undefined (loading) from [] (empty)
+  )
+}
+
+/**
+ * Reactive hook for a single entry by id. Returns a tri-state value:
+ *
+ * - `undefined` — Dexie is still opening (loading state; show a spinner/skeleton)
+ * - `null`      — Dexie is open but no entry matches `id` (not found; show a guard)
+ * - `LifeLogEntry` — entry found; render the full entry
+ *
+ * Callers MUST handle both `undefined` and `null` explicitly.
+ * Do NOT default to null — losing the loading state breaks skeleton UI.
+ *
+ * The `.then(e => e ?? null)` transform converts Dexie's `undefined` (not-found)
+ * to `null`, freeing `undefined` to mean "Dexie is still opening" exclusively.
+ *
+ * Any string id is safe to pass (including '' from a missing route param) —
+ * Dexie returns undefined for a non-matching key, which becomes null here.
+ *
+ * @example
+ *   const id = useParams<{ id: string }>().id ?? ''
+ *   const entry = useEntry(id)
+ *   if (entry === undefined) return <p>Loading...</p>
+ *   if (entry === null) return <p>Entry not found.</p>
+ *   return <h1>{entry.title}</h1>
+ */
+export function useEntry(id: string): LifeLogEntry | null | undefined {
+  return useLiveQuery(
+    () => db.entries.get(id).then((e) => e ?? null),
+    [id],
+    // No default value: callers distinguish undefined (loading) from null (not found)
   )
 }
