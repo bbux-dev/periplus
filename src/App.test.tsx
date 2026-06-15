@@ -1,8 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import App from './App'
+import { db } from './services/db'
+import { entriesRepository } from './services/entriesRepository'
 
 /** Helper: render <App /> inside MemoryRouter at the given initial path. */
 function renderAt(path: string) {
@@ -26,14 +28,17 @@ describe('App — dashboard route', () => {
   })
 })
 
-// ─── SC3 / NAV-03: All 7 route paths render a heading without throwing ───────
+// ─── SC3 / NAV-03: All 6 route paths render a heading without throwing ───────
+// Note: /d/:domain/:type/capture was removed in Phase 4 (CaptureUrlPage is now
+// the default at /d/:domain/:type). /d/:domain/:type/review redirects to the
+// capture screen when there is no location.state draft (Pitfall 3 guard).
 
-describe('App — all 7 routes reachable (SC3/NAV-03)', () => {
+describe('App — all 6 routes reachable (SC3/NAV-03)', () => {
   const routes: { path: string; expectedHeading: RegExp }[] = [
     { path: '/d/media',              expectedHeading: /^media$/i },
     { path: '/d/media/book',         expectedHeading: /add book/i },
-    { path: '/d/media/book/capture', expectedHeading: /url capture/i },
-    { path: '/d/media/book/review',  expectedHeading: /review/i },
+    // /d/media/book/review has no location.state draft → guard redirects to /d/media/book
+    { path: '/d/media/book/review',  expectedHeading: /add book/i },
     { path: '/d/media/book/manual',  expectedHeading: /manual entry/i },
     { path: '/entries',              expectedHeading: /entry list/i },
     { path: '/entries/abc',          expectedHeading: /entry detail/i },
@@ -66,9 +71,9 @@ describe('App — catch-all 404 route (WR-02)', () => {
 // ─── W-01: Unknown :type falls back to raw string, no crash ──────────────────
 
 describe('App — unknown route params (W-01)', () => {
-  it('renders raw type string for unknown :type on EntryTypePage', async () => {
+  it('renders raw type string for unknown :type on CaptureUrlPage', async () => {
     renderAt('/d/media/bogus_type')
-    // EntryTypePage should show "Add bogus_type" without crashing
+    // CaptureUrlPage shows "Add bogus_type" without crashing (typeConfig?.label ?? type)
     expect(await screen.findByText(/bogus_type/i)).toBeInTheDocument()
   })
 
@@ -108,7 +113,7 @@ describe('App — navigation flow (SC3)', () => {
 // ─── SC4 / NAV-04: Back walks up the tree (domain → type, type → dashboard) ─
 
 describe('App — back navigation (SC4/NAV-04)', () => {
-  it('Back from EntryTypePage returns to the domain screen', async () => {
+  it('Back from CaptureUrlPage returns to the domain screen', async () => {
     const user = userEvent.setup()
     renderAt('/')
 
@@ -139,7 +144,7 @@ describe('App — back navigation (SC4/NAV-04)', () => {
     expect(screen.getByText('Expenditures')).toBeInTheDocument()
   })
 
-  it('two-level Back: EntryTypePage → DomainPage → Dashboard', async () => {
+  it('two-level Back: CaptureUrlPage → DomainPage → Dashboard', async () => {
     const user = userEvent.setup()
     renderAt('/')
 
@@ -156,5 +161,55 @@ describe('App — back navigation (SC4/NAV-04)', () => {
     await user.click(screen.getByRole('button', { name: /go back/i }))
     expect(await screen.findByText('Trips')).toBeInTheDocument()
     expect(screen.getByText('Expenditures')).toBeInTheDocument()
+  })
+})
+
+// ─── CAPT-01 end-to-end: capture → review → save (SC2/SC4) ──────────────────
+
+describe('App — capture → review → save (CAPT end-to-end, SC2/SC4)', () => {
+  beforeEach(async () => {
+    await db.delete()
+    await db.open()
+  })
+
+  it('Google Maps URL → Import → Review prefill → Save → persists entry + navigates to trips domain', async () => {
+    const user = userEvent.setup()
+    renderAt('/d/trips/place')
+
+    // CaptureUrlPage renders "Add Place" at /d/trips/place
+    expect(await screen.findByRole('heading', { name: /add place/i })).toBeInTheDocument()
+
+    // Paste a Google Maps URL into the URL input
+    const urlInput = screen.getByLabelText('URL')
+    await user.type(
+      urlInput,
+      'https://www.google.com/maps/place/Eiffel+Tower/@48.8583701,2.2944813,17z',
+    )
+
+    // Click "Import from URL" — extracts metadata and navigates to ReviewPage
+    await user.click(screen.getByRole('button', { name: /import from url/i }))
+
+    // ReviewPage appears; title is pre-filled from the Google Maps extraction
+    const titleInput = await screen.findByLabelText('Title')
+    expect(titleInput).toHaveValue('Eiffel Tower')
+
+    // Click "Save" — persists entry and navigates to /d/trips
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    // DomainPage for trips renders with "Trips" heading + type tiles
+    expect(await screen.findByRole('heading', { name: /^trips$/i })).toBeInTheDocument()
+    expect(screen.getByText('Place')).toBeInTheDocument()
+
+    // Verify the entry was persisted in IndexedDB via fake-indexeddb
+    const entries = await entriesRepository.list()
+    expect(entries).toHaveLength(1)
+    expect(entries[0].title).toBe('Eiffel Tower')
+    expect(entries[0].domain).toBe('trips')
+    expect(entries[0].type).toBe('place')
+    expect(entries[0].sourceUrl).toBe(
+      'https://www.google.com/maps/place/Eiffel+Tower/@48.8583701,2.2944813,17z',
+    )
+    expect(entries[0].syncedAt).toBeNull()
+    expect(entries[0].tags).toEqual([])
   })
 })
