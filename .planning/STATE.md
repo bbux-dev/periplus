@@ -1,0 +1,70 @@
+# Project State
+
+## Project Reference
+
+See: .planning/PROJECT.md (updated 2026-06-15)
+
+**Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
+**Current focus:** Phase 1 — Foundation & PWA Shell
+
+## Current Position
+
+Phase: 1 of 6 (Foundation & PWA Shell)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-06-15 — Roadmap created from ingest (spec.md + architecture-template.md)
+
+Progress: [░░░░░░░░░░] 0%
+
+## Performance Metrics
+
+**Velocity:**
+- Total plans completed: 0
+- Average duration: -
+- Total execution time: 0 hours
+
+**By Phase:**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| - | - | - | - |
+
+**Recent Trend:**
+- Last 5 plans: -
+- Trend: -
+
+*Updated after each plan completion*
+
+## Accumulated Context
+
+### Decisions
+
+Decisions are logged in PROJECT.md Key Decisions table. All are LOCKED from the
+architecture-template.md SPEC + spec.md:
+
+- Stack locked: React 19 + TS 5.9 + Vite 7 + Tailwind v4 + react-router-dom v7 + vite-plugin-pwa + Dexie + Vitest, single app (no monorepo)
+- No backend / no auth; `services/` are local Dexie repositories (not HTTP clients); `useLiveQuery` not TanStack Query
+- Single `LifeLogEntry` record type; `entries` + `settings` IndexedDB stores; future-sync seam kept open
+- URL-first capture is default; manual entry behind a visible `Enter Manually` button
+
+### Pending Todos
+
+None yet.
+
+### Blockers/Concerns
+
+None yet.
+
+## Deferred Items
+
+Items acknowledged and carried forward from previous milestone close:
+
+| Category | Item | Status | Deferred At |
+|----------|------|--------|-------------|
+| *(none)* | | | |
+
+## Session Continuity
+
+Last session: 2026-06-15
+Stopped at: Roadmap, requirements, project, and state files created from ingest
+Resume file: None

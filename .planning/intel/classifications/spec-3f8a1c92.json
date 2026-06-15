@@ -1,0 +1,22 @@
+{
+  "source_path": "/home/bbux/git/life-log/spec.md",
+  "type": "SPEC",
+  "confidence": "high",
+  "manifest_override": false,
+  "title": "Prototype Spec: Personal Life Log PWA",
+  "summary": "Technical spec for a mobile-first offline PWA that captures structured personal life-log entries with a URL-first capture flow and local IndexedDB persistence.",
+  "scope": [
+    "Life Log PWA",
+    "LifeLogEntry data model",
+    "IndexedDB storage",
+    "service worker / offline app shell",
+    "URL metadata extraction",
+    "capture and review screens",
+    "JSON export",
+    "React/TypeScript/Vite/Dexie stack"
+  ],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": null,
+  "notes": ""
+}

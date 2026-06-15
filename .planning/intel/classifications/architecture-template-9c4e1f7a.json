@@ -1,0 +1,24 @@
+{
+  "source_path": "/home/bbux/git/life-log/docs/architecture-template.md",
+  "type": "SPEC",
+  "confidence": "high",
+  "manifest_override": false,
+  "title": "SPEC: Frontend Architecture Template (Life Log PWA)",
+  "summary": "Technical specification pinning the Life Log PWA React app structure, stack, directory layout, and conventions adapted from the patrimonium/apps/web codebase.",
+  "scope": [
+    "Life Log PWA frontend",
+    "React 19 + Vite + TypeScript + Tailwind v4",
+    "vite-plugin-pwa / Workbox service worker",
+    "src directory layout",
+    "components/ui design-system primitives",
+    "services Dexie/IndexedDB repositories",
+    "state/common request-state helpers",
+    "pwa/pwaConfig createPwaOptions factory"
+  ],
+  "cross_refs": [
+    "spec.md"
+  ],
+  "locked": false,
+  "precedence": null,
+  "notes": ""
+}
