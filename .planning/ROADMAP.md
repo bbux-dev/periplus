@@ -17,7 +17,7 @@ Life Log is built bottom-up by dependency. **Milestone v0.1.0 is a tracer bullet
 
 - [x] **Phase 1: Foundation & App Shell** — Scaffold the locked stack into a runnable app with a "Life Log" welcome screen and a DB-backed counter tracer _(v0.1.0)_
 - [x] **Phase 2: Data Layer & PWA Shell** — Dexie `LifeLogEntry` + repository with reactive reads, plus an installable, offline-capable PWA shell (completed 2026-06-15)
-- [ ] **Phase 3: Navigation & Dashboard** — Home dashboard, category screens, and routing across all 7 screens
+- [x] **Phase 3: Navigation & Dashboard** — Home dashboard, category screens, and routing across all 7 screens (completed 2026-06-15)
 - [ ] **Phase 4: URL-First Capture** — Default paste-URL → extract → review → save flow with offline create
 - [ ] **Phase 5: Manual Entry** — Secondary `Enter Manually` path with type-specific forms
 - [ ] **Phase 6: Entry List, Detail & Export** — Browse, filter, inspect, and JSON-export all saved entries
@@ -75,7 +75,7 @@ Plans:
 Plans:
 - [x] 03-01-PLAN.md — navigation.ts config (NAVIGATION + getDomainConfig) derived from db.ts taxonomy, unit-tested (Wave 1)
 - [x] 03-02-PLAN.md — DashboardPage (3 root tiles) + DomainPage (entry-type tiles + Back), RTL-tested (Wave 2)
-- [ ] 03-03-PLAN.md — EntryTypePage + PlaceholderPage stubs, full 7-route App.tsx wiring, full-app routing/back-nav test (Wave 3)
+- [x] 03-03-PLAN.md — EntryTypePage + PlaceholderPage stubs, full 7-route App.tsx wiring, full-app routing/back-nav test (Wave 3)
 **UI hint**: yes
 
 ### Phase 4: URL-First Capture
@@ -127,7 +127,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Foundation & App Shell | 3/3 | Complete | 2026-06-15 |
 | 2. Data Layer & PWA Shell | 3/3 | Complete   | 2026-06-15 |
-| 3. Navigation & Dashboard | 2/3 | In Progress|  |
+| 3. Navigation & Dashboard | 3/3 | Complete   | 2026-06-15 |
 | 4. URL-First Capture | 0/TBD | Not started | - |
 | 5. Manual Entry | 0/TBD | Not started | - |
 | 6. Entry List, Detail & Export | 0/TBD | Not started | - |
