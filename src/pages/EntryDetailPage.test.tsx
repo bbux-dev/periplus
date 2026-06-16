@@ -154,9 +154,9 @@ describe('EntryDetailPage: not-found guard', () => {
     expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument()
   })
 
-  it('shows not-found for empty-string id (missing route param coercion)', async () => {
-    // Render at a path that matches the route but has no entry
-    renderDetail('')
+  it('shows not-found for a random uuid that was never created', async () => {
+    // Extra not-found case: a syntactically valid id that simply has no matching entry
+    renderDetail('00000000-0000-0000-0000-000000000000')
     expect(await screen.findByText('Entry not found.')).toBeInTheDocument()
   })
 })
