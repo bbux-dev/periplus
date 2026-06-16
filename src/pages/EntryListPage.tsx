@@ -115,11 +115,14 @@ export function EntryListPage() {
           </ul>
         )}
 
-        {/* Export button — operates on full unfiltered entries */}
+        {/* Export button — operates on full unfiltered entries.
+            Disabled when there are no entries to avoid a confusing empty-log download. */}
         <button
           onClick={handleExport}
+          disabled={allEntries.length === 0}
           className="mt-2 px-4 py-2 rounded-md border border-[var(--color-border)]
-                     text-sm font-medium hover:bg-[var(--color-muted)] transition-colors"
+                     text-sm font-medium hover:bg-[var(--color-muted)] transition-colors
+                     disabled:opacity-40 disabled:cursor-not-allowed"
         >
           Export JSON
         </button>

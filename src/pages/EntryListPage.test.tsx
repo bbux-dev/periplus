@@ -217,4 +217,13 @@ describe('EntryListPage — Export button (EXP-01)', () => {
     const [jsonArg] = vi.mocked(triggerDownload).mock.calls[0]
     expect(jsonArg).toContain('The Pragmatic Programmer')
   })
+
+  it('Export JSON button is disabled when there are no entries', async () => {
+    renderPage()
+    // Wait for loading to resolve (empty list shows "No entries yet.")
+    await screen.findByText('No entries yet.')
+
+    const exportBtn = screen.getByRole('button', { name: /Export JSON/i })
+    expect(exportBtn).toBeDisabled()
+  })
 })
