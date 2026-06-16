@@ -140,6 +140,23 @@ describe('EntryDetailPage: loading state', () => {
   })
 })
 
+// ─── SC3b: Tag deduplication ──────────────────────────────────────────────────
+
+describe('EntryDetailPage: tag deduplication', () => {
+  it('renders each unique tag exactly once even when entry.tags contains duplicates', async () => {
+    const created = await entriesRepository.create(
+      makeEntryData({ tags: ['food', 'food', 'travel'] }),
+    )
+    renderDetail(created.id)
+    await screen.findByRole('heading', { name: 'The Pragmatic Programmer' })
+
+    // "food" should appear exactly once (de-duplicated), "travel" exactly once
+    const foodChips = screen.getAllByText('food')
+    expect(foodChips).toHaveLength(1)
+    expect(screen.getByText('travel')).toBeInTheDocument()
+  })
+})
+
 // ─── SC4: Not-found guard ─────────────────────────────────────────────────────
 
 describe('EntryDetailPage: not-found guard', () => {

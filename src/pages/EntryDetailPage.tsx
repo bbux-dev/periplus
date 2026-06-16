@@ -130,12 +130,13 @@ export function EntryDetailPage() {
           </div>
         )}
 
-        {/* Tags */}
+        {/* Tags — deduplicated at render site so duplicate stored strings don't
+            produce React key collisions or render the same chip twice. */}
         {entry.tags.length > 0 && (
           <div>
             <FieldLabel>Tags</FieldLabel>
             <div className="flex flex-wrap gap-2">
-              {entry.tags.map((tag) => (
+              {[...new Set(entry.tags)].map((tag) => (
                 <span
                   key={tag}
                   className="px-2 py-0.5 rounded-full text-xs bg-[var(--color-muted)] border border-[var(--color-border)]"
