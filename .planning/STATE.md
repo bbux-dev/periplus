@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: Tracer Bullet — App Shell + DB-Backed Counter
 status: executing
-stopped_at: Completed 05-02-PLAN.md (ManualEntryPage — Phase 5 complete)
-last_updated: "2026-06-16T00:12:54.077Z"
+stopped_at: Completed 06-05-PLAN.md (EntryDetailPage VIEW-03)
+last_updated: "2026-06-16T00:19:02.073Z"
 last_activity: 2026-06-16
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 22
-  completed_plans: 20
+  completed_plans: 21
   percent: 83
 ---
 
@@ -27,11 +27,11 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 
 Phase: 06 (Entry List, Detail & Export) — EXECUTING
 Phase: 06 (Entry List, Detail & Export) — NOT STARTED
-Plan: 5 of 6
+Plan: 6 of 6
 Status: Ready to execute
 Last activity: 2026-06-16
 
-Progress: [█████████░] 91%
+Progress: [██████████] 95%
 
 ## Performance Metrics
 
@@ -72,6 +72,7 @@ Progress: [█████████░] 91%
 | Phase 06-entry-list-detail-export P01 | 2min | 2 tasks | 3 files |
 | Phase 06-entry-list-detail-export P03 | 2min | 2 tasks | 2 files |
 | Phase 06-entry-list-detail-export P04 | 3min | 2 tasks | 4 files |
+| Phase 06-entry-list-detail-export P05 | 2min | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -103,6 +104,7 @@ architecture-template.md SPEC + spec.md:
 - [Phase ?]: no behavior change, http:/https: allow-list preserved
 - [Phase 06-03]: exportedAt injected as parameter in buildExportJson — function never reads Date internally, keeping it deterministic and testable without time mocking
 - [Phase ?]: EntryListPage
+- [Phase ?]: EntryDetailPage (VIEW-03): tri-state useEntry guard, isSafeUrl XSS gate for sourceUrl, metadata JSON in React-escaped pre, domain-scoped type label
 
 ### Pending Todos
 
@@ -122,6 +124,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-16T00:12:54.067Z
-Stopped at: Completed 05-02-PLAN.md (ManualEntryPage — Phase 5 complete)
+Last session: 2026-06-16T00:19:02.063Z
+Stopped at: Completed 06-05-PLAN.md (EntryDetailPage VIEW-03)
 Resume file: None
