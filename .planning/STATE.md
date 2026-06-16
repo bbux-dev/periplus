@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v0.1.0
 milestone_name: Tracer Bullet — App Shell + DB-Backed Counter
 status: executing
-stopped_at: Completed 05-02-PLAN.md (ManualEntryPage — Phase 5 complete)
-last_updated: "2026-06-15T23:59:34.399Z"
-last_activity: 2026-06-15
+stopped_at: Completed 06-03-PLAN.md (exportEntries service — EXP-01 complete)
+last_updated: "2026-06-16T00:04:09.963Z"
+last_activity: 2026-06-16
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 22
-  completed_plans: 18
-  percent: 82
+  completed_plans: 19
+  percent: 83
 ---
 
 # Project State
@@ -27,11 +27,11 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 
 Phase: 06 (Entry List, Detail & Export) — EXECUTING
 Phase: 06 (Entry List, Detail & Export) — NOT STARTED
-Plan: 3 of 6
+Plan: 4 of 6
 Status: Ready to execute
-Last activity: 2026-06-15
+Last activity: 2026-06-16
 
-Progress: [████████░░] 82%
+Progress: [█████████░] 86%
 
 ## Performance Metrics
 
@@ -70,6 +70,7 @@ Progress: [████████░░] 82%
 | Phase 05-manual-entry P01 | 12min | 2 tasks | 4 files |
 | Phase 05-manual-entry P02 | 8min | 2 tasks | 5 files |
 | Phase 06-entry-list-detail-export P01 | 2min | 2 tasks | 3 files |
+| Phase 06-entry-list-detail-export P03 | 2min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,7 @@ architecture-template.md SPEC + spec.md:
 - [Phase ?]: [04-04] MemoryRouter v7 initialEntries object form verified: InitialEntry=string|Partial<Location>
 - [Phase 05-02]: ManualEntryPage mirrors CaptureUrlPage guard structure (unknown-domain + unknown-type) for T-05-04 mitigation; PlaceholderPage retired from manual route; App.test.tsx heading updated from /manual entry/i to /add book/i
 - [Phase ?]: no behavior change, http:/https: allow-list preserved
+- [Phase 06-03]: exportedAt injected as parameter in buildExportJson — function never reads Date internally, keeping it deterministic and testable without time mocking
 
 ### Pending Todos
 
@@ -118,6 +120,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-15T23:59:34.389Z
+Last session: 2026-06-16T00:04:09.953Z
 Stopped at: Completed 05-02-PLAN.md (ManualEntryPage — Phase 5 complete)
 Resume file: None
