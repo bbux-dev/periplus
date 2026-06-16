@@ -21,7 +21,7 @@ real capture lands.
 
 ### App Shell (SHELL)
 
-- [ ] **SHELL-01**: A mobile-first welcome screen renders the app title **"Life Log"** as the default route
+- [x] **SHELL-01**: A mobile-first welcome screen renders the app title **"Life Log"** as the default route
 
 ### Tracer Demo (DEMO)
 
@@ -63,7 +63,7 @@ Committed prototype scope, kept on the roadmap and sequenced into later mileston
 
 - [x] **CAPT-01**: After choosing an entry type, the URL Capture screen is shown by default (title `Add {Entry Type}`, URL input, `Import from URL`, `Enter Manually`)
 - [x] **CAPT-02**: User pastes a URL, app infers metadata, and navigates to the Review Entry screen
-- [ ] **CAPT-03**: `services/extractMetadataFromUrl(url, type)` returns a partial draft using URL/domain heuristics for `google_maps`, `imdb`, `book_url`, `podcast_url`
+- [x] **CAPT-03**: `services/extractMetadataFromUrl(url, type)` returns a partial draft using URL/domain heuristics for `google_maps`, `imdb`, `book_url`, `podcast_url`
 - [x] **CAPT-04**: If extraction yields little/fails, the URL is preserved and Review still opens with whatever fields are available
 - [x] **CAPT-05**: Review Entry screen lets the user edit all visible fields; Save persists a `LifeLogEntry` and navigates to detail/category; Cancel discards
 - [x] **CAPT-06**: An `Enter Manually` button is clearly visible as a secondary action; manual entry is NOT the default path
