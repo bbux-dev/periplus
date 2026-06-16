@@ -27,9 +27,9 @@ describe('DashboardPage', () => {
     expect(screen.getByText('Expenditures')).toBeInTheDocument()
   })
 
-  it('renders exactly 3 domain links', () => {
+  it('renders 3 domain links plus the View All Entries link (4 total)', () => {
     renderDashboard()
-    expect(screen.getAllByRole('link')).toHaveLength(3)
+    expect(screen.getAllByRole('link')).toHaveLength(4)
   })
 
   it('media link targets /d/media', () => {
@@ -37,5 +37,12 @@ describe('DashboardPage', () => {
     const links = screen.getAllByRole('link')
     const mediaLink = links.find((l) => l.textContent?.includes('Media'))
     expect(mediaLink?.getAttribute('href')).toBe('/d/media')
+  })
+
+  it('View All Entries link targets /entries', () => {
+    renderDashboard()
+    const links = screen.getAllByRole('link')
+    const entriesLink = links.find((l) => l.textContent?.includes('View All Entries'))
+    expect(entriesLink?.getAttribute('href')).toBe('/entries')
   })
 })
