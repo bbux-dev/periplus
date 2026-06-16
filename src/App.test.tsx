@@ -41,8 +41,6 @@ describe('App — all 6 routes reachable (SC3/NAV-03)', () => {
     { path: '/d/media/book/review',  expectedHeading: /add book/i },
     // ManualEntryPage replaced PlaceholderPage — heading is now "Add Book"
     { path: '/d/media/book/manual',  expectedHeading: /add book/i },
-    { path: '/entries',              expectedHeading: /entry list/i },
-    { path: '/entries/abc',          expectedHeading: /entry detail/i },
   ]
 
   it.each(routes)(
@@ -66,6 +64,25 @@ describe('App — catch-all 404 route (WR-02)', () => {
     renderAt('/does-not-exist')
     await screen.findByRole('heading', { name: /page not found/i })
     expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument()
+  })
+})
+
+// ─── Phase 6: Entry List + Detail routes wired (VIEW-01, VIEW-03) ───────────
+
+describe('App — Phase 6 entry routes (VIEW-01, VIEW-03)', () => {
+  beforeEach(async () => {
+    await db.delete()
+    await db.open()
+  })
+
+  it('/entries renders the EntryListPage "Entries" heading', async () => {
+    renderAt('/entries')
+    expect(await screen.findByRole('heading', { name: /^entries$/i })).toBeInTheDocument()
+  })
+
+  it('/entries/:id with unknown id renders "Entry not found."', async () => {
+    renderAt('/entries/abc')
+    expect(await screen.findByText('Entry not found.')).toBeInTheDocument()
   })
 })
 

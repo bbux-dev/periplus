@@ -4,6 +4,8 @@ import { DomainPage }      from './pages/DomainPage'
 import { CaptureUrlPage }  from './pages/CaptureUrlPage'
 import { ReviewPage }      from './pages/ReviewPage'
 import { ManualEntryPage } from './pages/ManualEntryPage'
+import { EntryListPage }   from './pages/EntryListPage'
+import { EntryDetailPage } from './pages/EntryDetailPage'
 import { PlaceholderPage } from './pages/PlaceholderPage'
 
 function App() {
@@ -20,9 +22,9 @@ function App() {
       {/* Phase 5 — Manual Entry */}
       <Route path="/d/:domain/:type/manual"  element={<ManualEntryPage />} />
 
-      {/* Phase 6 stubs — Entry List + Detail */}
-      <Route path="/entries"    element={<PlaceholderPage title="Entry List" />} />
-      <Route path="/entries/:id" element={<PlaceholderPage title="Entry Detail" />} />
+      {/* Phase 6 — Entry List + Detail (real pages) */}
+      <Route path="/entries"    element={<EntryListPage />} />
+      <Route path="/entries/:id" element={<EntryDetailPage />} />
 
       {/* Catch-all: unknown paths show a graceful not-found page */}
       <Route path="*" element={<PlaceholderPage title="Page Not Found" />} />
