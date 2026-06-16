@@ -167,6 +167,23 @@ describe('EntryListPage — empty state', () => {
     renderPage()
     expect(await screen.findByText('No entries yet.')).toBeInTheDocument()
   })
+
+  it('shows a filter-specific message (not "No entries yet.") when filter is active but has no matches', async () => {
+    // Seed a media entry; then activate the Trips filter — trips list is empty
+    await act(async () => {
+      await entriesRepository.create(makeMediaEntry())
+    })
+
+    renderPage()
+    await screen.findByText('The Pragmatic Programmer')
+
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: 'Trips' }))
+
+    // Should show filter-specific message, NOT the generic "No entries yet."
+    expect(screen.queryByText('No entries yet.')).not.toBeInTheDocument()
+    expect(screen.getByText('No Trips entries yet.')).toBeInTheDocument()
+  })
 })
 
 // ─── VIEW-04: automated persistence proxy ────────────────────────────────────

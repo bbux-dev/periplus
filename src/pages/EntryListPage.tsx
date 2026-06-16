@@ -102,7 +102,11 @@ export function EntryListPage() {
 
         {/* Entry list or empty state */}
         {filtered.length === 0 ? (
-          <p className="text-center opacity-60 text-sm py-8">No entries yet.</p>
+          <p className="text-center opacity-60 text-sm py-8">
+            {filter === 'all'
+              ? 'No entries yet.'
+              : `No ${FILTER_OPTIONS.find((o) => o.value === filter)?.label ?? filter} entries yet.`}
+          </p>
         ) : (
           <ul className="flex flex-col gap-2">
             {filtered.map((entry) => (
