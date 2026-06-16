@@ -20,7 +20,7 @@ Life Log is built bottom-up by dependency. **Milestone v0.1.0 is a tracer bullet
 - [x] **Phase 3: Navigation & Dashboard** — Home dashboard, category screens, and routing across all 7 screens (completed 2026-06-15)
 - [x] **Phase 4: URL-First Capture** — Default paste-URL → extract → review → save flow with offline create (completed 2026-06-15)
 - [x] **Phase 5: Manual Entry** — Secondary `Enter Manually` path with type-specific forms (completed 2026-06-15)
-- [ ] **Phase 6: Entry List, Detail & Export** — Browse, filter, inspect, and JSON-export all saved entries
+- [x] **Phase 6: Entry List, Detail & Export** — Browse, filter, inspect, and JSON-export all saved entries (completed 2026-06-16)
 
 ## Phase Details
 
@@ -131,7 +131,7 @@ Plans:
 - [x] 06-03-PLAN.md — exportEntries.ts: pure buildExportJson + mockable triggerDownload (EXP-01)
 - [x] 06-04-PLAN.md — EntryListPage (reactive, filterable list + export) + Dashboard link (VIEW-01/02/04)
 - [x] 06-05-PLAN.md — EntryDetailPage (full entry + metadata JSON + safe sourceUrl + not-found guard) (VIEW-03)
-- [ ] 06-06-PLAN.md — Wire /entries + /entries/:id routes in App.tsx to the real pages
+- [x] 06-06-PLAN.md — Wire /entries + /entries/:id routes in App.tsx to the real pages
 
 ## Progress
 
@@ -145,4 +145,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Navigation & Dashboard | 3/3 | Complete   | 2026-06-15 |
 | 4. URL-First Capture | 5/5 | Complete   | 2026-06-15 |
 | 5. Manual Entry | 2/2 | Complete   | 2026-06-15 |
-| 6. Entry List, Detail & Export | 5/6 | In Progress|  |
+| 6. Entry List, Detail & Export | 6/6 | Complete   | 2026-06-16 |
