@@ -92,4 +92,16 @@ describe('triggerDownload', () => {
     expect(capturedAnchor!.download).toBe('my-log.json')
     expect(capturedAnchor!.href).toContain('blob:x')
   })
+
+  it('revokes the blob URL even when the anchor click throws', () => {
+    const fakeUrl = 'blob:throw-url'
+    vi.spyOn(URL, 'createObjectURL').mockReturnValue(fakeUrl)
+    const revokeSpy = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {})
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {
+      throw new Error('click intercepted')
+    })
+
+    expect(() => triggerDownload('{"version":1}')).toThrow('click intercepted')
+    expect(revokeSpy).toHaveBeenCalledWith(fakeUrl)
+  })
 })
