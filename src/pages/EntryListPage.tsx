@@ -63,12 +63,17 @@ export function EntryListPage() {
   // Gate: undefined = Dexie still opening; callers MUST NOT skip this check
   if (entries === undefined) return <p>Loading...</p>
 
+  // Capture the narrowed LifeLogEntry[] so closures retain the exact type.
+  // TypeScript control flow narrows `entries` here but does not propagate into
+  // nested function declarations — capturing it explicitly avoids a TS2345 error.
+  const allEntries = entries
+
   const filtered =
-    filter === 'all' ? entries : entries.filter((e) => e.domain === filter)
+    filter === 'all' ? allEntries : allEntries.filter((e) => e.domain === filter)
 
   function handleExport() {
     // Export operates on the full unfiltered entries array
-    triggerDownload(buildExportJson(entries, Date.now()), 'life-log-export.json')
+    triggerDownload(buildExportJson(allEntries, Date.now()), 'life-log-export.json')
   }
 
   return (
