@@ -21,7 +21,7 @@ save) — a shortcut is a saved DSL template whose empty slots are the "holes."
 
 ### DASH — dashboard rendering & layout switcher
 
-- [ ] **DASH-01**: The Dashboard renders the active layout's shortcuts as full-width tappable
+- [x] **DASH-01**: The Dashboard renders the active layout's shortcuts as full-width tappable
   rows (Variant B: chips + rows), each showing its name and assigned `@heroicons/react` icon.
 - [x] **DASH-02**: The user can switch between layouts via horizontally-scrollable layout chips;
   the active-layout choice persists across reloads.
@@ -67,7 +67,7 @@ save) — a shortcut is a saved DSL template whose empty slots are the "holes."
 | CFG-01 | Phase 11 — Config Model, Schema & Storage | Complete |
 | CFG-02 | Phase 11 — Config Model, Schema & Storage | Complete |
 | CFG-03 | Phase 11 — Config Model, Schema & Storage | Complete |
-| DASH-01 | Phase 12 — Dashboard Rendering & Layout Switcher | Pending |
+| DASH-01 | Phase 12 — Dashboard Rendering & Layout Switcher | Complete |
 | DASH-02 | Phase 12 — Dashboard Rendering & Layout Switcher | Complete |
 | DASH-03 | Phase 12 — Dashboard Rendering & Layout Switcher | Complete |
 | CAP-01 | Phase 13 — Tap-to-Capture Flow | Pending |

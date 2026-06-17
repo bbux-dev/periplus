@@ -53,7 +53,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 ### 🔄 v0.3.0 — Dashboard Shortcut Layouts (Phases 11–15)
 
 - [x] **Phase 11: Config Model, Schema & Storage** — CFG types, versioned JSON Schema, Dexie `settings` reactive read/write, validator. Foundational; no UI. Reqs: CFG-01..03. (completed 2026-06-17)
-- [ ] **Phase 12: Dashboard Rendering & Layout Switcher** — Variant B chips+rows dashboard with Heroicons, scrollable layout switcher, persisted selection, seeded defaults. Reqs: DASH-01..03.
+- [x] **Phase 12: Dashboard Rendering & Layout Switcher** — Variant B chips+rows dashboard with Heroicons, scrollable layout switcher, persisted selection, seeded defaults. Reqs: DASH-01..03. (completed 2026-06-17)
 - [ ] **Phase 13: Tap-to-Capture Flow** — fill-the-hole micro-prompt (mobile keypad + live DSL preview), per-shortcut one-tap save + undo toast or ReviewPage route. Reqs: CAP-01..04.
 - [ ] **Phase 14: Import / Export Config** — export config as JSON, import with JSON Schema validation + version migration, reject invalid with clear message. Reqs: PORT-01..02.
 - [ ] **Phase 15: Authoring Tool** — create/edit/delete shortcuts and layouts, reorder shortcuts, "Save current as shortcut" from the omnibar, parseDSL validation before save. Reqs: EDIT-01..04.
@@ -83,7 +83,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
   4. A fresh install (no prior config in Dexie `settings`) shows sensible default layouts (e.g. DayToDay / Travel / WorkTrip) with shortcuts without any user setup.
 **Plans**: 2 plans
   - [x] 12-01-PLAN.md — DEFAULT_SHORTCUT_CONFIG seed constant + active-layout persistence (activeLayoutRepository + useActiveLayoutName) [wave 1, data]
-  - [ ] 12-02-PLAN.md — .no-scrollbar + LayoutChips/ShortcutRow + DashboardPage seeding/chips/rows wiring [wave 2, UI]
+  - [x] 12-02-PLAN.md — .no-scrollbar + LayoutChips/ShortcutRow + DashboardPage seeding/chips/rows wiring [wave 2, UI]
 **UI hint**: yes
 
 ### Phase 13: Tap-to-Capture Flow
@@ -138,7 +138,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 | 9. Quick-Capture Omnibar | v0.2.0 | 1/1 | Complete | 2026-06-16 |
 | 10. Docs & Examples | v0.2.0 | 1/1 | Complete | 2026-06-16 |
 | 11. Config Model, Schema & Storage | v0.3.0 | 1/1 | Complete   | 2026-06-17 |
-| 12. Dashboard Rendering & Layout Switcher | v0.3.0 | 1/2 | In Progress|  |
+| 12. Dashboard Rendering & Layout Switcher | v0.3.0 | 2/2 | Complete   | 2026-06-17 |
 | 13. Tap-to-Capture Flow | v0.3.0 | 0/? | Not started | - |
 | 14. Import / Export Config | v0.3.0 | 0/? | Not started | - |
 | 15. Authoring Tool | v0.3.0 | 0/? | Not started | - |
