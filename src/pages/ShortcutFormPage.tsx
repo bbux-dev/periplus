@@ -26,9 +26,9 @@ import {
   configRepository,
 } from '../services/configRepository'
 import { validateShortcutConfig } from '../services/configValidator'
-import { addShortcut, updateShortcut } from '../services/shortcutMutations'
+import { addShortcut, updateShortcut, deleteShortcut } from '../services/shortcutMutations'
 import { validateTemplate } from '../services/templateValidator'
-import type { Shortcut } from '../config/shortcutConfig'
+import type { ShortcutConfig, Shortcut } from '../config/shortcutConfig'
 import { FormField } from '../components/ui/FormField'
 import { Button } from '../components/ui/Button'
 import { IconPicker } from '../components/dashboard/IconPicker'
@@ -85,7 +85,10 @@ export function ShortcutFormPage() {
 
   // ── Save gate ─────────────────────────────────────────────────────────────
   const canSave =
-    name.trim() !== '' && dslTemplate.trim() !== '' && templateResult.valid
+    name.trim() !== '' &&
+    dslTemplate.trim() !== '' &&
+    templateResult.valid &&
+    effectiveSelectedLayout !== ''
 
   // ── Save handler ──────────────────────────────────────────────────────────
   async function handleSave() {
@@ -96,6 +99,15 @@ export function ShortcutFormPage() {
       const current = await configRepository.get()
       if (!current) return
 
+      // Defense-in-depth re-check after fresh read (IN-02/IN-04): guard against
+      // any race where form state was valid at click time but stale by the time
+      // the async read completes.
+      if (
+        !validateTemplate(dslTemplate.trim()).valid ||
+        name.trim() === '' ||
+        effectiveSelectedLayout === ''
+      ) return
+
       // Config strings rendered as React text nodes — T-15-04
       const shortcut: Shortcut = {
         name: name.trim(),
@@ -104,9 +116,18 @@ export function ShortcutFormPage() {
         confirm,
       }
 
-      const next = isEditing
-        ? updateShortcut(current, effectiveSelectedLayout, prefill.shortcut!.name, shortcut)
-        : addShortcut(current, effectiveSelectedLayout, shortcut)
+      // WR-02: cross-layout move — when editing and the user chose a different
+      // layout, delete from the original layout then add to the new one.
+      let next: ShortcutConfig
+      if (isEditing && prefill.layoutName && effectiveSelectedLayout !== prefill.layoutName) {
+        const originalName = prefill.shortcut!.name
+        const afterDelete = deleteShortcut(current, prefill.layoutName, originalName)
+        next = addShortcut(afterDelete, effectiveSelectedLayout, shortcut)
+      } else if (isEditing) {
+        next = updateShortcut(current, effectiveSelectedLayout, prefill.shortcut!.name, shortcut)
+      } else {
+        next = addShortcut(current, effectiveSelectedLayout, shortcut)
+      }
 
       // T-15-01: defense-in-depth validation before every put
       const vr = validateShortcutConfig(next)

@@ -183,6 +183,47 @@ describe('ShortcutFormPage — EDIT-01 create', () => {
   })
 })
 
+// ─── WR-02: cross-layout move ─────────────────────────────────────────────────
+
+describe('ShortcutFormPage — WR-02 cross-layout move', () => {
+  it('moving a shortcut to a different layout removes it from the old and adds it to the new', async () => {
+    const user = userEvent.setup()
+    const shortcut: Shortcut = {
+      name: 'Coffee',
+      dslTemplate: 'expense 5:coffee',
+      confirm: false,
+    }
+    await act(async () => {
+      await configRepository.put({
+        version: 1,
+        layouts: [
+          { name: 'Alpha', shortcuts: [shortcut] },
+          { name: 'Beta', shortcuts: [] },
+        ],
+      })
+    })
+
+    // Open edit form pre-filled with the shortcut in layout 'Alpha'
+    renderFormPage({ layoutName: 'Alpha', shortcut })
+    await screen.findByRole('heading', { name: /Edit Shortcut/i })
+
+    // Change layout select to 'Beta'
+    await user.selectOptions(screen.getByRole('combobox'), 'Beta')
+
+    // Save
+    await user.click(screen.getByRole('button', { name: /Update Shortcut/i }))
+    await screen.findByTestId('manage-probe')
+
+    // Verify persisted state
+    const saved = await configRepository.get()
+    const alpha = saved?.layouts.find((l) => l.name === 'Alpha')
+    const beta  = saved?.layouts.find((l) => l.name === 'Beta')
+    expect(alpha?.shortcuts).toHaveLength(0)
+    expect(beta?.shortcuts).toHaveLength(1)
+    expect(beta?.shortcuts[0].name).toBe('Coffee')
+  })
+})
+
 // ─── Icon selection ───────────────────────────────────────────────────────────
 
 describe('ShortcutFormPage — icon selection', () => {
