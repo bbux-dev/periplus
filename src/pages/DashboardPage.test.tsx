@@ -361,6 +361,8 @@ describe('DashboardPage', () => {
 
       const entries = await entriesRepository.list()
       expect(entries).toHaveLength(1)
+      // Amount came from the template (baseValues), not from a fill — must be preserved
+      expect(entries[0].amount).toBe(5)
       // metadata.merchant is the filled value, NOT the '{}' placeholder
       expect(entries[0].metadata?.merchant).toBe('Acme')
       // Metadata should not contain the literal '{}' string
