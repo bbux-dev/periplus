@@ -12,6 +12,7 @@ import {
   useShortcutConfig,
   useActiveLayoutName,
   configRepository,
+  activeLayoutRepository,
 } from '../services/configRepository'
 import { validateShortcutConfig } from '../services/configValidator'
 import {
@@ -137,6 +138,12 @@ export function ManageShortcutsPage() {
       const vr = validateShortcutConfig(next)
       if (!vr.ok) { setError(vr.reason); return }
       await configRepository.put(vr.config)
+      // If the renamed layout was the persisted active layout, follow the rename
+      // so DASH-02 persistence survives (otherwise the dashboard silently falls
+      // back to layouts[0] on next visit).
+      if ((await activeLayoutRepository.get()) === oldName) {
+        await activeLayoutRepository.put(name)
+      }
       // Keep local selection in sync if the renamed layout was selected
       if (effectiveSelectedName === oldName) setSelectedLayoutName(name)
       setRenameTarget(null)

@@ -61,6 +61,12 @@ export async function importConfig(file: File): Promise<ImportResult> {
   } catch {
     return { ok: false, reason: 'File is not valid JSON.' }
   }
+  // Unwrap the export envelope { version, exportedAt, config } produced by
+  // buildConfigExportJson so the round-trip works. A hand-edited bare config
+  // (no `config` key) is passed through untouched.
+  if (typeof raw === 'object' && raw !== null && 'config' in raw) {
+    raw = (raw as { config: unknown }).config
+  }
   const result = migrateConfig(raw)
   if (!result.ok) return { ok: false, reason: result.reason }
   try {

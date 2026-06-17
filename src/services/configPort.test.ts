@@ -124,4 +124,14 @@ describe('importConfig', () => {
     expect(result.ok).toBe(false)
     expect(putSpy).not.toHaveBeenCalled()
   })
+
+  it('Test 7 (round-trip): buildConfigExportJson output re-imports successfully', async () => {
+    // Regression for the v0.3.0 milestone-audit BLOCKER: export wraps the config
+    // in an envelope; importConfig must unwrap it so the round-trip works.
+    const json = buildConfigExportJson(DEFAULT_SHORTCUT_CONFIG, 1718600000000)
+    const file = new File([json], 'life-log-shortcuts.json', { type: 'application/json' })
+    const result = await importConfig(file)
+    expect(result).toEqual({ ok: true })
+    expect(await configRepository.get()).toEqual(DEFAULT_SHORTCUT_CONFIG)
+  })
 })
