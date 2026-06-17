@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v0.2.0
 milestone_name: Quick-Capture DSL
-status: planning
+status: Shipped
 last_updated: "2026-06-17T03:53:23.222Z"
-last_activity: 2026-06-17
+last_activity: 2026-06-17 — Milestone v0.2.0 shipped (Quick-Capture DSL)
 progress:
-  total_phases: 0
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_phases: 4
+  completed_phases: 4
+  total_plans: 4
+  completed_plans: 4
+  percent: 100
 ---
 
 # Project State
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-15)
 
 **Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 06 — Entry List, Detail & Export
+**Current focus:** v0.2.0 Quick-Capture DSL — SHIPPED (Phases 7–10)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: Milestone v0.2.0 complete (Phases 7–10)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-06-17 — Milestone v0.2.0 started
+Status: Shipped — awaiting next milestone
+Last activity: 2026-06-17 — Quick-Capture DSL shipped; 277 tests green, build clean
 
 ## Performance Metrics
 

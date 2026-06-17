@@ -1,5 +1,33 @@
 # Milestones
 
+## v0.2.0 Quick-Capture DSL (Shipped: 2026-06-16)
+
+**Phases completed:** 4 phases (7–10), 10 requirements (DSL-01..04, OMNI-01..04, DATA-01, DOCS-01)
+
+**Key accomplishments:**
+
+- Quick-Capture DSL: a one-line `[type] slot1:slot2 ?k=v,k=v` shorthand parsed live into the
+  existing Review screen. Parser ported to TS from the VALIDATED spike `001-dsl-parser`; per-type
+  `POSITIONAL_SCHEMA` declared beside `ENTRY_FIELDS`; output is the flat formValues
+  `buildReviewDraft` already consumes (zero new persistence). Three statuses (ok/ambiguous/error)
+  ensure nothing saves from a guess.
+- Type-agnostic parser with exact-only type resolution (partials → suggestion menu), quote-aware
+  tokenizing (colons/commas/spaces inside `"…"`), and domain-context type inference. 26 tests.
+- `entriesRepository.listDistinctValues` + `useDistinctValues` hook: frequency-ranked distinct
+  category/merchant/tags values with case-insensitive prefix filter, backing value suggestions.
+- Quick-Capture omnibar (`/capture`, dashboard tile): live parse preview, type-token suggestions
+  (resolving the `p`=place/podcast and `e`=event/expense single-letter collisions), and
+  history-backed value suggestions. Pre-fills ReviewPage; never direct-saves.
+- README with full DSL reference + a worked example per entry type (all drawn from the validated
+  parser suite).
+
+**Quality at ship:** 277 tests passing (up from 221); `tsc -b` + `vite build` + PWA generation
+clean; all new code lint-clean. Built autonomously in one session. Known pre-existing tech debt
+(carried from v0.1.0, not addressed): 4 eslint errors in `cn.test.tsx`, `main.tsx`,
+`exportEntries.test.ts`, `extractMetadataFromUrl.ts`.
+
+---
+
 ## v0.1.0 Tracer Bullet — App Shell + DB-Backed Counter (Shipped: 2026-06-16)
 
 **Phases completed:** 6 phases, 22 plans, 36 tasks

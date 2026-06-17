@@ -24,7 +24,12 @@ A user can capture a structured life event on their phone in seconds — URL-fir
 
 **Next milestone:** v0.2.0 — Quick-Capture DSL (in progress).
 
-## Current Milestone: v0.2.0 Quick-Capture DSL
+## Current Milestone: v0.2.0 Quick-Capture DSL — ✅ SHIPPED 2026-06-16
+
+**Outcome:** All 4 phases (7–10) shipped; 10/10 requirements met; 277 tests green, build +
+PWA clean. The DSL omnibar (`/capture`) parses a one-line shorthand live into the existing
+Review screen with type-token + history-backed value suggestions — no new save path, no
+silent mis-saves. Parser was ported directly from the VALIDATED spike `001-dsl-parser`.
 
 **Goal:** Replace slow multi-field entry with a one-line, URL-esque shorthand
 (`[type] slot1:slot2 ?k=v,k=v`) that parses live into the existing Review screen —
@@ -60,15 +65,16 @@ quoted, and parsed input ALWAYS routes through the Review screen with live previ
 - ✓ URL-first capture (offline heuristics) → review → save, the default path — v0.1.0
 - ✓ Manual entry behind a visible `Enter Manually` secondary button — v0.1.0
 - ✓ Entry list (filterable) + detail + JSON export of all entries — v0.1.0
+- ✓ Quick-Capture DSL: one-line `[type] slot1:slot2 ?k=v,k=v` shorthand → entry fields (DSL-01..04) — v0.2.0
+- ✓ Quick-capture omnibar with live preview + type/value suggestions, pre-filling Review (OMNI-01..04) — v0.2.0
+- ✓ `entriesRepository` distinct-values lookup for value suggestions (DATA-01) — v0.2.0
+- ✓ DSL docs with worked examples per type (DOCS-01) — v0.2.0
 
 ### Active
 
-<!-- v0.2.0 Quick-Capture DSL — see REQUIREMENTS.md for full REQ-IDs. -->
+<!-- Next milestone scope is open — run /gsd:new-milestone. -->
 
-- [ ] DSL parser: one-line `[type] slot1:slot2 ?k=v,k=v` shorthand → entry fields (DSL-01..04)
-- [ ] Quick-capture omnibar with live preview + suggestions, pre-filling Review (OMNI-01..04)
-- [ ] `entriesRepository` distinct-values lookup for value suggestions (DATA-01)
-- [ ] DSL docs with worked examples per type (DOCS-01)
+(None — v0.2.0 shipped; next milestone not yet scoped)
 
 ### Deferred (candidate directions for the next milestone)
 
@@ -147,4 +153,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-16 after completing milestone v0.1.0 (full local life-log shipped)*
+*Last updated: 2026-06-16 after completing milestone v0.2.0 (Quick-Capture DSL shipped)*

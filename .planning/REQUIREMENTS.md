@@ -8,38 +8,38 @@ Design: `.planning/notes/quick-capture-dsl-design.md`. De-risked by spike `001-d
 
 ### DSL — shorthand parser
 
-- [ ] **DSL-01**: User can capture an entry by typing a one-line shorthand
+- [x] **DSL-01**: User can capture an entry by typing a one-line shorthand
   `[type] slot1:slot2 ?k=v,k=v` that parses into that type's entry fields, via per-type
   positional schemas declared beside `ENTRY_FIELDS`.
-- [ ] **DSL-02**: User can omit the leading type token and have the type inferred from the
+- [x] **DSL-02**: User can omit the leading type token and have the type inferred from the
   current domain context (single-type domains); the parser resolves only exact type
   names/aliases — partial tokens (`p`, `e`, `boo`) return `ambiguous`, not a guess.
-- [ ] **DSL-03**: User can quote values so free text may contain delimiters
+- [x] **DSL-03**: User can quote values so free text may contain delimiters
   (`:` / `,` / space); multi-value params (e.g. `tags`) must be quoted.
-- [ ] **DSL-04**: Malformed or ambiguous input is reported as a status (`ambiguous` /
+- [x] **DSL-04**: Malformed or ambiguous input is reported as a status (`ambiguous` /
   `error`) with a human-readable issue, never silently mis-saved.
 
 ### OMNI — quick-capture omnibar
 
-- [ ] **OMNI-01**: User can open a quick-capture omnibar, type a DSL string, and see a live
+- [x] **OMNI-01**: User can open a quick-capture omnibar, type a DSL string, and see a live
   parse preview (parsed type + field values + any issues) update as they type.
-- [ ] **OMNI-02**: On confirm, parsed input pre-fills the existing Review screen (via the
+- [x] **OMNI-02**: On confirm, parsed input pre-fills the existing Review screen (via the
   same `buildReviewDraft` → `ReviewPage` path manual entry uses); the omnibar never
   directly saves.
-- [ ] **OMNI-03**: User sees type-token suggestions as they type (prefix → type menu),
+- [x] **OMNI-03**: User sees type-token suggestions as they type (prefix → type menu),
   which disambiguate the single-letter collisions (`p` = podcast/place, `e` =
   event/expense).
-- [ ] **OMNI-04**: User sees history-backed value suggestions for category / merchant /
+- [x] **OMNI-04**: User sees history-backed value suggestions for category / merchant /
   tags drawn from their own prior entries.
 
 ### DATA — repository support
 
-- [ ] **DATA-01**: `entriesRepository` exposes a distinct-values lookup (frequency-ranked,
+- [x] **DATA-01**: `entriesRepository` exposes a distinct-values lookup (frequency-ranked,
   optional prefix filter) over a metadata/tags field, backing OMNI-04.
 
 ### DOCS — documentation
 
-- [ ] **DOCS-01**: Project docs (README) document the DSL grammar with worked examples for
+- [x] **DOCS-01**: Project docs (README) document the DSL grammar with worked examples for
   every entry type.
 
 ## Traceability
