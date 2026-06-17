@@ -47,9 +47,11 @@ export interface ShortcutConfig {
 
 // ─── Icon allow-list ──────────────────────────────────────────────────────────
 //
-// Only keys in this map can be stored as `icon` values in the config.
-// All keys match exact heroicons/24/outline export names (with "Icon" suffix).
-// Unknown keys passed to resolveShortcutIcon() silently fall back to DEFAULT_SHORTCUT_ICON.
+// Curated set of icons offered in the config authoring UI. Configs may store ANY
+// string as an `icon` value (the structural validator is intentionally lenient);
+// unknown keys passed to resolveShortcutIcon() silently fall back to
+// DEFAULT_SHORTCUT_ICON at render time — so removing a key here never breaks a
+// stored config. All keys match exact heroicons/24/outline export names ("Icon" suffix).
 // Extending this map does NOT require a config version bump (additive change).
 
 export const DEFAULT_SHORTCUT_ICON = BoltIcon

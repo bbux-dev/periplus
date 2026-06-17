@@ -11,7 +11,15 @@ import type { ShortcutConfig } from '../config/shortcutConfig'
 const CONFIG_KEY = 'shortcutConfig'
 
 export const configRepository = {
-  /** Returns the stored config, or undefined if none has been saved yet. */
+  /**
+   * Returns the stored config, or undefined if none has been saved yet.
+   *
+   * NOTE: returns the raw stored value cast to ShortcutConfig — NO runtime
+   * validation on read. Treat the result as trusted only because every write
+   * path (Phase 14 import) MUST run migrateConfig/validateShortcutConfig before
+   * calling put(). Read-time re-validation would couple this data-only repository
+   * to the validator and is deliberately deferred (see Phase 11 REVIEW WR-03).
+   */
   async get(): Promise<ShortcutConfig | undefined> {
     const row = await db.settings.get(CONFIG_KEY)
     return row?.value as ShortcutConfig | undefined

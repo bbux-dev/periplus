@@ -32,7 +32,7 @@ export function validateShortcutConfig(raw: unknown): ValidationResult {
   if (obj['version'] !== 1) {
     return {
       ok: false,
-      reason: `Unsupported config version: ${String(obj['version'])}. Expected 1.`,
+      reason: `Unsupported config version: ${JSON.stringify(obj['version'])}. Expected 1.`,
     }
   }
   if (!Array.isArray(obj['layouts'])) {
