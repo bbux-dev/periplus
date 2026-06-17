@@ -76,6 +76,26 @@ describe('HoleSheet', () => {
     expect(screen.getByRole('button', { name: /save/i })).toBeDisabled()
   })
 
+  it('Save button remains disabled when amount is a lone "." (CR-01)', async () => {
+    const user = userEvent.setup()
+    render(<HoleSheet {...baseProps} />)
+    // Tap decimal key only — parseFloat('.') is NaN, should not enable Save
+    await user.click(screen.getByRole('button', { name: '.' }))
+    expect(screen.getByRole('button', { name: /save/i })).toBeDisabled()
+  })
+
+  it('Save button is enabled and onSave fires with a valid decimal like ".5" (CR-01)', async () => {
+    const user = userEvent.setup()
+    const onSave = vi.fn()
+    render(<HoleSheet {...baseProps} onSave={onSave} />)
+    // Tap decimal then 5 — ".5" parses as 0.5, valid number
+    await user.click(screen.getByRole('button', { name: '.' }))
+    await user.click(screen.getByRole('button', { name: '5' }))
+    expect(screen.getByRole('button', { name: /save/i })).not.toBeDisabled()
+    await user.click(screen.getByRole('button', { name: /save/i }))
+    expect(onSave).toHaveBeenCalledWith({ amount: '.5' })
+  })
+
   it('Save button is enabled once the amount hole has a value', async () => {
     const user = userEvent.setup()
     render(<HoleSheet {...baseProps} />)

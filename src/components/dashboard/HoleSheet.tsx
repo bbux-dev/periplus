@@ -69,8 +69,18 @@ export function HoleSheet({
   const merged = applyFills(baseValues, fills)
   const preview = buildDSLPreview(type, merged)
 
-  // Save gate: all holes must have a non-empty trimmed value
-  const allFilled = orderedHoles.every((h) => (fills[h.key] ?? '').trim() !== '')
+  // Save gate: non-empty fill required for all holes; amount holes must parse as a
+  // finite number (rejects lone '.', empty string, non-numeric input).
+  const isValidFill = (hole: { key: string; isAmount: boolean }) => {
+    const v = (fills[hole.key] ?? '').trim()
+    if (!v) return false
+    if (hole.isAmount) {
+      const n = parseFloat(v)
+      return !isNaN(n) && isFinite(n)
+    }
+    return true
+  }
+  const allFilled = orderedHoles.every(isValidFill)
 
   // ── Handlers ───────────────────────────────────────────────────────────────
 
