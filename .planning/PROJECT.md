@@ -32,7 +32,14 @@ Review screen with type-token + history-backed value suggestions — no new save
 silent mis-saves. Parser was ported directly from the VALIDATED spike `001-dsl-parser`.
 Full details in `.planning/MILESTONES.md`.
 
-## Current Milestone: v0.3.0 Dashboard Shortcut Layouts
+## Current Milestone: v0.3.0 Dashboard Shortcut Layouts — ✅ SHIPPED 2026-06-17
+
+**Outcome:** All 5 phases (11–15) shipped; 16/16 requirements satisfied; 500 tests green, `tsc -b`
+clean, zero new runtime dependencies. The Dashboard now renders customizable one-tap shortcut
+layouts (chips + rows) backed by a JSON-Schema-validated config in the Dexie `settings` store, with
+tap-to-capture (one-tap save + undo / fill-the-hole keypad sheet / ReviewPage), portable
+import/export, and a full in-app authoring tool. The milestone audit caught and fixed a real
+cross-phase blocker (export/import envelope mismatch). Next milestone: open.
 
 **Goal:** Customizable one-tap shortcut buttons on the Dashboard, grouped into switchable
 **layouts** (DayToDay / Travel / WorkTrip), built on top of the v0.2.0 Quick-Capture DSL —
@@ -80,16 +87,17 @@ out of the v0.2.0 "always Review" invariant for trusted shortcuts, paired with u
 - ✓ Quick-capture omnibar with live preview + type/value suggestions, pre-filling Review (OMNI-01..04) — v0.2.0
 - ✓ `entriesRepository` distinct-values lookup for value suggestions (DATA-01) — v0.2.0
 - ✓ DSL docs with worked examples per type (DOCS-01) — v0.2.0
+- ✓ Shortcut-layouts config model + versioned JSON Schema + Dexie `settings` storage (CFG-01..03) — v0.3.0
+- ✓ Dashboard layout switcher + shortcut rendering with seeded defaults (DASH-01..03) — v0.3.0
+- ✓ Tap-to-capture: fill-the-hole keypad + per-shortcut one-tap save w/ undo or ReviewPage (CAP-01..04) — v0.3.0
+- ✓ Import / export of the shortcut config as validated JSON (PORT-01..02) — v0.3.0
+- ✓ Authoring tool for shortcuts + layouts + "Save current as shortcut" from the omnibar (EDIT-01..04) — v0.3.0
 
 ### Active
 
-<!-- v0.3.0 Dashboard Shortcut Layouts — REQ-IDs defined in REQUIREMENTS.md. -->
+<!-- Next milestone scope is open — run /gsd:new-milestone. -->
 
-- [ ] Shortcut-layouts config model + versioned JSON Schema + Dexie `settings` storage (v0.3.0)
-- [ ] Dashboard layout switcher + shortcut rendering with seeded defaults (v0.3.0)
-- [ ] Tap-to-capture (fill-the-hole + per-shortcut one-tap/confirm save with undo) (v0.3.0)
-- [ ] Import / export of the shortcut config as validated JSON (v0.3.0)
-- [ ] Authoring tool for shortcuts + layouts, plus "Save current as shortcut" (v0.3.0)
+(None — v0.3.0 shipped; next milestone not yet scoped)
 
 ### Deferred (candidate directions for future milestones)
 
@@ -168,4 +176,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-17 — started milestone v0.3.0 (Dashboard Shortcut Layouts)*
+*Last updated: 2026-06-17 — after completing milestone v0.3.0 (Dashboard Shortcut Layouts shipped)*

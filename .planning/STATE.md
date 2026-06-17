@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v0.3.0
 milestone_name: Dashboard Shortcut Layouts
-status: verifying
+status: Awaiting next milestone
 stopped_at: Completed 15-authoring-tool/15-01-PLAN.md
-last_updated: "2026-06-17T19:29:15.974Z"
-last_activity: 2026-06-17
+last_updated: "2026-06-17T20:03:04.566Z"
+last_activity: 2026-06-17 — Milestone v0.3.0 completed and archived
 progress:
   total_phases: 5
   completed_phases: 5
@@ -25,19 +25,10 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 
 ## Current Position
 
-Phase: 15 (Authoring Tool) — EXECUTING
-Plan: 3 of 3
-Status: Phase complete — ready for verification
-Last activity: 2026-06-17
-
-```
-[Phase 11: Config Model, Schema & Storage    ] — not started
-[Phase 12: Dashboard Rendering & Switcher    ] — not started
-[Phase 13: Tap-to-Capture Flow               ] — not started
-[Phase 14: Import / Export Config            ] — not started
-[Phase 15: Authoring Tool                    ] — not started
-Progress: [██████████] 100%
-```
+Phase: Milestone v0.3.0 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-06-17 — Milestone v0.3.0 completed and archived
 
 ## Performance Metrics
 
@@ -161,6 +152,9 @@ Items acknowledged and carried forward from previous milestone close:
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
 | DSL follow-ups | Field/param-key suggestions after `?`, content-based type inference, currency-symbol amount parsing | Deferred to post-v0.3.0 | v0.2.0 close |
+| human-verification | Device/browser visual checks for phases 12–15 (touch scroll/keypad feel, native file dialog + disk write, reactive update in real browser, persistence across real tab reload) — all logic proven by 500-test suite | Acknowledged non-blocking | v0.3.0 close |
+| tech-debt (13) | WR-05: no user-visible error UI on capture create-failure (console-logged; sheet stays open) | Deferred | v0.3.0 close |
+| tech-debt (15) | IN-03: shortcut delete has no confirmation prompt (immediate by design for v1); "+ New" chip is a 2-step path to the shortcut form (omnibar path is direct) | Deferred | v0.3.0 close |
 
 ## Session Continuity
 
@@ -170,4 +164,4 @@ Resume file: None
 
 ## Operator Next Steps
 
-- Execute Phase 15 Plan 02 (ManageShortcutsPage + ShortcutFormPage UI)
+- Start the next milestone with /gsd-new-milestone

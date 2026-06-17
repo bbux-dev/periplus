@@ -4,7 +4,7 @@
 
 - ✅ **v0.1.0 — Tracer Bullet → working local life-log** — Phases 1–6 (shipped 2026-06-16)
 - ✅ **v0.2.0 — Quick-Capture DSL** — Phases 7–10 (shipped 2026-06-16)
-- 🔄 **v0.3.0 — Dashboard Shortcut Layouts** — Phases 11–15 (in progress)
+- ✅ **v0.3.0 — Dashboard Shortcut Layouts** — Phases 11–15 (shipped 2026-06-17)
 
 ## Phases
 
@@ -50,87 +50,31 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 
 </details>
 
-### 🔄 v0.3.0 — Dashboard Shortcut Layouts (Phases 11–15)
+<details>
+<summary>✅ v0.3.0 — Dashboard Shortcut Layouts (Phases 11–15) — SHIPPED 2026-06-17</summary>
 
-- [x] **Phase 11: Config Model, Schema & Storage** — CFG types, versioned JSON Schema, Dexie `settings` reactive read/write, validator. Foundational; no UI. Reqs: CFG-01..03. (completed 2026-06-17)
-- [x] **Phase 12: Dashboard Rendering & Layout Switcher** — Variant B chips+rows dashboard with Heroicons, scrollable layout switcher, persisted selection, seeded defaults. Reqs: DASH-01..03. (completed 2026-06-17)
-- [x] **Phase 13: Tap-to-Capture Flow** — fill-the-hole micro-prompt (mobile keypad + live DSL preview), per-shortcut one-tap save + undo toast or ReviewPage route. Reqs: CAP-01..04. (completed 2026-06-17)
-- [x] **Phase 14: Import / Export Config** — export config as JSON, import with JSON Schema validation + version migration, reject invalid with clear message. Reqs: PORT-01..02. (completed 2026-06-17)
-- [x] **Phase 15: Authoring Tool** — create/edit/delete shortcuts and layouts, reorder shortcuts, "Save current as shortcut" from the omnibar, parseDSL validation before save. Reqs: EDIT-01..04. (completed 2026-06-17)
+Customizable one-tap shortcut buttons on the Dashboard, grouped into switchable layouts, built on
+the v0.2.0 Quick-Capture DSL (a shortcut is a saved DSL template with empty-slot "holes"). Design:
+`notes/dashboard-shortcut-layouts-design.md`; UI: sketch `001-dashboard-shortcut-layouts` (Variant B).
 
-## Phase Details
+- [x] **Phase 11: Config Model, Schema & Storage** — CFG types, versioned JSON Schema spec,
+  hand-rolled validator + migration seam, Dexie `settings` reactive repository. Reqs: CFG-01..03. (1 plan)
+- [x] **Phase 12: Dashboard Rendering & Layout Switcher** — Variant B chips+rows, scrollable layout
+  switcher (persisted), seeded defaults. Reqs: DASH-01..03. (2 plans)
+- [x] **Phase 13: Tap-to-Capture Flow** — fill-the-hole keypad sheet w/ live DSL preview, per-shortcut
+  one-tap save + undo or ReviewPage route; `{}` named-hole token; shared `draftToEntry`. Reqs: CAP-01..04. (3 plans)
+- [x] **Phase 14: Import / Export Config** — export config JSON envelope; import parse→migrate→validate→put
+  (wholesale reject) from `/settings`. Reqs: PORT-01..02. (2 plans)
+- [x] **Phase 15: Authoring Tool** — create/edit/delete + reorder shortcuts & layouts, icon picker,
+  parseDSL-gated template, "Save current as shortcut" from the omnibar. Reqs: EDIT-01..04. (3 plans)
 
-### Phase 11: Config Model, Schema & Storage
-**Goal**: The shortcut config types are defined, backed by a versioned JSON Schema, and can be persisted to and read reactively from the Dexie `settings` store.
-**Depends on**: Nothing (foundational; no UI)
-**Requirements**: CFG-01, CFG-02, CFG-03
-**Success Criteria** (what must be TRUE):
-  1. A `ShortcutConfig` TypeScript type (and sub-types `Layout`, `Shortcut`) matches the JSON Schema shape exactly.
-  2. A well-formed config validates successfully; a structurally invalid config is rejected with a human-readable error message before any storage write.
-  3. Writing a config to the Dexie `settings` store and reading it back reactively returns the same config without data loss.
-  4. A config exported by an older app version loads successfully in a newer one via the defined forward-compat migration path (version field present and migration logic exercised in tests).
-**Plans**: 1 plan
-  - [x] 11-01-PLAN.md — config types + Heroicons allow-list, JSON Schema spec, hand-rolled validator + migration seam, Dexie settings repository + reactive useShortcutConfig hook
+Quality at ship: 500 tests passing; `tsc -b` clean; zero new runtime dependencies. Milestone audit
+caught + fixed a real cross-phase blocker (export/import envelope mismatch) and a rename-persistence bug.
+Full phase details + success criteria archived in
+[`milestones/v0.3.0-ROADMAP.md`](milestones/v0.3.0-ROADMAP.md).
+Audit: [`milestones/v0.3.0-MILESTONE-AUDIT.md`](milestones/v0.3.0-MILESTONE-AUDIT.md).
 
-### Phase 12: Dashboard Rendering & Layout Switcher
-**Goal**: The Dashboard renders the active layout's shortcuts as tappable rows with Heroicons icons, provides a horizontally-scrollable layout chip switcher with persisted selection, and seeds sensible defaults on a fresh install.
-**Depends on**: Phase 11
-**Requirements**: DASH-01, DASH-02, DASH-03
-**Success Criteria** (what must be TRUE):
-  1. The Dashboard shows the active layout's shortcuts as full-width tappable rows, each displaying its name and assigned Heroicons icon.
-  2. Tapping a layout chip switches the active layout and the shortcut rows update to reflect that layout's shortcuts.
-  3. The active layout selection persists across page reloads.
-  4. A fresh install (no prior config in Dexie `settings`) shows sensible default layouts (e.g. DayToDay / Travel / WorkTrip) with shortcuts without any user setup.
-**Plans**: 2 plans
-  - [x] 12-01-PLAN.md — DEFAULT_SHORTCUT_CONFIG seed constant + active-layout persistence (activeLayoutRepository + useActiveLayoutName) [wave 1, data]
-  - [x] 12-02-PLAN.md — .no-scrollbar + LayoutChips/ShortcutRow + DashboardPage seeding/chips/rows wiring [wave 2, UI]
-**UI hint**: yes
-
-### Phase 13: Tap-to-Capture Flow
-**Goal**: Tapping a shortcut triggers the correct capture path — immediate entry or fill-the-hole prompt — using the v0.2.0 parseDSL pipeline, with per-shortcut one-tap direct save + undo or ReviewPage routing.
-**Depends on**: Phases 11–12
-**Requirements**: CAP-01, CAP-02, CAP-03, CAP-04
-**Success Criteria** (what must be TRUE):
-  1. Tapping a zero-hole shortcut with `confirm:false` saves the entry immediately via parseDSL → buildReviewDraft → entriesRepository.create with no prompt shown.
-  2. Tapping a shortcut with `confirm:true` routes through the existing ReviewPage regardless of whether holes are present.
-  3. Tapping a shortcut with one or more holes opens a fill-the-hole sheet; a mobile numeric keypad and quick-amount presets update a live DSL preview of the resulting line before capture.
-  4. After a direct save (`confirm:false`), a "Saved · Undo" toast appears; tapping Undo calls `entriesRepository.delete` and confirms the entry is gone.
-  5. A named-hole placeholder in a `dslTemplate` causes the fill-the-hole prompt to ask for that specific named field, not only empty positional slots.
-**Plans**: 3 plans
-  - [x] 13-01-PLAN.md — captureService (draftToEntry, detectHoles, {} token, applyFills/buildDSLPreview) + ReviewPage refactor to draftToEntry [wave 1, logic]
-  - [x] 13-02-PLAN.md — HoleSheet (keypad/presets/live preview) + SavedToast components [wave 2, UI]
-  - [x] 13-03-PLAN.md — useShortcutCapture orchestrator hook + DashboardPage wire-in + integration tests [wave 3, wiring]
-**UI hint**: yes
-
-### Phase 14: Import / Export Config
-**Goal**: Users can export the full shortcut config as a JSON file and import a JSON config file that is validated against the JSON Schema before being applied.
-**Depends on**: Phase 11
-**Requirements**: PORT-01, PORT-02
-**Success Criteria** (what must be TRUE):
-  1. Tapping "Export Config" triggers a download of a JSON file whose contents match the current shortcut config.
-  2. Importing a valid config JSON file replaces the current config and the Dashboard reflects the new layouts and shortcuts immediately.
-  3. Importing an invalid or structurally malformed file is rejected before any change is applied, with a clear human-readable error message.
-  4. A config exported from an older app version imports successfully via the version migration path defined in Phase 11.
-**Plans**: 2 plans
-  - [x] 14-01-PLAN.md — configPort.ts: buildConfigExportJson (pure) + importConfig (parse→migrate→put, wholesale reject) [wave 1, service, TDD]
-  - [x] 14-02-PLAN.md — SettingsPage (export button + file-input import + success/error) + /settings route + Dashboard cog link [wave 2, UI, depends_on 14-01]
-**UI hint**: yes
-
-### Phase 15: Authoring Tool
-**Goal**: Users can create, edit, delete, and reorder shortcuts and layouts in-app, and save any DSL line from the omnibar directly as a new shortcut template.
-**Depends on**: Phases 11–13
-**Requirements**: EDIT-01, EDIT-02, EDIT-03, EDIT-04
-**Success Criteria** (what must be TRUE):
-  1. The user can create a new shortcut (name, icon, dslTemplate, confirm flag) within a layout and it appears on the Dashboard immediately.
-  2. The user can edit an existing shortcut's fields and delete it; changes persist across reloads.
-  3. The user can create, rename, or delete a layout; the layout switcher chip row reflects the change immediately.
-  4. The user can reorder shortcuts within a layout; the new order persists across reloads.
-  5. From the omnibar, tapping "Save current as shortcut" (via the "+ New" chip entry point) pre-fills the authoring form with the current DSL line; a `dslTemplate` that fails `parseDSL` cannot be saved.
-**Plans**: 3 plans
-  - [x] 15-01-PLAN.md — templateValidator (EDIT-04 predicate) + shortcutMutations pure helpers (CRUD + reorder), TDD [wave 1, logic]
-  - [x] 15-02-PLAN.md — ManageShortcutsPage (layout CRUD + shortcut delete/reorder) + /manage route [wave 2, UI, depends_on 15-01]
-  - [x] 15-03-PLAN.md — IconPicker + ShortcutFormPage (create/edit + EDIT-04 gate) + /manage/shortcut route + omnibar "Save as Shortcut" + "+ New" chip activation [wave 3, UI, depends_on 15-01,15-02]
-**UI hint**: yes
+</details>
 
 ## Progress
 

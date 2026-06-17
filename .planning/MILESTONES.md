@@ -1,5 +1,40 @@
 # Milestones
 
+## v0.3.0 Dashboard Shortcut Layouts (Shipped: 2026-06-17)
+
+**Phases completed:** 5 phases, 11 plans, 11 tasks
+
+**Key accomplishments:**
+
+- **Config model (Phase 11):** `ShortcutConfig`/`Layout`/`Shortcut` types + a 21-icon static
+  Heroicons allow-list + a draft-07 JSON Schema spec artifact + a hand-rolled structural
+  validator (whole-or-reject) with a versioned `migrateConfig` seam, persisted in the dormant
+  v0.1.0 Dexie `settings` store via a reactive repository — zero new deps, `db.ts` untouched.
+- **Dashboard rendering (Phase 12):** Variant-B chips+rows dashboard — scrollable layout-chip
+  switcher (persisted active layout) + tappable shortcut rows with Heroicons — and one-shot
+  first-run seeding of sensible default layouts (DayToDay / Travel / WorkTrip).
+- **Tap-to-capture (Phase 13):** a shortcut is a saved DSL template; tapping routes to one-tap
+  direct save (+ "Saved · Undo" toast), a fill-the-hole keypad sheet with a live DSL preview, or
+  the existing ReviewPage — per-shortcut `confirm`. Reuses the whole v0.2.0 parseDSL →
+  buildReviewDraft pipeline via an extracted shared `draftToEntry`; `{}` named-hole token.
+- **Import / export (Phase 14):** export the config as a versioned JSON envelope and import it
+  back (parse → migrate → validate → put, wholesale reject) from a new `/settings` page —
+  portable config sharing without accounts.
+- **Authoring tool (Phase 15):** in-app create/edit/delete + reorder of shortcuts and layouts
+  (pure immutable helpers, always re-validated before write), an allow-list icon picker, a
+  parseDSL-gated template field, plus "Save current as shortcut" from the omnibar.
+
+**Quality at ship:** 500 tests passing (up from 277); `tsc -b` clean; zero new runtime
+dependencies across the milestone. Built autonomously (research → plan → check → execute →
+code-review+fix → verify per phase). The milestone audit caught and fixed a real cross-phase
+blocker (export/import envelope mismatch) plus an active-layout rename-persistence bug.
+
+**Known deferred items at close:** device/browser visual checks for phases 12–15, plus two minor
+tech-debt items (capture create-failure error UI; shortcut-delete confirmation) — see STATE.md
+Deferred Items.
+
+---
+
 ## v0.2.0 Quick-Capture DSL (Shipped: 2026-06-16)
 
 **Phases completed:** 4 phases (7–10), 10 requirements (DSL-01..04, OMNI-01..04, DATA-01, DOCS-01)
@@ -11,13 +46,17 @@
   `POSITIONAL_SCHEMA` declared beside `ENTRY_FIELDS`; output is the flat formValues
   `buildReviewDraft` already consumes (zero new persistence). Three statuses (ok/ambiguous/error)
   ensure nothing saves from a guess.
+
 - Type-agnostic parser with exact-only type resolution (partials → suggestion menu), quote-aware
   tokenizing (colons/commas/spaces inside `"…"`), and domain-context type inference. 26 tests.
+
 - `entriesRepository.listDistinctValues` + `useDistinctValues` hook: frequency-ranked distinct
   category/merchant/tags values with case-insensitive prefix filter, backing value suggestions.
+
 - Quick-Capture omnibar (`/capture`, dashboard tile): live parse preview, type-token suggestions
   (resolving the `p`=place/podcast and `e`=event/expense single-letter collisions), and
   history-backed value suggestions. Pre-fills ReviewPage; never direct-saves.
+
 - README with full DSL reference + a worked example per entry type (all drawn from the validated
   parser suite).
 
