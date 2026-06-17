@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { QueueListIcon, BoltIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
 import { NAVIGATION } from '../config/navigation'
 import { cn } from '../components/ui/cn'
@@ -17,6 +17,8 @@ import { HoleSheet } from '../components/dashboard/HoleSheet'
 import { SavedToast } from '../components/dashboard/SavedToast'
 
 export function DashboardPage() {
+  const navigate = useNavigate()
+
   // ─── One-shot seeding effect (DASH-03) ────────────────────────────────────────
   // Uses the awaited configRepository.get() — NOT the hook — to distinguish
   // "Dexie still opening" from "no config stored". Runs once on mount.
@@ -69,6 +71,7 @@ export function DashboardPage() {
               layouts={layouts}
               activeLayoutName={activeLayout?.name}
               onSelect={handleLayoutSelect}
+              onManage={() => navigate('/manage')}
             />
             {activeLayout?.shortcuts.map((s) => (
               <ShortcutRow

@@ -41,6 +41,13 @@ export function QuickCapturePage() {
   const typeSuggestions = ctx.kind === 'type' ? typeMatches(ctx.prefix) : []
 
   const canConfirm = parsed.status === 'ok' && parsed.type != null
+  // EDIT-03: allow saving as a shortcut template when the line is parseable + typed
+  // Broader than canConfirm: allows status='ok' OR 'ambiguous' as long as type is resolved
+  const canSaveAsShortcut = parsed.type !== null && parsed.status !== 'error'
+
+  const handleSaveAsShortcut = () => {
+    navigate('/manage/shortcut', { state: { dslTemplate: text } })
+  }
 
   const refocus = () => inputRef.current?.focus()
 
@@ -169,6 +176,10 @@ export function QuickCapturePage() {
 
         <Button variant="primary" onClick={handleConfirm} disabled={!canConfirm}>
           Review &amp; Save
+        </Button>
+        {/* EDIT-03: Save current DSL line as shortcut template */}
+        <Button variant="secondary" onClick={handleSaveAsShortcut} disabled={!canSaveAsShortcut}>
+          Save as Shortcut
         </Button>
         <Button variant="secondary" onClick={goBack}>
           Cancel

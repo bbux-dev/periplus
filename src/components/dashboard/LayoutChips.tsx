@@ -1,13 +1,22 @@
 import { cn } from '../ui/cn'
 import type { Layout } from '../../config/shortcutConfig'
 
+// ─── LayoutChips ──────────────────────────────────────────────────────────────
+//
+// Horizontal scrollable chip row for layout selection + "+ New" entry point.
+// onManage is optional: when provided, the "+ New" chip is shown as an active
+// button that calls onManage; when omitted (e.g. ManageShortcutsPage), the
+// chip is hidden (the manage page has its own "Add Shortcut" button).
+
 interface LayoutChipsProps {
   layouts: Layout[]
   activeLayoutName: string | undefined
   onSelect: (name: string) => void
+  /** When provided, activates the "+ New" chip to call this handler. */
+  onManage?: () => void
 }
 
-export function LayoutChips({ layouts, activeLayoutName, onSelect }: LayoutChipsProps) {
+export function LayoutChips({ layouts, activeLayoutName, onSelect, onManage }: LayoutChipsProps) {
   return (
     <div
       className="flex gap-2 overflow-x-auto no-scrollbar pb-1"
@@ -30,15 +39,18 @@ export function LayoutChips({ layouts, activeLayoutName, onSelect }: LayoutChips
           {layout.name}
         </button>
       ))}
-      {/* TODO Phase 15: authoring tool entry point — disabled placeholder */}
-      <button
-        type="button"
-        disabled
-        className="shrink-0 cursor-default whitespace-nowrap rounded-full border border-dashed
-                   px-4 py-1.5 text-sm font-semibold text-[var(--color-border)]"
-      >
-        + New
-      </button>
+      {/* Phase 15: authoring tool entry point — shown only when onManage is wired */}
+      {onManage !== undefined && (
+        <button
+          type="button"
+          onClick={onManage}
+          className="shrink-0 whitespace-nowrap rounded-full border border-dashed
+                     px-4 py-1.5 text-sm font-semibold text-[var(--color-foreground)]
+                     hover:bg-[var(--color-muted)] focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          + New
+        </button>
+      )}
     </div>
   )
 }
