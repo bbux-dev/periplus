@@ -82,7 +82,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
   3. The active layout selection persists across page reloads.
   4. A fresh install (no prior config in Dexie `settings`) shows sensible default layouts (e.g. DayToDay / Travel / WorkTrip) with shortcuts without any user setup.
 **Plans**: 2 plans
-  - [ ] 12-01-PLAN.md — DEFAULT_SHORTCUT_CONFIG seed constant + active-layout persistence (activeLayoutRepository + useActiveLayoutName) [wave 1, data]
+  - [x] 12-01-PLAN.md — DEFAULT_SHORTCUT_CONFIG seed constant + active-layout persistence (activeLayoutRepository + useActiveLayoutName) [wave 1, data]
   - [ ] 12-02-PLAN.md — .no-scrollbar + LayoutChips/ShortcutRow + DashboardPage seeding/chips/rows wiring [wave 2, UI]
 **UI hint**: yes
 
@@ -138,7 +138,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 | 9. Quick-Capture Omnibar | v0.2.0 | 1/1 | Complete | 2026-06-16 |
 | 10. Docs & Examples | v0.2.0 | 1/1 | Complete | 2026-06-16 |
 | 11. Config Model, Schema & Storage | v0.3.0 | 1/1 | Complete   | 2026-06-17 |
-| 12. Dashboard Rendering & Layout Switcher | v0.3.0 | 0/2 | Planned | - |
+| 12. Dashboard Rendering & Layout Switcher | v0.3.0 | 1/2 | In Progress|  |
 | 13. Tap-to-Capture Flow | v0.3.0 | 0/? | Not started | - |
 | 14. Import / Export Config | v0.3.0 | 0/? | Not started | - |
 | 15. Authoring Tool | v0.3.0 | 0/? | Not started | - |

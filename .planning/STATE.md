@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v0.3.0
 milestone_name: Dashboard Shortcut Layouts
-status: verifying
-stopped_at: Completed 11-config-model-schema-storage/11-01-PLAN.md
-last_updated: "2026-06-17T15:13:58.446Z"
+status: executing
+stopped_at: Completed 12-dashboard-rendering-layout-switcher/12-01-PLAN.md
+last_updated: "2026-06-17T15:53:38.433Z"
 last_activity: 2026-06-17
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
+  total_plans: 3
+  completed_plans: 2
   percent: 20
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-17)
 
 **Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 11 — Config Model, Schema & Storage
+**Current focus:** Phase 12 — Dashboard Rendering & Layout Switcher
 
 ## Current Position
 
-Phase: 11 (Config Model, Schema & Storage) — EXECUTING
-Plan: 1 of 1
-Status: Phase complete — ready for verification
+Phase: 12 (Dashboard Rendering & Layout Switcher) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
 Last activity: 2026-06-17
 
 ```
@@ -36,7 +36,7 @@ Last activity: 2026-06-17
 [Phase 13: Tap-to-Capture Flow               ] — not started
 [Phase 14: Import / Export Config            ] — not started
 [Phase 15: Authoring Tool                    ] — not started
-Progress: [██████████] 100%
+Progress: [███████░░░] 67%
 ```
 
 ## Performance Metrics
@@ -81,6 +81,7 @@ Progress: [██████████] 100%
 | Phase 06-entry-list-detail-export P05 | 2min | 1 tasks | 2 files |
 | Phase 06-entry-list-detail-export P06 | 2min | 1 tasks | 2 files |
 | Phase 11-config-model-schema-storage P01 | 5min | 3 tasks | 7 files |
+| Phase 12-dashboard-rendering-layout-switcher P01 | 8min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -120,6 +121,9 @@ architecture-template.md SPEC + spec.md:
 - [Phase ?]: useShortcutConfig has NO default value: undefined = Dexie opening OR no config saved; Phase 12 handles seeding
 - [Phase ?]: HeroIcon forwardRef objects have typeof==='object' (not 'function') — validated against @heroicons/react 2.2.0
 - [Phase ?]: db.ts untouched: storing shortcutConfig in settings key is a data write, not a schema change; no Dexie version bump
+- [Phase 12-01]: DEFAULT_SHORTCUT_CONFIG is inert data — parseDSL not called at module load; DSL validity asserted in tests only (T-12-01 accept)
+- [Phase 12-01]: ACTIVE_LAYOUT_KEY = 'activeLayoutName' in db.settings; separate key from shortcutConfig, no schema bump, no db.ts modification
+- [Phase 12-01]: useActiveLayoutName has NO default (undefined = loading/unset); callers derive activeLayout with layouts.find() ?? layouts[0]
 
 ### Pending Todos
 
@@ -139,7 +143,7 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-17T15:13:58.436Z
+Last session: 2026-06-17T15:53:38.423Z
 Stopped at: Completed 11-config-model-schema-storage/11-01-PLAN.md
 Resume file: None
 
