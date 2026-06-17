@@ -9,6 +9,7 @@ import { EntryListPage }   from './pages/EntryListPage'
 import { EntryDetailPage } from './pages/EntryDetailPage'
 import { PlaceholderPage } from './pages/PlaceholderPage'
 import { SettingsPage }    from './pages/SettingsPage'
+import { ManageShortcutsPage } from './pages/ManageShortcutsPage'
 
 function App() {
   return (
@@ -31,6 +32,9 @@ function App() {
 
       {/* Phase 14 — Import / Export Config */}
       <Route path="/settings"   element={<SettingsPage />} />
+
+      {/* Phase 15 — Authoring Tool */}
+      <Route path="/manage" element={<ManageShortcutsPage />} />
 
       {/* Catch-all: unknown paths show a graceful not-found page */}
       <Route path="*" element={<PlaceholderPage title="Page Not Found" />} />
