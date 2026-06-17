@@ -19,6 +19,7 @@ interface LayoutChipsProps {
 export function LayoutChips({ layouts, activeLayoutName, onSelect, onManage }: LayoutChipsProps) {
   return (
     <div
+      role="group"
       className="flex gap-2 overflow-x-auto no-scrollbar pb-1"
       aria-label="Layout switcher"
     >
