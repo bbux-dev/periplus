@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Quick-Capture DSL — parser playground</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.5 ui-sans-serif, system-ui, sans-serif;
+         background: #0f1115; color: #e6e8ec; padding: 2rem 1.25rem; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 1.15rem; margin: 0 0 .25rem; }
+  p.sub { color: #8b91a0; margin: 0 0 1.5rem; }
+  .controls { display: flex; gap: .75rem; align-items: center; margin-bottom: .5rem; }
+  label { color: #8b91a0; font-size: .8rem; }
+  select, input { font: inherit; background: #1a1d24; color: #e6e8ec;
+    border: 1px solid #2a2e38; border-radius: 8px; padding: .5rem .65rem; }
+  input#dsl { width: 100%; font-family: ui-monospace, monospace; font-size: 1rem; padding: .8rem 1rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: .6rem 0 1.25rem; }
+  .chip { cursor: pointer; font-family: ui-monospace, monospace; font-size: .78rem;
+    background: #1a1d24; border: 1px solid #2a2e38; border-radius: 999px; padding: .3rem .7rem; color: #aab; }
+  .chip:hover { border-color: #4b63b8; color: #fff; }
+  .card { background: #161922; border: 1px solid #242833; border-radius: 12px; padding: 1.1rem 1.25rem; }
+  .statusrow { display: flex; align-items: center; gap: .6rem; margin-bottom: .9rem; }
+  .badge { font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    padding: .25rem .6rem; border-radius: 6px; }
+  .ok { background: #143d2a; color: #4ade80; }
+  .ambiguous { background: #3d3414; color: #fbbf24; }
+  .error { background: #3d1414; color: #f87171; }
+  .typetag { font-family: ui-monospace, monospace; color: #93c5fd; }
+  table { width: 100%; border-collapse: collapse; font-family: ui-monospace, monospace; font-size: .88rem; }
+  td { padding: .3rem .5rem; border-bottom: 1px solid #20242e; }
+  td.k { color: #8b91a0; width: 38%; }
+  td.v { color: #e6e8ec; }
+  .msgs { margin-top: .9rem; display: grid; gap: .4rem; }
+  .msg { font-size: .85rem; padding: .5rem .7rem; border-radius: 8px; font-family: ui-monospace, monospace; }
+  .msg.issue { background: #2a1414; color: #fca5a5; border-left: 3px solid #f87171; }
+  .msg.warn { background: #2a2414; color: #fcd34d; border-left: 3px solid #fbbf24; }
+  .empty { color: #6b7280; font-style: italic; }
+  .legend { color: #6b7280; font-size: .78rem; margin-top: 1.5rem; line-height: 1.7; }
+  code { background: #1a1d24; padding: .1rem .35rem; border-radius: 4px; font-size: .85em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Quick-Capture DSL — parser playground</h1>
+  <p class="sub">Type a shorthand string. It parses live into the flat <code>formValues</code>
+     that <code>buildReviewDraft()</code> would consume. Grammar: <code>[type] pos1:pos2 ?k=v,k=v</code></p>
+
+  <div class="controls">
+    <label for="ctx">Domain context (inferred type when omitted):</label>
+    <select id="ctx">
+      <option value="">— none (top-level omnibar) —</option>
+      <option value="expense">expenditures → expense</option>
+      <option value="show">media (pretend single-type) → show</option>
+      <option value="place">trips (pretend single-type) → place</option>
+    </select>
+  </div>
+
+  <input id="dsl" placeholder='try:  expense 12.50:food?merchant=Blue Bottle' autocomplete="off" spellcheck="false" />
+
+  <div class="chips" id="chips"></div>
+
+  <div class="card">
+    <div class="statusrow">
+      <span class="badge" id="badge">—</span>
+      <span class="typetag" id="type"></span>
+    </div>
+    <div id="out"></div>
+    <div class="msgs" id="msgs"></div>
+  </div>
+
+  <div class="legend">
+    <strong>Green</strong> = clean parse, pre-fills ReviewPage. &nbsp;
+    <strong>Amber (ambiguous)</strong> = needs a type pick from suggestions. &nbsp;
+    <strong>Red (error)</strong> = must route to ReviewPage, never save silently.<br>
+    Examples to feel the edges: quoted colons, the <code>p</code>/<code>e</code> collisions,
+    unterminated quotes, and the tags-comma trap.
+  </div>
+</div>
+
+<script src="parser.js"></script>
+<script>
+  const examples = [
+    'expense 12.50:food?merchant=Blue Bottle',
+    'book "Dune: A Novel":Herbert?rating=5',
+    'movie "Blade Runner 2049"?rating=5',
+    'place "Blue Bottle":"315 Linden St"',
+    'p coffee:5',
+    'book "Dune:Herbert',
+    'expense 12:food?tags=a,b,c',
+    'expense 12:food?tags="a, b, c"',
+    'show dogs:5',
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const dsl = $('dsl'), ctx = $('ctx');
+
+  const chips = $('chips');
+  examples.forEach(ex => {
+    const c = document.createElement('span');
+    c.className = 'chip'; c.textContent = ex;
+    c.onclick = () => { dsl.value = ex; render(); dsl.focus(); };
+    chips.appendChild(c);
+  });
+
+  function render() {
+    const r = parseDSL(dsl.value, { defaultType: ctx.value || null });
+    const badge = $('badge');
+    badge.textContent = r.status;
+    badge.className = 'badge ' + r.status;
+    $('type').textContent = r.type ? '▸ ' + r.type : '';
+
+    const out = $('out');
+    const keys = Object.keys(r.values);
+    if (!keys.length) {
+      out.innerHTML = '<div class="empty">no field values parsed</div>';
+    } else {
+      out.innerHTML = '<table>' + keys.map(k =>
+        `<tr><td class="k">${k}</td><td class="v">${escapeHtml(r.values[k])}</td></tr>`).join('') + '</table>';
+    }
+
+    const msgs = $('msgs');
+    msgs.innerHTML =
+      r.issues.map(m => `<div class="msg issue">✗ ${escapeHtml(m)}</div>`).join('') +
+      r.warnings.map(m => `<div class="msg warn">⚠ ${escapeHtml(m)}</div>`).join('');
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"]/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  }
+
+  dsl.addEventListener('input', render);
+  ctx.addEventListener('change', render);
+  dsl.value = examples[0];
+  render();
+</script>
+</body>
+</html>
