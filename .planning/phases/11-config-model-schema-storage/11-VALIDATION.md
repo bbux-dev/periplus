@@ -1,9 +1,9 @@
 ---
 phase: 11
 slug: config-model-schema-storage
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: approved
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-06-17
 ---
 
@@ -48,11 +48,11 @@ created: 2026-06-17
 
 ## Wave 0 Requirements
 
-- [ ] `src/services/configRepository.test.ts` — read/write/round-trip stubs for CFG-01
-- [ ] `src/services/validateShortcutConfig.test.ts` — valid/invalid cases for CFG-02
-- [ ] `src/services/migrateConfig.test.ts` — older→current migration + reject-if-newer for CFG-03
+- [x] `src/config/shortcutConfig.test.ts` — config types/shape for CFG-01
+- [x] `src/services/configRepository.test.tsx` — read/write/round-trip + reactive hook for CFG-01
+- [x] `src/services/configValidator.test.ts` — valid/invalid cases (CFG-02) + older→current migration + reject-if-newer (CFG-03)
 
-*Existing vitest infrastructure covers the framework; only new test files are needed.*
+*Existing vitest infrastructure covers the framework; only new test files are needed (created as part of the TDD tasks).*
 
 ---
 
