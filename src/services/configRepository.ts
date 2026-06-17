@@ -56,3 +56,43 @@ export function useShortcutConfig(): ShortcutConfig | undefined {
     // No default: undefined = Dexie opening or no config saved
   )
 }
+
+// ─── Active layout persistence (DASH-02) ──────────────────────────────────────
+//
+// Stores the active layout name in the same Dexie settings table under a
+// separate key. No schema version bump required — db.settings accepts arbitrary
+// keys. Pattern mirrors configRepository exactly.
+
+const ACTIVE_LAYOUT_KEY = 'activeLayoutName'
+
+export const activeLayoutRepository = {
+  /** Returns the persisted active layout name, or undefined if none has been saved. */
+  async get(): Promise<string | undefined> {
+    const row = await db.settings.get(ACTIVE_LAYOUT_KEY)
+    return row?.value as string | undefined
+  },
+
+  /** Upserts the active layout name. */
+  async put(name: string): Promise<void> {
+    await db.settings.put({ key: ACTIVE_LAYOUT_KEY, value: name })
+  },
+}
+
+/**
+ * Reactive hook: returns the persisted active layout name, or undefined while
+ * Dexie is opening or no selection has been saved yet.
+ *
+ * Callers MUST handle undefined — fall back to the first layout in the config.
+ * Do NOT provide a default value (same rule as useShortcutConfig).
+ *
+ * @example
+ *   const persistedLayoutName = useActiveLayoutName()
+ *   const activeLayout = layouts.find(l => l.name === persistedLayoutName) ?? layouts[0]
+ */
+export function useActiveLayoutName(): string | undefined {
+  return useLiveQuery(
+    () => activeLayoutRepository.get(),
+    [],
+    // No default: undefined = Dexie opening or no layout selection saved
+  )
+}

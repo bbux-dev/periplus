@@ -1,7 +1,7 @@
 import { render, screen, act } from '@testing-library/react'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { db } from './db'
-import { configRepository, useShortcutConfig } from './configRepository'
+import { configRepository, useShortcutConfig, activeLayoutRepository, useActiveLayoutName } from './configRepository'
 import type { ShortcutConfig } from '../config/shortcutConfig'
 
 // fake-indexeddb/auto is already hoisted in src/test-setup.ts — do NOT re-import it
@@ -111,5 +111,64 @@ describe('useShortcutConfig reactive hook', () => {
       await configRepository.put(makeFullConfig())
     })
     expect(await screen.findByText('1 layouts')).toBeInTheDocument()
+  })
+})
+
+// ─── activeLayoutRepository: get and put ─────────────────────────────────────
+
+describe('activeLayoutRepository: get', () => {
+  it('returns undefined before any write', async () => {
+    const result = await activeLayoutRepository.get()
+    expect(result).toBeUndefined()
+  })
+})
+
+describe('activeLayoutRepository: put and get round-trip', () => {
+  it('stores a name and returns it', async () => {
+    await activeLayoutRepository.put('Travel')
+    expect(await activeLayoutRepository.get()).toBe('Travel')
+  })
+
+  it('put is an upsert — overwrites existing name', async () => {
+    await activeLayoutRepository.put('DayToDay')
+    await activeLayoutRepository.put('Travel')
+    expect(await activeLayoutRepository.get()).toBe('Travel')
+  })
+})
+
+// ─── useActiveLayoutName reactive hook ───────────────────────────────────────
+
+function ActiveLayoutTest() {
+  const name = useActiveLayoutName()
+  if (name === undefined) return <p>Loading</p>
+  return <p>{name}</p>
+}
+
+describe('useActiveLayoutName reactive hook', () => {
+  it('returns undefined before any write (renders the loading branch)', async () => {
+    render(<ActiveLayoutTest />)
+    expect(await screen.findByText('Loading')).toBeInTheDocument()
+  })
+
+  it('re-renders reactively after activeLayoutRepository.put() is called inside act()', async () => {
+    render(<ActiveLayoutTest />)
+    await screen.findByText('Loading')
+    await act(async () => {
+      await activeLayoutRepository.put('Travel')
+    })
+    expect(await screen.findByText('Travel')).toBeInTheDocument()
+  })
+
+  it('re-renders with the correct name after a second put() (upsert)', async () => {
+    render(<ActiveLayoutTest />)
+    await screen.findByText('Loading')
+    await act(async () => {
+      await activeLayoutRepository.put('DayToDay')
+    })
+    await screen.findByText('DayToDay')
+    await act(async () => {
+      await activeLayoutRepository.put('WorkTrip')
+    })
+    expect(await screen.findByText('WorkTrip')).toBeInTheDocument()
   })
 })
