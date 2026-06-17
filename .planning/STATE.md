@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v0.3.0
 milestone_name: Dashboard Shortcut Layouts
-status: verifying
-stopped_at: Completed 14-import-export-config/14-01-PLAN.md
-last_updated: "2026-06-17T18:19:58.377Z"
-last_activity: 2026-06-17
+status: executing
+stopped_at: Completed 15-authoring-tool/15-01-PLAN.md
+last_updated: "2026-06-17T19:10:00.000Z"
+last_activity: 2026-06-17 -- Phase 15 Plan 01 complete (templateValidator + shortcutMutations)
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 8
-  completed_plans: 8
-  percent: 80
+  total_plans: 11
+  completed_plans: 9
+  percent: 82
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-17)
 
 **Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 14 — Import / Export Config
+**Current focus:** Phase 15 — Authoring Tool
 
 ## Current Position
 
-Phase: 14 (Import / Export Config) — EXECUTING
-Plan: 2 of 2
-Status: Phase complete — ready for verification
-Last activity: 2026-06-17
+Phase: 15 (Authoring Tool) — EXECUTING
+Plan: 2 of 3
+Status: Plan 01 complete; continuing Phase 15
+Last activity: 2026-06-17 -- Phase 15 execution started
 
 ```
 [Phase 11: Config Model, Schema & Storage    ] — not started
@@ -87,6 +87,7 @@ Progress: [██████████] 100%
 | Phase 13-tap-to-capture-flow P02 | 8min | - tasks | - files |
 | Phase 13-tap-to-capture-flow P03 | 40 min | 2 tasks | 4 files |
 | Phase 14-import-export-config P01 | 5min | 2 tasks | 2 files |
+| Phase 15-authoring-tool P01 | 8min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -137,6 +138,10 @@ architecture-template.md SPEC + spec.md:
 - [Phase ?]: [Phase 13-02]: SavedToast owns NO timer — timer+state lives in DashboardPage, wired in 13-03 per RESEARCH §5
 - [Phase ?]: triggerDownload imported and re-exported from exportEntries in configPort, not duplicated — single source of truth for browser download shim
 - [Phase ?]: importConfig uses file.text() (modern File API); wholesale reject — configRepository.put only called on { ok: true } from migrateConfig
+- [Phase 15-01]: validateTemplate predicate: status!='error' && type!=null — holes (positional slots, {} token) are valid (EDIT-04)
+- [Phase 15-01]: Within-layout shortcut name uniqueness only; cross-layout duplicates allowed
+- [Phase 15-01]: deleteLayout throws 'Cannot delete the only remaining layout.' — exact message for UI to surface
+- [Phase 15-01]: renameLayout does NOT write activeLayoutName — caller/Dexie concern (Pitfall 3)
 
 ### Pending Todos
 
@@ -156,10 +161,10 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-17T18:19:58.366Z
-Stopped at: Completed 14-import-export-config/14-01-PLAN.md
+Last session: 2026-06-17T19:10:00.000Z
+Stopped at: Completed 15-authoring-tool/15-01-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
 
-- Run `/gsd:plan-phase 11` to plan Phase 11 (Config Model, Schema & Storage)
+- Execute Phase 15 Plan 02 (ManageShortcutsPage + ShortcutFormPage UI)
