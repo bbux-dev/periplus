@@ -12,3 +12,7 @@
   /* Typography */
   --font-sans: system-ui, sans-serif;
 }
+
+/* Utility: hide scrollbar while keeping scroll behavior (chip switcher) */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
