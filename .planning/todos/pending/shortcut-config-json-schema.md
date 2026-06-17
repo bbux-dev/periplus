@@ -2,6 +2,7 @@
 title: Define JSON Schema + validation/versioning for the shortcut config
 date: 2026-06-17
 priority: medium
+resolves_phase: 11
 ---
 
 # Define JSON Schema + validation/versioning for the shortcut config
