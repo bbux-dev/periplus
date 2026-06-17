@@ -3,8 +3,11 @@ import {
   resolveShortcutIcon,
   SHORTCUT_ICON_MAP,
   DEFAULT_SHORTCUT_ICON,
+  DEFAULT_SHORTCUT_CONFIG,
 } from './shortcutConfig'
 import { BanknotesIcon, BoltIcon } from '@heroicons/react/24/outline'
+import { parseDSL } from '../services/dsl/parser'
+import { validateShortcutConfig } from '../services/configValidator'
 
 // ─── DEFAULT_SHORTCUT_ICON ────────────────────────────────────────────────────
 
@@ -59,5 +62,40 @@ describe('resolveShortcutIcon', () => {
     expect(() => resolveShortcutIcon('anything')).not.toThrow()
     expect(() => resolveShortcutIcon(undefined)).not.toThrow()
     expect(() => resolveShortcutIcon('')).not.toThrow()
+  })
+})
+
+// ─── DEFAULT_SHORTCUT_CONFIG ──────────────────────────────────────────────────
+
+describe('DEFAULT_SHORTCUT_CONFIG DSL validity', () => {
+  it('every default dslTemplate parses without error', () => {
+    for (const layout of DEFAULT_SHORTCUT_CONFIG.layouts) {
+      for (const shortcut of layout.shortcuts) {
+        const result = parseDSL(shortcut.dslTemplate)
+        expect(
+          result.status,
+          `layout "${layout.name}" shortcut "${shortcut.name}": ` +
+          `template "${shortcut.dslTemplate}" has issues: ${result.issues.join('; ')}`,
+        ).not.toBe('error')
+      }
+    }
+  })
+
+  it('every default icon key is present in SHORTCUT_ICON_MAP', () => {
+    for (const layout of DEFAULT_SHORTCUT_CONFIG.layouts) {
+      if (layout.icon) {
+        expect(SHORTCUT_ICON_MAP, `layout icon: ${layout.icon}`).toHaveProperty(layout.icon)
+      }
+      for (const shortcut of layout.shortcuts) {
+        if (shortcut.icon) {
+          expect(SHORTCUT_ICON_MAP, `shortcut icon: ${shortcut.icon}`).toHaveProperty(shortcut.icon)
+        }
+      }
+    }
+  })
+
+  it('passes validateShortcutConfig (structural schema)', () => {
+    const result = validateShortcutConfig(DEFAULT_SHORTCUT_CONFIG)
+    expect(result.ok).toBe(true)
   })
 })

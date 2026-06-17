@@ -88,3 +88,47 @@ export function resolveShortcutIcon(key: string | undefined): HeroIcon {
   if (!key) return DEFAULT_SHORTCUT_ICON
   return SHORTCUT_ICON_MAP[key] ?? DEFAULT_SHORTCUT_ICON
 }
+
+// ─── Default config (DASH-03) ─────────────────────────────────────────────────
+//
+// Seed data for a fresh install. Written to Dexie settings on first mount of
+// DashboardPage when no config is stored (Phase 12 seeding effect). Plain inert
+// data — parseDSL is NOT called at module load; validity is asserted in tests.
+
+export const DEFAULT_SHORTCUT_CONFIG: ShortcutConfig = {
+  version: 1,
+  layouts: [
+    {
+      name: 'DayToDay',
+      icon: 'HomeIcon',
+      shortcuts: [
+        // Zero holes — one-tap direct save (Phase 13)
+        { name: 'Coffee',    icon: 'BoltIcon',         dslTemplate: 'expense 5:coffee',   confirm: false },
+        // Amount hole — fill sheet (Phase 13)
+        { name: 'Groceries', icon: 'ShoppingCartIcon', dslTemplate: 'expense :groceries', confirm: false },
+        { name: 'Lunch',     icon: 'BanknotesIcon',    dslTemplate: 'expense :food',      confirm: false },
+        // Text hole — ReviewPage (Phase 13)
+        { name: 'New Movie', icon: 'FilmIcon',         dslTemplate: 'movie :',            confirm: true  },
+      ],
+    },
+    {
+      name: 'Travel',
+      icon: 'GlobeAltIcon',
+      shortcuts: [
+        { name: 'Trip Expense',  icon: 'BanknotesIcon', dslTemplate: 'expense :food',    confirm: false },
+        { name: 'Taxi',          icon: 'TruckIcon',     dslTemplate: 'expense :transit', confirm: false },
+        { name: 'Place Visited', icon: 'MapPinIcon',    dslTemplate: 'place :',          confirm: true  },
+      ],
+    },
+    {
+      name: 'WorkTrip',
+      icon: 'BriefcaseIcon',
+      shortcuts: [
+        // Multi-value tag param MUST be quoted to avoid DSL comma-splitting
+        { name: 'Work Meal',     icon: 'BanknotesIcon', dslTemplate: 'expense :meals?tags="work"',   confirm: false },
+        { name: 'Work Taxi',     icon: 'TruckIcon',     dslTemplate: 'expense :transit?tags="work"', confirm: false },
+        { name: 'Client Dinner', icon: 'BriefcaseIcon', dslTemplate: 'expense :dining?tags="work"',  confirm: true  },
+      ],
+    },
+  ],
+}
