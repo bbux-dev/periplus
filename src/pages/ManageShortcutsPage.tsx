@@ -76,6 +76,10 @@ export function ManageShortcutsPage() {
 
   // ─── Write path helpers ─────────────────────────────────────────────────────
 
+  // IN-03 (deferred): shortcut deletion is intentionally immediate for v1 with no
+  // confirmation prompt, to keep the implementation simple and tests free of
+  // window.confirm mocking. A confirmation dialog is a UX enhancement for a future
+  // iteration.
   async function handleDeleteShortcut(shortcutName: string) {
     setError(null)
     try {
