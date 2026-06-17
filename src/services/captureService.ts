@@ -140,7 +140,10 @@ export function buildDSLPreview(
     .filter(([k, v]) => !schema.includes(k) && v)
     .map(([k, v]) => {
       const needsQuote = /[ :,?]/.test(v)
-      return `${k}=${needsQuote ? `"${v}"` : v}`
+      // Escape backslash first, then double-quote, so the preview is valid DSL
+      // if the user copies it into the Quick Capture omnibar.
+      const escaped = v.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
+      return `${k}=${needsQuote ? `"${escaped}"` : v}`
     })
 
   const namedStr = namedEntries.length ? `?${namedEntries.join(',')}` : ''

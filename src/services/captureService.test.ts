@@ -194,6 +194,19 @@ describe('buildDSLPreview', () => {
       buildDSLPreview('expense', { amount: '12', category: 'food', merchant: 'target', currency: 'USD' }),
     ).toBe('expense 12:food?merchant=target,currency=USD')
   })
+
+  it('WR-02: escapes embedded double-quote in quoted named param values', () => {
+    // merchant value contains a space (triggers quoting) and a double-quote
+    expect(
+      buildDSLPreview('expense', { amount: '12', category: 'food', merchant: 'say "hello"' }),
+    ).toBe('expense 12:food?merchant="say \\"hello\\""')
+  })
+
+  it('WR-02: escapes backslash before double-quote in quoted values', () => {
+    expect(
+      buildDSLPreview('expense', { amount: '12', category: 'food', merchant: 'a\\b c' }),
+    ).toBe('expense 12:food?merchant="a\\\\b c"')
+  })
 })
 
 // ─── draftToEntry ─────────────────────────────────────────────────────────────
