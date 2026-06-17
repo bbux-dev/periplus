@@ -29,20 +29,21 @@ playwright.config.ts          # at the repo root (mirrors patrimonium)
 ## Running
 
 ```bash
-npm run e2e:install      # one-time: download browser binaries (chromium covers both projects)
-npm run e2e:smoke        # the smoke suite on mobile (Pixel 7) + chromium  ← default
-npm run e2e:smoke:all    # all projects: mobile, chromium, firefox, webkit
-npm run e2e:headed       # chromium, headed (watch it run)
-npm run e2e:debug        # Playwright Inspector
-npm run e2e:report       # open the last HTML report
-npm run e2e:codegen      # record selectors against the running app
+pnpm e2e:install      # one-time: download browser binaries (chromium covers both projects)
+pnpm e2e:smoke        # the smoke suite on mobile (Pixel 7) + chromium  ← default
+pnpm e2e:smoke:all    # all projects: mobile, chromium, firefox, webkit
+pnpm e2e:headed       # chromium, headed (watch it run)
+pnpm e2e:debug        # Playwright Inspector
+pnpm e2e:report       # open the last HTML report
+pnpm e2e:codegen      # record selectors against the running app
 ```
 
-The config's `webServer` starts `npm run dev` automatically (and reuses an already-running
-dev server locally). To run against a deployed/preview build instead, set `E2E_BASE_URL`:
+The config's `webServer` starts the Vite dev server automatically (and reuses an
+already-running one locally). To run against a deployed/preview build instead, set
+`E2E_BASE_URL`:
 
 ```bash
-E2E_BASE_URL=https://my-preview.example npm run e2e:smoke
+E2E_BASE_URL=https://my-preview.example pnpm e2e:smoke
 ```
 
 ## Conventions

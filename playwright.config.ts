@@ -45,7 +45,7 @@ export default defineConfig({
   webServer: process.env.E2E_BASE_URL
     ? undefined
     : {
-        command: 'npm run dev -- --host 127.0.0.1 --port 5173',
+        command: 'pnpm exec vite --host 127.0.0.1 --port 5173',
         url: baseURL,
         reuseExistingServer: !isCi,
         timeout: isCi ? 180_000 : 120_000,
