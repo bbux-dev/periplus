@@ -24,31 +24,42 @@ A user can capture a structured life event on their phone in seconds — URL-fir
 
 **Next milestone:** v0.2.0 — Quick-Capture DSL (in progress).
 
-## Current Milestone: v0.2.0 Quick-Capture DSL — ✅ SHIPPED 2026-06-16
+## Previous Milestone: v0.2.0 Quick-Capture DSL — ✅ SHIPPED 2026-06-16
 
 **Outcome:** All 4 phases (7–10) shipped; 10/10 requirements met; 277 tests green, build +
 PWA clean. The DSL omnibar (`/capture`) parses a one-line shorthand live into the existing
 Review screen with type-token + history-backed value suggestions — no new save path, no
 silent mis-saves. Parser was ported directly from the VALIDATED spike `001-dsl-parser`.
+Full details in `.planning/MILESTONES.md`.
 
-**Goal:** Replace slow multi-field entry with a one-line, URL-esque shorthand
-(`[type] slot1:slot2 ?k=v,k=v`) that parses live into the existing Review screen —
-fastest for expenses, generalized across all 7 entry types. Designed in
-`.planning/notes/quick-capture-dsl-design.md`, de-risked by spike `001-dsl-parser`
-(VALIDATED, 24/24).
+## Current Milestone: v0.3.0 Dashboard Shortcut Layouts
+
+**Goal:** Customizable one-tap shortcut buttons on the Dashboard, grouped into switchable
+**layouts** (DayToDay / Travel / WorkTrip), built on top of the v0.2.0 Quick-Capture DSL —
+collapsing recurring captures to a tap (+ at most one field).
+
+**Core insight:** A shortcut is a saved DSL template with empty-slot "holes." Tap a shortcut →
+fill the hole(s) (or nothing) → the filled string is valid DSL → `parseDSL` →
+`buildReviewDraft` → save. Almost no new capture logic — it reuses the entire v0.2.0 pipeline.
+Designed in `.planning/notes/dashboard-shortcut-layouts-design.md`; UI sketched in
+`sketches/001-dashboard-shortcut-layouts` (winner: Variant B, chips + rows).
 
 **Target features:**
-- Type-agnostic DSL parser with per-type positional schemas beside `ENTRY_FIELDS`,
-  emitting the flat formValues `buildReviewDraft` consumes (statuses ok/ambiguous/error)
-- Hybrid quick-capture omnibar: live parse preview → pre-fills the existing Review
-  screen (never direct-save), with type-token suggestions and history-backed value
-  suggestions
-- `entriesRepository` distinct-values lookup backing value suggestions
-- Docs/README with DSL grammar and worked examples per type
+- Config model (layouts → shortcuts, each a DSL template + `confirm` flag) stored as a single
+  versioned JSON object in the dormant Dexie `settings` store, validated by a JSON Schema
+- Dashboard rendering of layouts/shortcuts with a layout switcher (chips + rows) and sensible
+  seeded defaults
+- Tap-to-capture: fill-the-hole micro-prompt (mobile keypad amount sheet w/ live DSL preview);
+  per-shortcut `confirm` — one-tap direct save (+ undo toast) or route through ReviewPage
+- Import / export of the config as JSON (mirror the entries-export pattern; validate imports)
+- Authoring tool: create/edit/reorder shortcuts + layouts, assign icon (`@heroicons/react`) +
+  `confirm` flag; plus "Save current as shortcut" from the omnibar
 
-**Key context:** Spike-hardened invariants are non-negotiable — exact-only type
-resolution in the parser (partials → suggestion menu), multi-value params must be
-quoted, and parsed input ALWAYS routes through the Review screen with live preview.
+**Key context:** Single-user is preserved — "personal/shareable" is delivered via portable
+import/export, NOT accounts. JSON Schema (not Zod — user dislikes Zod DX) is the source of
+truth and doubles as docs for the shareable format. One-tap direct save intentionally bows
+out of the v0.2.0 "always Review" invariant for trusted shortcuts, paired with undo
+(`entriesRepository.delete` already exists). Icons are Heroicons, not emoji.
 
 ## Requirements
 
@@ -72,17 +83,21 @@ quoted, and parsed input ALWAYS routes through the Review screen with live previ
 
 ### Active
 
-<!-- Next milestone scope is open — run /gsd:new-milestone. -->
+<!-- v0.3.0 Dashboard Shortcut Layouts — REQ-IDs defined in REQUIREMENTS.md. -->
 
-(None — v0.2.0 shipped; next milestone not yet scoped)
+- [ ] Shortcut-layouts config model + versioned JSON Schema + Dexie `settings` storage (v0.3.0)
+- [ ] Dashboard layout switcher + shortcut rendering with seeded defaults (v0.3.0)
+- [ ] Tap-to-capture (fill-the-hole + per-shortcut one-tap/confirm save with undo) (v0.3.0)
+- [ ] Import / export of the shortcut config as validated JSON (v0.3.0)
+- [ ] Authoring tool for shortcuts + layouts, plus "Save current as shortcut" (v0.3.0)
 
-### Deferred (candidate directions for the next milestone)
+### Deferred (candidate directions for future milestones)
 
 <!-- Seams already exist in code for the first two. -->
 
 - [ ] Backend sync layer (consume the existing `syncedAt` / `listUnsynced` seam)
-- [ ] Edit / delete from Entry Detail (`entriesRepository.update`/`.delete` already exist, unused)
-- [ ] JSON import (round-trips the existing export)
+- [ ] Edit / delete of *entries* from Entry Detail (`entriesRepository.update`/`.delete` exist, unused)
+- [ ] JSON import of *entries* (round-trips the existing export)
 - [ ] Richer per-type capture heuristics + short-link (`maps.app.goo.gl`) resolution
 
 ### Out of Scope
@@ -153,4 +168,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-16 after completing milestone v0.2.0 (Quick-Capture DSL shipped)*
+*Last updated: 2026-06-17 — started milestone v0.3.0 (Dashboard Shortcut Layouts)*
