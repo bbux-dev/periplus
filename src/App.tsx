@@ -10,6 +10,7 @@ import { EntryDetailPage } from './pages/EntryDetailPage'
 import { PlaceholderPage } from './pages/PlaceholderPage'
 import { SettingsPage }    from './pages/SettingsPage'
 import { ManageShortcutsPage } from './pages/ManageShortcutsPage'
+import { ShortcutFormPage } from './pages/ShortcutFormPage'
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
 
       {/* Phase 15 — Authoring Tool */}
       <Route path="/manage" element={<ManageShortcutsPage />} />
+      <Route path="/manage/shortcut" element={<ShortcutFormPage />} />
 
       {/* Catch-all: unknown paths show a graceful not-found page */}
       <Route path="*" element={<PlaceholderPage title="Page Not Found" />} />

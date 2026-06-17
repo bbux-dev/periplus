@@ -147,7 +147,9 @@ describe('ShortcutFormPage — EDIT-04 validation gate', () => {
     await screen.findByRole('heading', { name: /New Shortcut/i })
 
     await user.type(screen.getByLabelText(/Name/i), 'Shop')
-    await user.type(screen.getByLabelText(/DSL Template/i), 'expense 5:food?merchant={}')
+    // Note: {{}} in user.type() produces the literal string '{}'
+    // (userEvent uses { } for key descriptors; {{ }} escape to literals)
+    await user.type(screen.getByLabelText(/DSL Template/i), 'expense 5:food?merchant={{}}')
 
     expect(screen.getByRole('button', { name: /Save Shortcut/i })).not.toBeDisabled()
   })
