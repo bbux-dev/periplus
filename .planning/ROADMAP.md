@@ -52,7 +52,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 
 ### 🔄 v0.3.0 — Dashboard Shortcut Layouts (Phases 11–15)
 
-- [ ] **Phase 11: Config Model, Schema & Storage** — CFG types, versioned JSON Schema, Dexie `settings` reactive read/write, validator. Foundational; no UI. Reqs: CFG-01..03.
+- [x] **Phase 11: Config Model, Schema & Storage** — CFG types, versioned JSON Schema, Dexie `settings` reactive read/write, validator. Foundational; no UI. Reqs: CFG-01..03. (completed 2026-06-17)
 - [ ] **Phase 12: Dashboard Rendering & Layout Switcher** — Variant B chips+rows dashboard with Heroicons, scrollable layout switcher, persisted selection, seeded defaults. Reqs: DASH-01..03.
 - [ ] **Phase 13: Tap-to-Capture Flow** — fill-the-hole micro-prompt (mobile keypad + live DSL preview), per-shortcut one-tap save + undo toast or ReviewPage route. Reqs: CAP-01..04.
 - [ ] **Phase 14: Import / Export Config** — export config as JSON, import with JSON Schema validation + version migration, reject invalid with clear message. Reqs: PORT-01..02.
@@ -70,7 +70,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
   3. Writing a config to the Dexie `settings` store and reading it back reactively returns the same config without data loss.
   4. A config exported by an older app version loads successfully in a newer one via the defined forward-compat migration path (version field present and migration logic exercised in tests).
 **Plans**: 1 plan
-  - [ ] 11-01-PLAN.md — config types + Heroicons allow-list, JSON Schema spec, hand-rolled validator + migration seam, Dexie settings repository + reactive useShortcutConfig hook
+  - [x] 11-01-PLAN.md — config types + Heroicons allow-list, JSON Schema spec, hand-rolled validator + migration seam, Dexie settings repository + reactive useShortcutConfig hook
 
 ### Phase 12: Dashboard Rendering & Layout Switcher
 **Goal**: The Dashboard renders the active layout's shortcuts as tappable rows with Heroicons icons, provides a horizontally-scrollable layout chip switcher with persisted selection, and seeds sensible defaults on a fresh install.
@@ -135,7 +135,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 | 8. Distinct-Values Lookup | v0.2.0 | 1/1 | Complete | 2026-06-16 |
 | 9. Quick-Capture Omnibar | v0.2.0 | 1/1 | Complete | 2026-06-16 |
 | 10. Docs & Examples | v0.2.0 | 1/1 | Complete | 2026-06-16 |
-| 11. Config Model, Schema & Storage | v0.3.0 | 0/? | Not started | - |
+| 11. Config Model, Schema & Storage | v0.3.0 | 1/1 | Complete   | 2026-06-17 |
 | 12. Dashboard Rendering & Layout Switcher | v0.3.0 | 0/? | Not started | - |
 | 13. Tap-to-Capture Flow | v0.3.0 | 0/? | Not started | - |
 | 14. Import / Export Config | v0.3.0 | 0/? | Not started | - |

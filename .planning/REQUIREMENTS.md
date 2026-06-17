@@ -10,13 +10,13 @@ save) — a shortcut is a saved DSL template whose empty slots are the "holes."
 
 ### CFG — config model, schema & storage
 
-- [ ] **CFG-01**: The shortcut config is a single object —
+- [x] **CFG-01**: The shortcut config is a single object —
   `{ version, layouts: [{ name, icon?, shortcuts: [{ name, icon?, dslTemplate, confirm }] }] }`
   — persisted in the existing (dormant) Dexie `settings` store and read back reactively.
-- [ ] **CFG-02**: A versioned JSON Schema is the source of truth for the config; configs are
+- [x] **CFG-02**: A versioned JSON Schema is the source of truth for the config; configs are
   validated against it on load/import and rejected as a whole (no partial apply) with a
   human-readable reason when invalid.
-- [ ] **CFG-03**: The config carries a `version` field and a defined forward-compat strategy so
+- [x] **CFG-03**: The config carries a `version` field and a defined forward-compat strategy so
   a config exported by an older app version still loads in a newer one.
 
 ### DASH — dashboard rendering & layout switcher
@@ -64,9 +64,9 @@ save) — a shortcut is a saved DSL template whose empty slots are the "holes."
 
 | REQ | Phase | Status |
 |-----|-------|--------|
-| CFG-01 | Phase 11 — Config Model, Schema & Storage | Pending |
-| CFG-02 | Phase 11 — Config Model, Schema & Storage | Pending |
-| CFG-03 | Phase 11 — Config Model, Schema & Storage | Pending |
+| CFG-01 | Phase 11 — Config Model, Schema & Storage | Complete |
+| CFG-02 | Phase 11 — Config Model, Schema & Storage | Complete |
+| CFG-03 | Phase 11 — Config Model, Schema & Storage | Complete |
 | DASH-01 | Phase 12 — Dashboard Rendering & Layout Switcher | Pending |
 | DASH-02 | Phase 12 — Dashboard Rendering & Layout Switcher | Pending |
 | DASH-03 | Phase 12 — Dashboard Rendering & Layout Switcher | Pending |

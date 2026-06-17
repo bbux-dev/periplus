@@ -2,15 +2,16 @@
 gsd_state_version: 1.0
 milestone: v0.3.0
 milestone_name: Dashboard Shortcut Layouts
-status: planning
-last_updated: "2026-06-17T00:00:00.000Z"
+status: verifying
+stopped_at: Completed 11-config-model-schema-storage/11-01-PLAN.md
+last_updated: "2026-06-17T15:13:58.446Z"
 last_activity: 2026-06-17
 progress:
   total_phases: 5
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
+  percent: 20
 ---
 
 # Project State
@@ -20,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-17)
 
 **Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** v0.3.0 Dashboard Shortcut Layouts — roadmap defined (Phases 11–15), planning Phase 11
+**Current focus:** Phase 11 — Config Model, Schema & Storage
 
 ## Current Position
 
-Phase: 11 — Config Model, Schema & Storage (not started)
-Plan: —
-Status: Roadmap written; ready to plan Phase 11
-Last activity: 2026-06-17 — Roadmap created for v0.3.0
+Phase: 11 (Config Model, Schema & Storage) — EXECUTING
+Plan: 1 of 1
+Status: Phase complete — ready for verification
+Last activity: 2026-06-17
 
 ```
 [Phase 11: Config Model, Schema & Storage    ] — not started
@@ -35,7 +36,7 @@ Last activity: 2026-06-17 — Roadmap created for v0.3.0
 [Phase 13: Tap-to-Capture Flow               ] — not started
 [Phase 14: Import / Export Config            ] — not started
 [Phase 15: Authoring Tool                    ] — not started
-Progress: 0 / 5 phases
+Progress: [██████████] 100%
 ```
 
 ## Performance Metrics
@@ -79,6 +80,7 @@ Progress: 0 / 5 phases
 | Phase 06-entry-list-detail-export P04 | 3min | 2 tasks | 4 files |
 | Phase 06-entry-list-detail-export P05 | 2min | 1 tasks | 2 files |
 | Phase 06-entry-list-detail-export P06 | 2min | 1 tasks | 2 files |
+| Phase 11-config-model-schema-storage P01 | 5min | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -114,6 +116,10 @@ architecture-template.md SPEC + spec.md:
 - [v0.3.0 Roadmap]: JSON Schema is the source of truth for config validation (not Zod); ajv-vs-hand-rolled is a plan-phase decision for Phase 11
 - [v0.3.0 Roadmap]: Phase 14 (Import/Export) depends only on Phase 11 — can run in parallel with Phases 12–13
 - [v0.3.0 Roadmap]: All v0.2.0 pipeline (parseDSL, buildReviewDraft, ReviewPage, entriesRepository.create/.delete, triggerDownload) reused as-is
+- [Phase ?]: Hand-rolled validator chosen over ajv: ~80 lines, zero new deps, consistent with isSafeUrl/buildReviewDraft pattern; JSON Schema is spec artifact only
+- [Phase ?]: useShortcutConfig has NO default value: undefined = Dexie opening OR no config saved; Phase 12 handles seeding
+- [Phase ?]: HeroIcon forwardRef objects have typeof==='object' (not 'function') — validated against @heroicons/react 2.2.0
+- [Phase ?]: db.ts untouched: storing shortcutConfig in settings key is a data write, not a schema change; no Dexie version bump
 
 ### Pending Todos
 
@@ -133,8 +139,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-17
-Stopped at: Roadmap written for v0.3.0 (Phases 11–15)
+Last session: 2026-06-17T15:13:58.436Z
+Stopped at: Completed 11-config-model-schema-storage/11-01-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
