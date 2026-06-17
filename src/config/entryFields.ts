@@ -91,6 +91,27 @@ export const ENTRY_FIELDS: Record<EntryType, FieldDescriptor[]> = {
   ],
 }
 
+// ─── Positional schema (Quick-Capture DSL) ────────────────────────────────────
+//
+// Declares which fields are POSITIONAL in the DSL shorthand `[type] s1:s2 ?k=v`,
+// and in what order. slot1 = primary identity, slot2 = "who/where" secondary.
+// Values are `key`s into the type's ENTRY_FIELDS list (so the parser reuses the
+// same field mapping as the manual form via buildReviewDraft). Everything not
+// listed here is reachable as a named `?key=value` param.
+//
+// Expense is the only type whose slot1 is a number (amount), not a name — that is
+// exactly why a bare expense (`12.50:food`) reads naturally.
+
+export const POSITIONAL_SCHEMA: Record<EntryType, string[]> = {
+  show:    ['title', 'creator'],
+  movie:   ['title', 'creator'],
+  book:    ['title', 'creator'],
+  podcast: ['title', 'creator'],
+  place:   ['name', 'address'],
+  event:   ['title', 'location'],
+  expense: ['amount', 'category'],
+}
+
 // ─── buildReviewDraft mapper ──────────────────────────────────────────────────
 
 /**
