@@ -1,0 +1,23 @@
+/* Midnight theme — a possible dark mode for Life Log (NOT yet in the app).
+   Same token names as default.css so every sketch flips cleanly via the toolbar. */
+:root {
+  --color-primary: hsl(222, 89%, 60%);
+  --color-primary-foreground: hsl(222, 47%, 11%);
+  --color-background: hsl(222, 47%, 9%);
+  --color-foreground: hsl(210, 40%, 96%);
+  --color-muted: hsl(222, 33%, 16%);
+  --color-border: hsl(222, 25%, 24%);
+
+  --color-foreground-muted: hsl(215, 20%, 65%);
+  --color-success: hsl(142, 71%, 55%);
+  --color-success-bg: hsl(142, 50%, 16%);
+
+  --font-sans: system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+  --shadow-sheet: 0 -8px 30px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+}

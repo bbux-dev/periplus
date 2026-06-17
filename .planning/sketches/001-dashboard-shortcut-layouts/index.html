@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sketch 001 — Dashboard shortcut layouts</title>
+<link rel="stylesheet" href="../themes/default.css" />
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding-top: 52px;
+    font-family: var(--font-sans);
+    background: var(--color-muted);
+    color: var(--color-foreground);
+  }
+
+  /* ── variant nav ───────────────────────────────────────────── */
+  #variant-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9998;
+    background: var(--color-background); border-bottom: 1px solid var(--color-border);
+    padding: 8px 12px; display: flex; gap: 8px; font-size: 13px;
+  }
+  .variant-tab {
+    border: 1px solid var(--color-border); background: transparent;
+    color: var(--color-foreground); padding: 6px 12px; border-radius: var(--radius-full);
+    cursor: pointer; font: inherit;
+  }
+  .variant-tab.active { background: var(--color-primary); color: var(--color-primary-foreground); border-color: var(--color-primary); }
+
+  /* ── phone frame ───────────────────────────────────────────── */
+  .phone {
+    max-width: 390px; margin: 18px auto; min-height: 720px;
+    background: var(--color-background); border: 1px solid var(--color-border);
+    border-radius: 22px; padding: 20px 18px 28px; position: relative; overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+  .app-title { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 2px; }
+  .app-sub { color: var(--color-foreground-muted); font-size: 13px; margin: 0 0 18px; }
+  .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--color-foreground-muted); margin: 18px 2px 8px; font-weight: 600; }
+
+  svg { display: block; }
+  .ico-wrap { color: var(--color-primary); }
+
+  /* mode dot — communicates per-shortcut confirm behavior */
+  .mode { font-size: 10px; padding: 1px 6px; border-radius: var(--radius-full); font-weight: 600; white-space: nowrap; }
+  .mode.tap   { background: var(--color-success-bg); color: var(--color-success); }
+  .mode.fill  { background: hsl(222 89% 40% / .12); color: var(--color-primary); }
+  .mode.review{ background: var(--color-muted); color: var(--color-foreground-muted); border: 1px solid var(--color-border); }
+  .tmpl { font-family: var(--font-mono); font-size: 11px; color: var(--color-foreground-muted); }
+
+  /* ── layout switchers (differ per variant) ─────────────────── */
+  .seg { display: flex; background: var(--color-muted); border-radius: var(--radius-full); padding: 3px; gap: 2px; }
+  .seg button { flex: 1; border: 0; background: transparent; color: var(--color-foreground-muted);
+    padding: 8px 4px; border-radius: var(--radius-full); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .seg button.on { background: var(--color-background); color: var(--color-foreground); box-shadow: var(--shadow-card); }
+
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+  .chips button { white-space: nowrap; border: 1px solid var(--color-border); background: var(--color-background);
+    color: var(--color-foreground); padding: 7px 16px; border-radius: var(--radius-full); font: inherit; font-size: 13px; cursor: pointer; }
+  .chips button.on { background: var(--color-primary); color: var(--color-primary-foreground); border-color: var(--color-primary); }
+
+  .dropdown { width: 100%; font: inherit; font-size: 15px; padding: 11px 12px; border-radius: var(--radius-md);
+    border: 1px solid var(--color-border); background: var(--color-background); color: var(--color-foreground); font-weight: 600; }
+
+  /* ── shortcut presentations ────────────────────────────────── */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .card { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 14px 12px;
+    background: var(--color-background); cursor: pointer; text-align: left; font: inherit; color: inherit;
+    display: flex; flex-direction: column; gap: 8px; transition: transform .06s, background .15s; }
+  .card:active { transform: scale(.97); background: var(--color-muted); }
+  .card .nm { font-weight: 600; font-size: 14px; }
+  .card .row { display: flex; align-items: center; justify-content: space-between; }
+
+  .rows { display: flex; flex-direction: column; gap: 8px; }
+  .listrow { display: flex; align-items: center; gap: 14px; padding: 14px; border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); background: var(--color-background); cursor: pointer; font: inherit; color: inherit; width: 100%; text-align: left;
+    transition: transform .06s, background .15s; }
+  .listrow:active { transform: scale(.99); background: var(--color-muted); }
+  .listrow .ico-wrap { width: 30px; display: flex; justify-content: center; }
+  .listrow .body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .listrow .nm { font-weight: 600; font-size: 15px; }
+  .listrow .aff { color: var(--color-foreground-muted); display: flex; }
+
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .tile { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 12px 6px; background: var(--color-background);
+    cursor: pointer; font: inherit; color: inherit; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center;
+    transition: transform .06s, background .15s; }
+  .tile:active { transform: scale(.95); background: var(--color-muted); }
+  .tile .nm { font-size: 11px; font-weight: 600; line-height: 1.15; }
+  .tile .mode { transform: scale(.82); }
+
+  .footer-link { display: flex; align-items: center; gap: 10px; margin-top: 16px; padding: 14px;
+    border: 1px dashed var(--color-border); border-radius: var(--radius-md); color: var(--color-foreground-muted);
+    font-size: 13px; cursor: pointer; background: transparent; width: 100%; font: inherit; }
+
+  /* ── bottom sheet ──────────────────────────────────────────── */
+  #scrim { position: fixed; inset: 0; background: rgba(0,0,0,.4); opacity: 0; pointer-events: none;
+    transition: opacity .2s; z-index: 9000; }
+  #scrim.show { opacity: 1; pointer-events: auto; }
+  .sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 9001;
+    background: var(--color-background); color: var(--color-foreground);
+    border-radius: 18px 18px 0 0; box-shadow: var(--shadow-sheet);
+    padding: 16px 18px 24px; transform: translateY(110%); transition: transform .24s cubic-bezier(.2,.8,.2,1);
+    max-width: 430px; margin: 0 auto; }
+  .sheet.show { transform: translateY(0); }
+  .grabber { width: 36px; height: 4px; border-radius: 2px; background: var(--color-border); margin: 0 auto 12px; }
+  .sheet-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .sheet-head .ico-wrap { color: var(--color-primary); }
+  .sheet-head h2 { margin: 0; font-size: 17px; }
+  .sheet-head .cat { font-size: 12px; color: var(--color-foreground-muted); font-family: var(--font-mono); }
+
+  /* amount display + keypad (the improved fill UI) */
+  .amt-display { text-align: right; font-size: 40px; font-weight: 700; letter-spacing: -0.02em; padding: 6px 4px 2px;
+    color: var(--color-foreground); }
+  .amt-display .z { color: var(--color-foreground-muted); }
+  .dsl-preview { text-align: right; font-family: var(--font-mono); font-size: 12px; color: var(--color-foreground-muted);
+    margin-bottom: 12px; min-height: 16px; }
+  .presets { display: flex; gap: 8px; margin-bottom: 12px; }
+  .presets button { flex: 1; border: 1px solid var(--color-border); background: var(--color-background); color: var(--color-foreground);
+    border-radius: var(--radius-full); padding: 8px 0; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .presets button:active { background: var(--color-muted); }
+  .keypad { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .keypad button { border: 0; background: var(--color-muted); color: var(--color-foreground); border-radius: var(--radius-md);
+    padding: 16px 0; font: inherit; font-size: 22px; font-weight: 600; cursor: pointer; }
+  .keypad button:active { background: var(--color-border); }
+  .keypad button.bksp { background: transparent; }
+
+  .ti { width: 100%; font: inherit; font-size: 15px; padding: 10px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-md);
+    background: var(--color-background); color: var(--color-foreground); }
+  .field-label { font-size: 12px; color: var(--color-foreground-muted); display: block; margin: 12px 0 5px; }
+  .btn { width: 100%; border: 0; border-radius: var(--radius-md); padding: 15px; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; }
+  .btn-primary { background: var(--color-primary); color: var(--color-primary-foreground); margin-top: 14px; }
+  .btn-primary:disabled { opacity: .45; }
+  .btn-ghost { background: transparent; color: var(--color-foreground-muted); margin-top: 2px; font-weight: 600; }
+  .review-badge { display:inline-block; font-size:11px; font-weight:600; color: var(--color-foreground-muted);
+    border:1px solid var(--color-border); border-radius: var(--radius-full); padding:2px 8px; margin-bottom: 10px; }
+
+  /* ── toast ─────────────────────────────────────────────────── */
+  #toast { position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 120%); z-index: 9500;
+    background: var(--color-foreground); color: var(--color-background); border-radius: var(--radius-full);
+    padding: 11px 12px 11px 18px; display: flex; align-items: center; gap: 14px; font-size: 14px;
+    transition: transform .25s cubic-bezier(.2,.8,.2,1); box-shadow: 0 6px 20px rgba(0,0,0,.25); white-space: nowrap; }
+  #toast.show { transform: translate(-50%, 0); }
+  #toast button { background: transparent; border: 0; color: var(--color-background); font: inherit; font-weight: 700;
+    cursor: pointer; padding: 4px 12px; border-radius: var(--radius-full); }
+  #toast button:hover { background: rgba(255,255,255,.15); }
+  .variant { display: none; }
+  .variant.active { display: block; }
+</style>
+</head>
+<body>
+
+<div id="variant-nav">
+  <button class="variant-tab" data-v="a" onclick="showVariant('a', event)">A · Segmented + cards</button>
+  <button class="variant-tab active" data-v="b" onclick="showVariant('b', event)">B · Chips + rows ★</button>
+  <button class="variant-tab" data-v="c" onclick="showVariant('c', event)">C · Dropdown + dense</button>
+</div>
+
+<div id="variant-a" class="variant"><div class="phone" id="phone-a"></div></div>
+<div id="variant-b" class="variant active"><div class="phone" id="phone-b"></div></div>
+<div id="variant-c" class="variant"><div class="phone" id="phone-c"></div></div>
+
+<div id="scrim" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet"></div>
+<div id="toast"></div>
+
+<div id="sketch-tools" style="position:fixed;bottom:12px;right:12px;z-index:9999;font-family:system-ui;font-size:12px;background:rgba(0,0,0,0.7);color:white;padding:8px 12px;border-radius:8px;opacity:0.4;transition:opacity 0.2s;display:flex;gap:10px;align-items:center;"
+     onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='0.4'">
+  <label>Theme
+    <select onchange="document.querySelector('link[href*=themes]').href='../themes/'+this.value+'.css'">
+      <option value="default">Light (app)</option>
+      <option value="midnight">Midnight</option>
+    </select>
+  </label>
+</div>
+
+<script>
+  // ── Heroicons-style outline icons (real Heroicons v2 paths where they map;
+  //    clean custom outlines in the same 1.6-stroke style otherwise). ─────────
+  const P = (d) => `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  const ICONS = {
+    // real Heroicons v2 (the app already uses these in navigation.ts)
+    banknotes: P('<path d="M2.25 8.25h19.5v9a1.5 1.5 0 0 1-1.5 1.5H3.75a1.5 1.5 0 0 1-1.5-1.5v-9Z"/><circle cx="12" cy="12.75" r="2.5"/><path d="M5.5 8.25V6.75a1.5 1.5 0 0 1 1.5-1.5h10a1.5 1.5 0 0 1 1.5 1.5v1.5"/>'),
+    film: P('<rect x="3" y="4.5" width="18" height="15" rx="1.5"/><path d="M3 9h18M3 15h18M7.5 4.5v15M16.5 4.5v15"/>'),
+    mapPin: P('<path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/><circle cx="12" cy="10.5" r="2.5"/>'),
+    cart: P('<path d="M2.25 3h1.6l2.1 11.25a1.5 1.5 0 0 0 1.48 1.2h8.4a1.5 1.5 0 0 0 1.47-1.17l1.5-6.6H5"/><circle cx="9" cy="20" r="1.1"/><circle cx="17" cy="20" r="1.1"/>'),
+    ticket: P('<path d="M3.75 6.75A1.5 1.5 0 0 1 5.25 5.25h13.5a1.5 1.5 0 0 1 1.5 1.5v2.1a2 2 0 0 0 0 6.3v2.1a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-2.1a2 2 0 0 0 0-6.3v-2.1Z"/><path d="M13.5 5.5v13" stroke-dasharray="2 2"/>'),
+    truck: P('<path d="M2.5 6.75A1.25 1.25 0 0 1 3.75 5.5h9.5v9.5H2.5v-8.25Z"/><path d="M13.25 8.5h3.5l3 3.5v3h-6.5"/><circle cx="6.5" cy="17.5" r="1.6"/><circle cx="16.5" cy="17.5" r="1.6"/>'),
+    building: P('<path d="M4 21V4.5A1.5 1.5 0 0 1 5.5 3h7A1.5 1.5 0 0 1 14 4.5V21"/><path d="M14 9h4.5A1.5 1.5 0 0 1 20 10.5V21M2.5 21h19M7 7h0M7 11h0M7 15h0M11 7h0M11 11h0M11 15h0"/>'),
+    // custom, Heroicons-style
+    cup: P('<path d="M4.5 8.25h11.25V15a3.75 3.75 0 0 1-3.75 3.75H8.25A3.75 3.75 0 0 1 4.5 15V8.25Z"/><path d="M15.75 9.75h2.25a2.25 2.25 0 0 1 0 4.5h-2.25"/><path d="M7.5 3v1.75M10.5 3v1.75M13.5 3v1.75"/>'),
+    fork: P('<path d="M6.5 3v3.5a2 2 0 0 0 4 0V3M8.5 8.5V21"/><path d="M16.5 3c-1.6 1.4-1.6 6 0 7.5V21"/>'),
+    fuel: P('<path d="M4.5 21V5A1.5 1.5 0 0 1 6 3.5h5A1.5 1.5 0 0 1 12.5 5v16"/><path d="M3.5 21h10M6.5 8h4.5"/><path d="M12.5 7l3 2.6V17a1.75 1.75 0 0 0 3.5 0V10l-3-2.8"/>'),
+  };
+  const icon = (k) => `<span class="ico-wrap">${ICONS[k] || ICONS.banknotes}</span>`;
+
+  // ── Fake data: layouts → shortcuts. mode drives tap behavior. ──────────────
+  const DATA = {
+    DayToDay: [
+      { icon: 'cup',       nm: 'Daily Coffee', tmpl: 'expense 5:coffee',  mode: 'tap', fixed: '5.00' },
+      { icon: 'banknotes', nm: 'Parking',      tmpl: 'expense 3:parking', mode: 'tap', fixed: '3.00' },
+      { icon: 'cart',      nm: 'Groceries',    tmpl: 'expense :groceries', mode: 'fill' },
+      { icon: 'fork',      nm: 'Lunch',        tmpl: 'expense :food',      mode: 'fill' },
+      { icon: 'fuel',      nm: 'Gas',          tmpl: 'expense :fuel',      mode: 'fill' },
+      { icon: 'film',      nm: 'New Movie',    tmpl: 'movie :',            mode: 'review' },
+    ],
+    Travel: [
+      { icon: 'banknotes', nm: 'Trip Expense', tmpl: 'expense :food',    mode: 'fill' },
+      { icon: 'fork',      nm: 'Restaurant',   tmpl: 'expense :dining',  mode: 'fill' },
+      { icon: 'building',  nm: 'Hotel',        tmpl: 'expense :lodging', mode: 'fill' },
+      { icon: 'truck',     nm: 'Taxi',         tmpl: 'expense :transit', mode: 'fill' },
+      { icon: 'mapPin',    nm: 'Place Visited', tmpl: 'place :',         mode: 'review' },
+    ],
+    WorkTrip: [
+      { icon: 'fork',      nm: 'Work Meal',     tmpl: 'expense :meals?tags="work"',   mode: 'fill' },
+      { icon: 'ticket',    nm: 'Conf Fee',      tmpl: 'expense :fees?tags="work"',    mode: 'fill' },
+      { icon: 'truck',     nm: 'Taxi',          tmpl: 'expense :transit?tags="work"', mode: 'fill' },
+      { icon: 'banknotes', nm: 'Client Dinner', tmpl: 'expense :dining?tags="work"',  mode: 'review' },
+    ],
+  };
+  const LAYOUTS = Object.keys(DATA);
+  const state = { a: 'DayToDay', b: 'Travel', c: 'WorkTrip' };
+
+  const modeBadge = (m) => m === 'tap'
+    ? '<span class="mode tap">⚡ one-tap</span>'
+    : m === 'fill' ? '<span class="mode fill">✎ amount</span>'
+    : '<span class="mode review">✓ review</span>';
+
+  // category = text after the first ':' up to '?' (the slot label in the template)
+  const catOf = (tmpl) => (tmpl.split(':')[1] || '').split('?')[0].trim();
+
+  function render(v) {
+    const layout = state[v], items = DATA[layout];
+    const sw = renderSwitcher(v, layout);
+    let body = '';
+    if (v === 'a') {
+      body = '<div class="grid2">' + items.map((s, i) => `
+        <button class="card" onclick="tap('${v}',${i})">
+          <div class="row">${icon(s.icon)}${modeBadge(s.mode)}</div>
+          <div class="nm">${s.nm}</div>
+          <div class="tmpl">${s.tmpl}</div>
+        </button>`).join('') + '</div>';
+    } else if (v === 'b') {
+      body = '<div class="rows">' + items.map((s, i) => `
+        <button class="listrow" onclick="tap('${v}',${i})">
+          ${icon(s.icon)}
+          <span class="body"><span class="nm">${s.nm}</span><span class="tmpl">${s.tmpl}</span></span>
+          ${modeBadge(s.mode)}
+          <span class="aff">${s.mode === 'tap' ? '⚡' : '›'}</span>
+        </button>`).join('') + '</div>';
+    } else {
+      body = '<div class="grid3">' + items.map((s, i) => `
+        <button class="tile" onclick="tap('${v}',${i})">
+          ${icon(s.icon)}
+          <span class="nm">${s.nm}</span>
+          ${modeBadge(s.mode)}
+        </button>`).join('') + '</div>';
+    }
+    document.getElementById('phone-' + v).innerHTML = `
+      <h1 class="app-title">Life Log</h1>
+      <p class="app-sub">Tap a shortcut to capture in seconds.</p>
+      <div class="section-label">Layout</div>
+      ${sw}
+      <div class="section-label">${layout} shortcuts</div>
+      ${body}
+      <button class="footer-link" onclick="toast('Opens the full Quick Capture omnibar', false)">⌨️ &nbsp;Type a shorthand instead…</button>
+    `;
+  }
+
+  function renderSwitcher(v, layout) {
+    if (v === 'a') {
+      return '<div class="seg">' + LAYOUTS.map(l =>
+        `<button class="${l===layout?'on':''}" onclick="setLayout('${v}','${l}')">${l}</button>`).join('') + '</div>';
+    } else if (v === 'b') {
+      return '<div class="chips">' + LAYOUTS.map(l =>
+        `<button class="${l===layout?'on':''}" onclick="setLayout('${v}','${l}')">${l}</button>`).join('')
+        + '<button onclick="toast(\'+ New layout (authoring tool)\', false)">+ New</button></div>';
+    } else {
+      return `<select class="dropdown" onchange="setLayout('${v}', this.value)">` +
+        LAYOUTS.map(l => `<option ${l===layout?'selected':''}>${l}</option>`).join('') + '</select>';
+    }
+  }
+  function setLayout(v, l) { state[v] = l; render(v); }
+
+  // ── tap behavior ──────────────────────────────────────────────────────────
+  function tap(v, i) {
+    const s = DATA[state[v]][i];
+    if (s.mode === 'tap') toast(`Saved · ${s.nm} $${s.fixed}`, true);
+    else if (s.mode === 'fill') openAmountSheet(s);
+    else openReviewSheet(s);
+  }
+
+  // ── improved fill-the-amount sheet: keypad + presets + live DSL preview ────
+  let amt = '';
+  function openAmountSheet(s) {
+    amt = '';
+    const cat = catOf(s.tmpl);
+    document.getElementById('sheet').innerHTML = `
+      <div class="grabber"></div>
+      <div class="sheet-head">${icon(s.icon)}
+        <div><h2>${s.nm}</h2><div class="cat">category: ${cat || '—'}</div></div>
+      </div>
+      <div class="amt-display" id="amtDisp"><span class="z">$0</span></div>
+      <div class="dsl-preview" id="dslPrev">expense ▢:${cat}</div>
+      <div class="presets">
+        ${[5,10,20,50].map(n => `<button onclick="preset(${n},'${cat}')">$${n}</button>`).join('')}
+      </div>
+      <div class="keypad">
+        ${[1,2,3,4,5,6,7,8,9].map(n => `<button onclick="key('${n}','${cat}')">${n}</button>`).join('')}
+        <button onclick="key('.','${cat}')">.</button>
+        <button onclick="key('0','${cat}')">0</button>
+        <button class="bksp" onclick="key('back','${cat}')">⌫</button>
+      </div>
+      <button class="btn btn-primary" id="saveBtn" disabled onclick="saveFromSheet('${s.nm}')">Save</button>
+      <button class="btn btn-ghost" onclick="closeSheet()">Cancel</button>`;
+    showSheet();
+  }
+  function key(k, cat) {
+    if (k === 'back') amt = amt.slice(0, -1);
+    else if (k === '.') { if (!amt.includes('.')) amt += amt === '' ? '0.' : '.'; }
+    else { if (amt.includes('.') && amt.split('.')[1].length >= 2) return; amt += k; }
+    syncAmt(cat);
+  }
+  function preset(n, cat) { amt = String(n); syncAmt(cat); }
+  function syncAmt(cat) {
+    const disp = document.getElementById('amtDisp');
+    disp.innerHTML = amt === '' ? '<span class="z">$0</span>' : '$' + amt;
+    document.getElementById('dslPrev').textContent = `expense ${amt || '▢'}:${cat}`;
+    document.getElementById('saveBtn').disabled = !(parseFloat(amt) > 0);
+  }
+
+  function openReviewSheet(s) {
+    document.getElementById('sheet').innerHTML = `
+      <div class="grabber"></div>
+      <span class="review-badge">confirm: true → Review screen</span>
+      <div class="sheet-head">${icon(s.icon)}<div><h2>Review ${s.tmpl.split(' ')[0]}</h2>
+        <div class="cat">pre-filled from "${s.nm}"</div></div></div>
+      <label class="field-label">Title</label>
+      <input class="ti" placeholder="e.g. Dune: Part Two" />
+      <label class="field-label">Amount</label>
+      <input class="ti" type="number" placeholder="0.00" />
+      <label class="field-label">Notes</label>
+      <input class="ti" placeholder="optional" />
+      <button class="btn btn-primary" onclick="saveFromSheet('${s.nm}', true)">Save</button>
+      <button class="btn btn-ghost" onclick="closeSheet()">Cancel</button>`;
+    showSheet();
+  }
+
+  function saveFromSheet(nm, viaReview) {
+    const label = amt ? `${nm} $${(+amt).toFixed(2)}` : nm;
+    closeSheet();
+    toast(viaReview ? `Saved via Review · ${label}` : `Saved · ${label}`, true);
+  }
+
+  function showSheet() { document.getElementById('scrim').classList.add('show'); document.getElementById('sheet').classList.add('show'); }
+  function closeSheet() { document.getElementById('scrim').classList.remove('show'); document.getElementById('sheet').classList.remove('show'); }
+
+  let toastTimer;
+  function toast(msg, undo) {
+    const t = document.getElementById('toast');
+    t.innerHTML = `<span>${msg}</span>` + (undo ? `<button onclick="undo()">Undo</button>` : '');
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), undo ? 3200 : 2000);
+  }
+  function undo() {
+    const t = document.getElementById('toast');
+    t.innerHTML = '<span>Undone ↩</span>';
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 1400);
+  }
+
+  function showVariant(v, ev) {
+    document.querySelectorAll('.variant').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.variant-tab').forEach(x => x.classList.remove('active'));
+    document.getElementById('variant-' + v).classList.add('active');
+    ev.target.classList.add('active');
+    closeSheet();
+  }
+
+  render('a'); render('b'); render('c');
+</script>
+</body>
+</html>

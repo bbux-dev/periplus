@@ -1,0 +1,27 @@
+/* Default theme — matches the real Life Log app tokens (src/index.css).
+   The app currently ships LIGHT (no dark mode defined), so this is the source of truth. */
+:root {
+  /* Colors (mirror the app's @theme tokens) */
+  --color-primary: hsl(222, 89%, 40%);
+  --color-primary-foreground: hsl(0, 0%, 100%);
+  --color-background: hsl(0, 0%, 100%);
+  --color-foreground: hsl(222, 89%, 10%);
+  --color-muted: hsl(210, 40%, 96%);
+  --color-border: hsl(214, 32%, 91%);
+
+  /* Derived helpers for the sketch (not in the app, sketch-only) */
+  --color-foreground-muted: hsl(222, 20%, 45%);
+  --color-success: hsl(142, 71%, 38%);
+  --color-success-bg: hsl(142, 71%, 95%);
+
+  /* Typography */
+  --font-sans: system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Spacing / shapes */
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+  --shadow-sheet: 0 -8px 30px rgba(0, 0, 0, 0.12);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
