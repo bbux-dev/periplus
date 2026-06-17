@@ -7,6 +7,31 @@ import { db } from '../services/db'
 import { entriesRepository } from '../services/entriesRepository'
 import type { ReviewDraft } from '../services/extractMetadataFromUrl'
 
+// ─── Shortcut form probe ──────────────────────────────────────────────────────
+
+function ShortcutFormProbe() {
+  const loc = useLocation()
+  const state = loc.state as { dslTemplate?: string } | null
+  return (
+    <div>
+      <span data-testid="form-probe">ShortcutForm</span>
+      <span data-testid="form-state">{JSON.stringify(state)}</span>
+    </div>
+  )
+}
+
+function renderPageWithShortcutRoute() {
+  return render(
+    <MemoryRouter initialEntries={['/capture']}>
+      <Routes>
+        <Route path="/capture" element={<QuickCapturePage />} />
+        <Route path="/manage/shortcut" element={<ShortcutFormProbe />} />
+        <Route path="/d/:domain/:type/review" element={<ReviewProbe />} />
+      </Routes>
+    </MemoryRouter>,
+  )
+}
+
 beforeEach(async () => {
   await db.delete()
   await db.open()
@@ -104,5 +129,39 @@ describe('QuickCapturePage (OMNI-01..04)', () => {
     await user.click(option)
     expect(screen.getByLabelText('Quick capture shorthand')).toHaveValue('expense 12:food')
     await waitFor(() => expect(screen.getByText('ok')).toBeInTheDocument())
+  })
+})
+
+// ─── EDIT-03: Save as Shortcut button ────────────────────────────────────────
+
+describe('QuickCapturePage — EDIT-03 Save as Shortcut', () => {
+  it('Save as Shortcut button is disabled when input is empty', () => {
+    renderPage()
+    expect(screen.getByRole('button', { name: /Save as Shortcut/i })).toBeDisabled()
+  })
+
+  it('Save as Shortcut button is disabled for malformed input (status=error)', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.type(screen.getByLabelText('Quick capture shorthand'), 'book "Dune:Herbert')
+    expect(screen.getByRole('button', { name: /Save as Shortcut/i })).toBeDisabled()
+  })
+
+  it('Save as Shortcut button is enabled for a parseable, typed line (status=ok, type!=null)', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.type(screen.getByLabelText('Quick capture shorthand'), 'expense :food')
+    expect(screen.getByRole('button', { name: /Save as Shortcut/i })).not.toBeDisabled()
+  })
+
+  it('Save as Shortcut navigates to /manage/shortcut with state { dslTemplate: text } (EDIT-03)', async () => {
+    const user = userEvent.setup()
+    renderPageWithShortcutRoute()
+    await user.type(screen.getByLabelText('Quick capture shorthand'), 'expense :food')
+    await user.click(screen.getByRole('button', { name: /Save as Shortcut/i }))
+
+    expect(await screen.findByTestId('form-probe')).toBeInTheDocument()
+    const state = JSON.parse(screen.getByTestId('form-state').textContent || '{}')
+    expect(state.dslTemplate).toBe('expense :food')
   })
 })

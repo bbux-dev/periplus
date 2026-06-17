@@ -50,10 +50,26 @@ describe('DashboardPage', () => {
     expect(chip).toHaveAttribute('aria-pressed', 'true')
   })
 
-  it('renders + New chip as disabled', async () => {
+  it('+ New chip is enabled (no longer a disabled placeholder)', async () => {
     renderDashboard()
     await screen.findByRole('button', { name: 'DayToDay' })
-    expect(screen.getByRole('button', { name: '+ New' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '+ New' })).not.toBeDisabled()
+  })
+
+  it('clicking + New chip navigates to /manage', async () => {
+    const user = userEvent.setup()
+    function ManageProbe() { return <div data-testid="manage-probe">Manage</div> }
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/manage" element={<ManageProbe />} />
+        </Routes>
+      </MemoryRouter>,
+    )
+    await screen.findByRole('button', { name: 'DayToDay' })
+    await user.click(screen.getByRole('button', { name: '+ New' }))
+    expect(await screen.findByTestId('manage-probe')).toBeInTheDocument()
   })
 
   it('clicking a chip persists selection and updates rows (DASH-02)', async () => {
