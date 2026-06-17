@@ -177,6 +177,9 @@ export function renameLayout(
   oldName: string,
   newName: string,
 ): ShortcutConfig {
+  // No-op when renaming to the same name — mirrors updateShortcut self-name guard
+  if (oldName === newName) return { ...config }
+
   const layoutExists = config.layouts.some((l) => l.name === oldName)
   if (!layoutExists) {
     throw new Error(`Layout "${oldName}" not found.`)

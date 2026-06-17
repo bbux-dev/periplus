@@ -280,6 +280,12 @@ describe('renameLayout', () => {
     renameLayout(config, 'DayToDay', 'Everyday')
     expect(config).toEqual(original)
   })
+
+  it('returns equivalent config (no-op) when oldName === newName — WR-01', () => {
+    const config = makeConfig(['Alpha', 'Beta'])
+    const result = renameLayout(config, 'DayToDay', 'DayToDay')
+    expect(result).toEqual(config)
+  })
 })
 
 // ─── deleteLayout ─────────────────────────────────────────────────────────────
