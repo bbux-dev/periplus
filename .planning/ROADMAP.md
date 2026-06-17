@@ -128,7 +128,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
   5. From the omnibar, tapping "Save current as shortcut" (via the "+ New" chip entry point) pre-fills the authoring form with the current DSL line; a `dslTemplate` that fails `parseDSL` cannot be saved.
 **Plans**: 3 plans
   - [x] 15-01-PLAN.md — templateValidator (EDIT-04 predicate) + shortcutMutations pure helpers (CRUD + reorder), TDD [wave 1, logic]
-  - [ ] 15-02-PLAN.md — ManageShortcutsPage (layout CRUD + shortcut delete/reorder) + /manage route [wave 2, UI, depends_on 15-01]
+  - [x] 15-02-PLAN.md — ManageShortcutsPage (layout CRUD + shortcut delete/reorder) + /manage route [wave 2, UI, depends_on 15-01]
   - [ ] 15-03-PLAN.md — IconPicker + ShortcutFormPage (create/edit + EDIT-04 gate) + /manage/shortcut route + omnibar "Save as Shortcut" + "+ New" chip activation [wave 3, UI, depends_on 15-01,15-02]
 **UI hint**: yes
 
@@ -150,4 +150,4 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 | 12. Dashboard Rendering & Layout Switcher | v0.3.0 | 2/2 | Complete   | 2026-06-17 |
 | 13. Tap-to-Capture Flow | v0.3.0 | 3/3 | Complete   | 2026-06-17 |
 | 14. Import / Export Config | v0.3.0 | 2/2 | Complete   | 2026-06-17 |
-| 15. Authoring Tool | v0.3.0 | 1/3 | Executing | - |
+| 15. Authoring Tool | v0.3.0 | 2/3 | In Progress|  |

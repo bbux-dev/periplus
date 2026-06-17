@@ -4,14 +4,14 @@ milestone: v0.3.0
 milestone_name: Dashboard Shortcut Layouts
 status: executing
 stopped_at: Completed 15-authoring-tool/15-01-PLAN.md
-last_updated: "2026-06-17T19:10:00.000Z"
-last_activity: 2026-06-17 -- Phase 15 Plan 01 complete (templateValidator + shortcutMutations)
+last_updated: "2026-06-17T19:16:07.581Z"
+last_activity: 2026-06-17
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 11
-  completed_plans: 9
-  percent: 82
+  completed_plans: 10
+  percent: 80
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 ## Current Position
 
 Phase: 15 (Authoring Tool) — EXECUTING
-Plan: 2 of 3
-Status: Plan 01 complete; continuing Phase 15
-Last activity: 2026-06-17 -- Phase 15 execution started
+Plan: 3 of 3
+Status: Ready to execute
+Last activity: 2026-06-17
 
 ```
 [Phase 11: Config Model, Schema & Storage    ] — not started
@@ -36,7 +36,7 @@ Last activity: 2026-06-17 -- Phase 15 execution started
 [Phase 13: Tap-to-Capture Flow               ] — not started
 [Phase 14: Import / Export Config            ] — not started
 [Phase 15: Authoring Tool                    ] — not started
-Progress: [██████████] 100%
+Progress: [█████████░] 91%
 ```
 
 ## Performance Metrics
@@ -88,6 +88,7 @@ Progress: [██████████] 100%
 | Phase 13-tap-to-capture-flow P03 | 40 min | 2 tasks | 4 files |
 | Phase 14-import-export-config P01 | 5min | 2 tasks | 2 files |
 | Phase 15-authoring-tool P01 | 8min | 2 tasks | 4 files |
+| Phase 15-authoring-tool P02 | 12min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -142,6 +143,7 @@ architecture-template.md SPEC + spec.md:
 - [Phase 15-01]: Within-layout shortcut name uniqueness only; cross-layout duplicates allowed
 - [Phase 15-01]: deleteLayout throws 'Cannot delete the only remaining layout.' — exact message for UI to surface
 - [Phase 15-01]: renameLayout does NOT write activeLayoutName — caller/Dexie concern (Pitfall 3)
+- [Phase ?]: 15-02: selectedLayoutName=undefined init; effectiveSelectedName derived from config+persisted for graceful fallback
 
 ### Pending Todos
 
@@ -161,7 +163,7 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-17T19:10:00.000Z
+Last session: 2026-06-17T19:16:03.890Z
 Stopped at: Completed 15-authoring-tool/15-01-PLAN.md
 Resume file: None
 

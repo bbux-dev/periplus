@@ -51,9 +51,9 @@ save) — a shortcut is a saved DSL template whose empty slots are the "holes."
 
 ### EDIT — authoring tool
 
-- [ ] **EDIT-01**: The user can create, edit, and delete shortcuts (name, icon, `dslTemplate`,
+- [x] **EDIT-01**: The user can create, edit, and delete shortcuts (name, icon, `dslTemplate`,
   `confirm` flag) through an in-app authoring UI.
-- [ ] **EDIT-02**: The user can create, edit, and delete layouts and reorder the shortcuts
+- [x] **EDIT-02**: The user can create, edit, and delete layouts and reorder the shortcuts
   within a layout.
 - [ ] **EDIT-03**: The user can "Save current as shortcut" from the quick-capture omnibar,
   turning the current DSL line into a new shortcut template (the "+ New" chip is an entry point).
@@ -76,8 +76,8 @@ save) — a shortcut is a saved DSL template whose empty slots are the "holes."
 | CAP-04 | Phase 13 — Tap-to-Capture Flow | Complete |
 | PORT-01 | Phase 14 — Import / Export Config | Complete |
 | PORT-02 | Phase 14 — Import / Export Config | Complete |
-| EDIT-01 | Phase 15 — Authoring Tool | Pending |
-| EDIT-02 | Phase 15 — Authoring Tool | Pending |
+| EDIT-01 | Phase 15 — Authoring Tool | Complete |
+| EDIT-02 | Phase 15 — Authoring Tool | Complete |
 | EDIT-03 | Phase 15 — Authoring Tool | Pending |
 | EDIT-04 | Phase 15 — Authoring Tool | Pending |
 
