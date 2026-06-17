@@ -82,11 +82,27 @@ straight to IndexedDB; others (`confirm: true`) route through the existing `Revi
 - **Per-shortcut `confirm`** flag decides one-tap-save vs Review.
 - Shortcut = DSL template; **holes = empty slots** (reuse existing parser behavior).
 
+## Sketch outcomes (sketch 001, 2026-06-17)
+
+- **Layout presentation:** **chips + rows** (Variant B) — horizontally scrollable layout
+  chips (+ "New") above full-width tappable list rows. Scales to many layouts; most legible
+  on a phone.
+- **Icons:** use **Heroicons** (`@heroicons/react`, already a dependency), reusing the app's
+  existing icon vocabulary (`BanknotesIcon`/`FilmIcon`/`MapPinIcon`) where they fit. Emoji
+  were rejected as too cheesy.
+- **Fill-the-amount UI:** a proper mobile sheet — big amount display, quick-amount presets,
+  **numeric keypad** (one-thumb), and a **live DSL preview** of the resulting line. The
+  sketch version is directional, not final.
+- **Authoring tool is WANTED (not just deferred).** The user explicitly wants a tool to
+  create/edit/reorder shortcuts and layouts (assign icon + `confirm` flag). It likely still
+  lands in a later phase than the read-only/default-layouts MVP, but it is in scope for the
+  feature, not optional. The "+ New" chip is its entry point.
+
 ## Deferred / decide-at-planning
 
-- **Authoring depth for v1.** Lean: ship sensible **default layouts** + **import/export** +
-  possibly **"Save current as shortcut"** from the omnibar; defer a full drag-to-reorder
-  manager screen to a later phase.
+- **Authoring depth / sequencing.** MVP can ship **default layouts** + **import/export** +
+  possibly **"Save current as shortcut"** from the omnibar first; the full
+  create/edit/reorder **authoring tool** (wanted — see above) follows as its own phase.
 - **Placeholder convention for non-positional holes.** Empty positional slots are natural
   holes; prompting for a named param (e.g. `merchant`) needs a token like `?` or `{}` in the
   template. Define it when planning.

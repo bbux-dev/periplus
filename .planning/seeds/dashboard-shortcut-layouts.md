@@ -32,7 +32,11 @@ JSON-Schema-validated object in the Dexie `settings` store, with import/export f
 3. **Tap-to-capture flow** — fill-the-hole micro-prompt; per-shortcut `confirm` (one-tap
    direct save + undo toast, or route through ReviewPage).
 4. **Import / export config** — mirror the entries-export pattern; validate imports.
-5. *(later)* Authoring/manager screen + "Save current as shortcut" from the omnibar.
+5. **Authoring tool (wanted)** — create/edit/reorder shortcuts + layouts, assign icon
+   (`@heroicons/react`) + `confirm` flag; plus "Save current as shortcut" from the omnibar.
+
+UI direction is sketched: see `sketches/001-dashboard-shortcut-layouts` (winner: Variant B,
+chips + rows; keypad amount sheet with live DSL preview; Heroicons not emoji).
 
 ## Open items to resolve at promotion
 
