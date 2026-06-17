@@ -50,8 +50,65 @@ A complete local-first, offline-capable Life Log PWA, built bottom-up by depende
 - Workflow: per phase — 1 researcher + 1 planner + 1 plan-checker + N executors (1 per plan) + 1 reviewer + 1 fixer + 1 verifier; milestone close added an integration checker.
 - Notable: worktrees were disabled (linear bootstrap chains; `node_modules` persistence) — sequential executors on the main tree avoided per-plan reinstall churn.
 
+## Milestone: v0.3.0 — Dashboard Shortcut Layouts
+
+**Shipped:** 2026-06-17
+**Phases:** 5 (11–15) | **Plans:** 11
+
+### What Was Built
+Customizable one-tap shortcut buttons on the Dashboard, grouped into switchable layouts, built
+entirely on top of the v0.2.0 Quick-Capture DSL — a shortcut is a saved DSL template whose empty
+slots are "holes." Config model + JSON Schema + Dexie `settings` storage (Phase 11); chips+rows
+dashboard + layout switcher + seeded defaults (Phase 12); tap-to-capture with one-tap save+undo /
+fill-the-hole keypad sheet / ReviewPage routing (Phase 13); portable import/export (Phase 14);
+full in-app authoring tool (Phase 15). 500 tests at ship; zero new runtime dependencies.
+
+### What Worked
+- **Building on a settled design paid off.** The explore (`dashboard-shortcut-layouts-design`),
+  the winning sketch (Variant B), and the JSON-schema todo meant the milestone scope and most
+  decisions were pre-resolved — research per phase mostly confirmed and sharpened rather than
+  discovered. The "shortcut = DSL template with holes" insight collapsed Phase 13 into reuse of
+  the existing parseDSL → buildReviewDraft → save pipeline (one extracted `draftToEntry`).
+- **Reuse over new surface.** Zero new runtime dependencies across the whole milestone; the
+  dormant v0.1.0 `settings` store was activated by data writes only (no Dexie schema bump); the
+  entries-export pattern was reused verbatim for config export.
+- **Per-phase code review caught real bugs early** (HoleSheet lone-`.` amount accepted as NaN;
+  unhandled Dexie rejections; renameLayout same-name throw; cross-layout move).
+
+### What Was Inefficient
+- **Unit tests in isolation missed a cross-phase integration bug.** Export and import were each
+  unit-tested green, but their composition was broken (envelope vs raw config) — only the
+  milestone integration checker caught it. Lesson: add a round-trip/composition test whenever two
+  pure functions are designed to feed each other (now added).
+- A few phases produced `human_needed` verifications purely for device/browser visual feel; the
+  logic was fully covered, so these were deferred as non-blocking.
+
+### Patterns Established
+- **Config write path:** read-fresh (`configRepository.get()`, not the hook value) → pure mutation
+  helper → `validateShortcutConfig` (defense-in-depth) → `configRepository.put`; reactivity via
+  `useLiveQuery`. Used identically across phases 12–15.
+- **Hole detection** via `POSITIONAL_SCHEMA` comparison (never warning-string matching); `{}` as
+  the named-hole token, stripped before `buildReviewDraft`.
+- **Allow-list pattern** for icons (`SHORTCUT_ICON_MAP` + `resolveShortcutIcon` fallback) instead
+  of dynamic component lookup.
+
+### Key Lessons
+- Compose-the-pure-functions integration tests are worth their weight — independent unit greenness
+  is not round-trip correctness.
+- A pre-milestone explore + sketch dramatically reduces per-phase research cost and rework.
+
+### Cost Observations
+- Model mix: planning on Opus; research / execution / review / fix / verification on Sonnet.
+- Workflow per phase: 1 researcher (skipped on the mechanical Phase 14) + pattern-mapper + planner
+  + plan-checker + N sequential executors (1 per plan) + reviewer + fixer + verifier; milestone
+  close added an integration checker.
+- Notable: worktrees disabled — sequential executors on the main tree (linear dependency chains;
+  `node_modules` persistence).
+
 ## Cross-Milestone Trends
 
 | Milestone | Phases | Plans | Tests at ship | Audit | Notes |
 |-----------|--------|-------|---------------|-------|-------|
 | v0.1.0 | 6 | 22 | 221 | passed (35/35) | Full local life-log shipped from a tracer bullet |
+| v0.2.0 | 4 | 4 | 277 | passed (10/10) | Quick-Capture DSL omnibar; parser ported from validated spike |
+| v0.3.0 | 5 | 11 | 500 | passed (16/16) | Shortcut layouts on the DSL; audit caught a real cross-phase blocker |
