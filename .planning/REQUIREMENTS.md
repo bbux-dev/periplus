@@ -32,10 +32,10 @@ save) — a shortcut is a saved DSL template whose empty slots are the "holes."
 
 - [x] **CAP-01**: Tapping a shortcut with no holes (a complete DSL template) captures the entry
   directly through the existing `parseDSL` → `buildReviewDraft` pipeline, with no field prompt.
-- [ ] **CAP-02**: Tapping a shortcut with empty-slot hole(s) opens a fill-the-hole micro-prompt
+- [x] **CAP-02**: Tapping a shortcut with empty-slot hole(s) opens a fill-the-hole micro-prompt
   (mobile amount keypad sheet with quick-amount presets and a live DSL preview of the resulting
   line) before capture; with multiple holes the prompt follows template slot order.
-- [ ] **CAP-03**: Each shortcut's `confirm` flag chooses the save path — `confirm:false` saves
+- [x] **CAP-03**: Each shortcut's `confirm` flag chooses the save path — `confirm:false` saves
   directly to IndexedDB and shows an undo affordance ("Saved · Undo", backed by
   `entriesRepository.delete`); `confirm:true` routes through the existing `ReviewPage`.
 - [x] **CAP-04**: A defined placeholder convention lets a shortcut declare a hole for a named
@@ -71,8 +71,8 @@ save) — a shortcut is a saved DSL template whose empty slots are the "holes."
 | DASH-02 | Phase 12 — Dashboard Rendering & Layout Switcher | Complete |
 | DASH-03 | Phase 12 — Dashboard Rendering & Layout Switcher | Complete |
 | CAP-01 | Phase 13 — Tap-to-Capture Flow | Complete |
-| CAP-02 | Phase 13 — Tap-to-Capture Flow | Pending |
-| CAP-03 | Phase 13 — Tap-to-Capture Flow | Pending |
+| CAP-02 | Phase 13 — Tap-to-Capture Flow | Complete |
+| CAP-03 | Phase 13 — Tap-to-Capture Flow | Complete |
 | CAP-04 | Phase 13 — Tap-to-Capture Flow | Complete |
 | PORT-01 | Phase 14 — Import / Export Config | Pending |
 | PORT-02 | Phase 14 — Import / Export Config | Pending |
