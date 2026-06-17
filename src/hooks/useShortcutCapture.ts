@@ -106,9 +106,11 @@ export function useShortcutCapture() {
         return
       }
 
-      // confirm:false — detect holes to decide: direct save vs sheet
-      const holeMap = detectHoles(type, parsed.values)
+      // confirm:false — detect holes to decide: direct save vs sheet.
+      // Compute clean once and reuse; detectHoles also cleans internally but
+      // needs raw values for named-hole (HOLE_TOKEN) detection.
       const clean = cleanValues(parsed.values)
+      const holeMap = detectHoles(type, parsed.values)
 
       if (!holeMap.hasHoles) {
         // Direct save path
