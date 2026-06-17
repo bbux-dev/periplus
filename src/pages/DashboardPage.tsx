@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { QueueListIcon, BoltIcon } from '@heroicons/react/24/outline'
+import { QueueListIcon, BoltIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
 import { NAVIGATION } from '../config/navigation'
 import { cn } from '../components/ui/cn'
 import {
@@ -119,6 +119,18 @@ export function DashboardPage() {
         >
           <QueueListIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
           <span className="text-lg font-medium">View All Entries</span>
+        </Link>
+        <Link
+          to="/settings"
+          className={cn(
+            'flex items-center gap-4 min-h-[64px] px-4 rounded-lg',
+            'border border-[var(--color-border)] bg-[var(--color-muted)]',
+            'hover:bg-[var(--color-border)] active:opacity-75',
+            'transition-colors',
+          )}
+        >
+          <Cog6ToothIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
+          <span className="text-lg font-medium">Shortcuts Config</span>
         </Link>
       </div>
 

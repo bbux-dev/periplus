@@ -104,11 +104,11 @@ describe('DashboardPage', () => {
     expect(screen.getByText('Expenditures')).toBeInTheDocument()
   })
 
-  it('renders Quick Capture + 3 domain links + View All Entries (5 total)', async () => {
+  it('renders Quick Capture + 3 domain links + View All Entries + Shortcuts Config (6 total)', async () => {
     renderDashboard()
     // Wait for async seeding to complete (shortcut rows are <button>, not <a>, so link count is unchanged)
     await screen.findByRole('button', { name: /DayToDay/i })
-    expect(screen.getAllByRole('link')).toHaveLength(5)
+    expect(screen.getAllByRole('link')).toHaveLength(6)
   })
 
   it('Quick Capture link targets /capture', async () => {

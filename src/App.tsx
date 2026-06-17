@@ -8,6 +8,7 @@ import { ManualEntryPage } from './pages/ManualEntryPage'
 import { EntryListPage }   from './pages/EntryListPage'
 import { EntryDetailPage } from './pages/EntryDetailPage'
 import { PlaceholderPage } from './pages/PlaceholderPage'
+import { SettingsPage }    from './pages/SettingsPage'
 
 function App() {
   return (
@@ -27,6 +28,9 @@ function App() {
       {/* Phase 6 — Entry List + Detail (real pages) */}
       <Route path="/entries"    element={<EntryListPage />} />
       <Route path="/entries/:id" element={<EntryDetailPage />} />
+
+      {/* Phase 14 — Import / Export Config */}
+      <Route path="/settings"   element={<SettingsPage />} />
 
       {/* Catch-all: unknown paths show a graceful not-found page */}
       <Route path="*" element={<PlaceholderPage title="Page Not Found" />} />
