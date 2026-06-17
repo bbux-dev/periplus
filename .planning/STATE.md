@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v0.3.0
 milestone_name: Dashboard Shortcut Layouts
 status: planning
-last_updated: "2026-06-17T14:28:01.792Z"
+last_updated: "2026-06-17T00:00:00.000Z"
 last_activity: 2026-06-17
 progress:
-  total_phases: 0
+  total_phases: 5
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -17,17 +17,26 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-15)
+See: .planning/PROJECT.md (updated 2026-06-17)
 
 **Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** v0.2.0 Quick-Capture DSL — SHIPPED (Phases 7–10)
+**Current focus:** v0.3.0 Dashboard Shortcut Layouts — roadmap defined (Phases 11–15), planning Phase 11
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 11 — Config Model, Schema & Storage (not started)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-06-17 — Milestone v0.3.0 started
+Status: Roadmap written; ready to plan Phase 11
+Last activity: 2026-06-17 — Roadmap created for v0.3.0
+
+```
+[Phase 11: Config Model, Schema & Storage    ] — not started
+[Phase 12: Dashboard Rendering & Switcher    ] — not started
+[Phase 13: Tap-to-Capture Flow               ] — not started
+[Phase 14: Import / Export Config            ] — not started
+[Phase 15: Authoring Tool                    ] — not started
+Progress: 0 / 5 phases
+```
 
 ## Performance Metrics
 
@@ -102,10 +111,13 @@ architecture-template.md SPEC + spec.md:
 - [Phase 06-03]: exportedAt injected as parameter in buildExportJson — function never reads Date internally, keeping it deterministic and testable without time mocking
 - [Phase ?]: EntryListPage
 - [Phase ?]: EntryDetailPage (VIEW-03): tri-state useEntry guard, isSafeUrl XSS gate for sourceUrl, metadata JSON in React-escaped pre, domain-scoped type label
+- [v0.3.0 Roadmap]: JSON Schema is the source of truth for config validation (not Zod); ajv-vs-hand-rolled is a plan-phase decision for Phase 11
+- [v0.3.0 Roadmap]: Phase 14 (Import/Export) depends only on Phase 11 — can run in parallel with Phases 12–13
+- [v0.3.0 Roadmap]: All v0.2.0 pipeline (parseDSL, buildReviewDraft, ReviewPage, entriesRepository.create/.delete, triggerDownload) reused as-is
 
 ### Pending Todos
 
-None yet.
+- `.planning/todos/pending/shortcut-config-json-schema.md` — validator choice (ajv vs hand-rolled) and versioning/migration strategy; resolve in Phase 11 planning.
 
 ### Blockers/Concerns
 
@@ -117,14 +129,14 @@ Items acknowledged and carried forward from previous milestone close:
 
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
-| *(none)* | | | |
+| DSL follow-ups | Field/param-key suggestions after `?`, content-based type inference, currency-symbol amount parsing | Deferred to post-v0.3.0 | v0.2.0 close |
 
 ## Session Continuity
 
-Last session: 2026-06-16T00:23:42.247Z
-Stopped at: Completed 06-05-PLAN.md (EntryDetailPage VIEW-03)
+Last session: 2026-06-17
+Stopped at: Roadmap written for v0.3.0 (Phases 11–15)
 Resume file: None
 
 ## Operator Next Steps
 
-- Start the next milestone with /gsd-new-milestone
+- Run `/gsd:plan-phase 11` to plan Phase 11 (Config Model, Schema & Storage)

@@ -62,13 +62,24 @@ save) — a shortcut is a saved DSL template whose empty slots are the "holes."
 
 ## Traceability
 
-| REQ | Phase |
-|-----|-------|
-| CFG-01..03 | Phase 11 — Config Model, Schema & Storage |
-| DASH-01..03 | Phase 12 — Dashboard Rendering & Layout Switcher |
-| CAP-01..04 | Phase 13 — Tap-to-Capture Flow |
-| PORT-01..02 | Phase 14 — Import / Export Config |
-| EDIT-01..04 | Phase 15 — Authoring Tool |
+| REQ | Phase | Status |
+|-----|-------|--------|
+| CFG-01 | Phase 11 — Config Model, Schema & Storage | Pending |
+| CFG-02 | Phase 11 — Config Model, Schema & Storage | Pending |
+| CFG-03 | Phase 11 — Config Model, Schema & Storage | Pending |
+| DASH-01 | Phase 12 — Dashboard Rendering & Layout Switcher | Pending |
+| DASH-02 | Phase 12 — Dashboard Rendering & Layout Switcher | Pending |
+| DASH-03 | Phase 12 — Dashboard Rendering & Layout Switcher | Pending |
+| CAP-01 | Phase 13 — Tap-to-Capture Flow | Pending |
+| CAP-02 | Phase 13 — Tap-to-Capture Flow | Pending |
+| CAP-03 | Phase 13 — Tap-to-Capture Flow | Pending |
+| CAP-04 | Phase 13 — Tap-to-Capture Flow | Pending |
+| PORT-01 | Phase 14 — Import / Export Config | Pending |
+| PORT-02 | Phase 14 — Import / Export Config | Pending |
+| EDIT-01 | Phase 15 — Authoring Tool | Pending |
+| EDIT-02 | Phase 15 — Authoring Tool | Pending |
+| EDIT-03 | Phase 15 — Authoring Tool | Pending |
+| EDIT-04 | Phase 15 — Authoring Tool | Pending |
 
 ## Future Requirements (deferred)
 
