@@ -21,9 +21,13 @@ describe('SHORTCUT_ICON_MAP', () => {
     expect(SHORTCUT_ICON_MAP['BoltIcon']).toBe(BoltIcon)
   })
 
-  it('every map value is a function/component', () => {
+  it('every map value is a React component (function or forwardRef object)', () => {
     for (const [key, value] of Object.entries(SHORTCUT_ICON_MAP)) {
-      expect(typeof value, `SHORTCUT_ICON_MAP["${key}"] is not a function`).toBe('function')
+      const t = typeof value
+      expect(
+        t === 'function' || (t === 'object' && value !== null),
+        `SHORTCUT_ICON_MAP["${key}"] is not a React component (got ${t})`,
+      ).toBe(true)
     }
   })
 
