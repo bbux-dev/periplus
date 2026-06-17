@@ -25,7 +25,7 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
           <button
             key={key}
             type="button"
-            aria-label={key.replace('Icon', '')}
+            aria-label={key.replace(/Icon$/, '')}
             aria-pressed={isSelected}
             onClick={() => onChange(key)}
             className={cn(
