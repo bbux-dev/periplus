@@ -12,6 +12,9 @@ import {
 import { DEFAULT_SHORTCUT_CONFIG } from '../config/shortcutConfig'
 import { LayoutChips } from '../components/dashboard/LayoutChips'
 import { ShortcutRow } from '../components/dashboard/ShortcutRow'
+import { useShortcutCapture } from '../hooks/useShortcutCapture'
+import { HoleSheet } from '../components/dashboard/HoleSheet'
+import { SavedToast } from '../components/dashboard/SavedToast'
 
 export function DashboardPage() {
   // ─── One-shot seeding effect (DASH-03) ────────────────────────────────────────
@@ -44,6 +47,16 @@ export function DashboardPage() {
     })
   }
 
+  // ─── Capture orchestrator (Phase 13 CAP-01/02/03/04) ─────────────────────────
+  const {
+    handleTap,
+    toastEntryId,
+    handleUndo,
+    sheetState,
+    handleSheetSave,
+    handleSheetCancel,
+  } = useShortcutCapture()
+
   return (
     <div className="min-h-screen flex flex-col px-6 py-8 bg-[var(--color-background)] text-[var(--color-foreground)]">
       <div className="w-full max-w-sm mx-auto flex flex-col gap-4">
@@ -61,9 +74,7 @@ export function DashboardPage() {
               <ShortcutRow
                 key={s.name}
                 shortcut={s}
-                onClick={() => {
-                  // TODO Phase 13: capture seam — no-op for now
-                }}
+                onClick={() => handleTap(s)}
               />
             ))}
           </>
@@ -110,6 +121,20 @@ export function DashboardPage() {
           <span className="text-lg font-medium">View All Entries</span>
         </Link>
       </div>
+
+      {/* ── Capture affordances (Phase 13) ──────────────────────────────── */}
+      {toastEntryId && <SavedToast onUndo={handleUndo} />}
+      {sheetState && (
+        <HoleSheet
+          isOpen
+          type={sheetState.type}
+          domain={sheetState.domain}
+          baseValues={sheetState.baseValues}
+          holeMap={sheetState.holeMap}
+          onSave={handleSheetSave}
+          onCancel={handleSheetCancel}
+        />
+      )}
     </div>
   )
 }

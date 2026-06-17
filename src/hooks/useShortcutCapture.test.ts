@@ -189,7 +189,9 @@ describe('useShortcutCapture', () => {
   // timers are active. The mock is restored in afterEach.
 
   describe('toast auto-dismiss', () => {
-    beforeEach(() => vi.useFakeTimers())
+    // Only fake setTimeout/clearTimeout so Dexie (uses setImmediate) and
+    // React's scheduler (uses MessageChannel) continue to work.
+    beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }))
     afterEach(() => {
       vi.useRealTimers()
       vi.restoreAllMocks()
