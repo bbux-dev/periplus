@@ -1,18 +1,76 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { QueueListIcon, BoltIcon } from '@heroicons/react/24/outline'
 import { NAVIGATION } from '../config/navigation'
+import { cn } from '../components/ui/cn'
+import {
+  configRepository,
+  useShortcutConfig,
+  activeLayoutRepository,
+  useActiveLayoutName,
+} from '../services/configRepository'
+import { DEFAULT_SHORTCUT_CONFIG } from '../config/shortcutConfig'
+import { LayoutChips } from '../components/dashboard/LayoutChips'
+import { ShortcutRow } from '../components/dashboard/ShortcutRow'
 
 export function DashboardPage() {
+  // ─── One-shot seeding effect (DASH-03) ────────────────────────────────────────
+  // Uses the awaited configRepository.get() — NOT the hook — to distinguish
+  // "Dexie still opening" from "no config stored". Runs once on mount.
+  useEffect(() => {
+    let cancelled = false
+    configRepository.get().then((existing) => {
+      if (existing === undefined && !cancelled) {
+        configRepository.put(DEFAULT_SHORTCUT_CONFIG)
+      }
+    })
+    return () => { cancelled = true }
+  }, [])
+
+  // ─── Reactive config + active layout derivation (DASH-01/02) ─────────────────
+  const config = useShortcutConfig()
+  const persistedLayoutName = useActiveLayoutName()
+  const layouts = config?.layouts ?? []
+  const activeLayout = layouts.find((l) => l.name === persistedLayoutName) ?? layouts[0]
+
+  async function handleLayoutSelect(name: string) {
+    await activeLayoutRepository.put(name)
+  }
+
   return (
     <div className="min-h-screen flex flex-col px-6 py-8 bg-[var(--color-background)] text-[var(--color-foreground)]">
       <div className="w-full max-w-sm mx-auto flex flex-col gap-4">
         <h1 className="text-2xl font-bold tracking-tight mb-4">Life Log</h1>
+
+        {/* Shortcut section — null while config loads to avoid layout shift */}
+        {config !== undefined && (
+          <>
+            <LayoutChips
+              layouts={layouts}
+              activeLayoutName={activeLayout?.name}
+              onSelect={handleLayoutSelect}
+            />
+            {activeLayout?.shortcuts.map((s) => (
+              <ShortcutRow
+                key={s.name}
+                shortcut={s}
+                onClick={() => {
+                  // TODO Phase 13: capture seam — no-op for now
+                }}
+              />
+            ))}
+          </>
+        )}
+
+        {/* Existing nav — always reachable */}
         <Link
           to="/capture"
-          className="flex items-center gap-4 min-h-[64px] px-4 rounded-lg
-                     border border-[var(--color-primary)] bg-[var(--color-primary)]
-                     text-[var(--color-primary-foreground)] hover:opacity-90 active:opacity-75
-                     transition-opacity"
+          className={cn(
+            'flex items-center gap-4 min-h-[64px] px-4 rounded-lg',
+            'border border-[var(--color-primary)] bg-[var(--color-primary)]',
+            'text-[var(--color-primary-foreground)] hover:opacity-90 active:opacity-75',
+            'transition-opacity',
+          )}
         >
           <BoltIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
           <span className="text-lg font-medium">Quick Capture</span>
@@ -21,10 +79,12 @@ export function DashboardPage() {
           <Link
             key={domain}
             to={`/d/${domain}`}
-            className="flex items-center gap-4 min-h-[64px] px-4 rounded-lg
-                       border border-[var(--color-border)] bg-[var(--color-muted)]
-                       hover:bg-[var(--color-border)] active:opacity-75
-                       transition-colors"
+            className={cn(
+              'flex items-center gap-4 min-h-[64px] px-4 rounded-lg',
+              'border border-[var(--color-border)] bg-[var(--color-muted)]',
+              'hover:bg-[var(--color-border)] active:opacity-75',
+              'transition-colors',
+            )}
           >
             <Icon className="h-6 w-6 shrink-0" aria-hidden="true" />
             <span className="text-lg font-medium">{label}</span>
@@ -32,10 +92,12 @@ export function DashboardPage() {
         ))}
         <Link
           to="/entries"
-          className="flex items-center gap-4 min-h-[64px] px-4 rounded-lg
-                     border border-[var(--color-border)] bg-[var(--color-muted)]
-                     hover:bg-[var(--color-border)] active:opacity-75
-                     transition-colors"
+          className={cn(
+            'flex items-center gap-4 min-h-[64px] px-4 rounded-lg',
+            'border border-[var(--color-border)] bg-[var(--color-muted)]',
+            'hover:bg-[var(--color-border)] active:opacity-75',
+            'transition-colors',
+          )}
         >
           <QueueListIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
           <span className="text-lg font-medium">View All Entries</span>
