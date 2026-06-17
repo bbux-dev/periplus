@@ -85,13 +85,17 @@ describe('detectHoles', () => {
     expect(result.positional[1]).toBe('category')
   })
 
-  it('named holes appear in discovery order', () => {
-    // merchant first, then category (in entry order)
-    const result = detectHoles('expense', { merchant: '{}', amount: '5', category: '{}' })
-    // amount is present → no positional hole
-    // named holes: merchant and category are HOLE_TOKEN
+  it('named holes appear in discovery order (non-positional named fields)', () => {
+    // merchant and currency are non-positional named fields for expense
+    // amount and category are filled → no positional holes
+    const result = detectHoles('expense', {
+      merchant: '{}',
+      amount: '5',
+      category: 'food',
+      currency: '{}',
+    })
     expect(result.positional).toEqual([])
-    expect(result.named).toEqual(['merchant', 'category'])
+    expect(result.named).toEqual(['merchant', 'currency'])
   })
 
   it('does NOT inspect warning strings — schema comparison catches bare template', () => {
