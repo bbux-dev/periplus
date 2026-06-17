@@ -15,7 +15,11 @@
     "e2e:debug": "playwright test --project=chromium --debug",
     "e2e:install": "playwright install",
     "e2e:report": "playwright show-report",
-    "e2e:codegen": "playwright codegen http://127.0.0.1:5173"
+    "e2e:codegen": "playwright codegen http://127.0.0.1:5173",
+    "sst": "sst",
+    "deploy": "sst deploy --stage dev",
+    "deploy:prod": "sst deploy --stage prod",
+    "sst:remove": "sst remove --stage dev"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -44,6 +48,7 @@
     "fake-indexeddb": "^6.2.5",
     "globals": "^16.4.0",
     "jsdom": "^29.1.1",
+    "sst": "^4.12.2",
     "tailwindcss": "^4.3.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.44.0",

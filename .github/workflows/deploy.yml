@@ -1,0 +1,60 @@
+name: Deploy
+
+# Static-site deploy via SST. The StaticSite component runs `pnpm build` itself
+# during `sst deploy`, so this job only installs deps and hands off to SST.
+#
+# Auth uses GitHub OIDC -> an IAM role in the rembr "dev" AWS account (no
+# long-lived AWS keys). DNS records for lifelog.bxtn.dev are created in
+# Cloudflare, so the deploy also needs a scoped Cloudflare API token.
+#
+# Required config (Settings -> Secrets and variables -> Actions, or per-Environment):
+#   - secret  AWS_DEPLOY_ROLE_ARN   arn of the role GitHub OIDC may assume
+#   - secret  CLOUDFLARE_API_TOKEN  token with Zone:Read + DNS:Edit for bxtn.dev
+#   - var     AWS_REGION            e.g. us-east-1 (optional; defaults below)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: SST stage to deploy
+        type: choice
+        options: [dev, prod]
+        default: dev
+
+# Never run two deploys to the same stage at once; let an in-flight deploy finish.
+concurrency:
+  group: deploy-${{ github.event.inputs.stage || 'dev' }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # push to main -> dev; manual dispatch -> chosen stage.
+    environment: ${{ github.event.inputs.stage || 'dev' }}
+    permissions:
+      id-token: write # required for OIDC
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4 # reads packageManager from package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: pnpm sst deploy --stage ${{ github.event.inputs.stage || 'dev' }}
