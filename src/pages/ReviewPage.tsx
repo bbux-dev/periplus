@@ -7,6 +7,7 @@ import { FormField } from '../components/ui/FormField'
 import { Button } from '../components/ui/Button'
 import { entriesRepository } from '../services/entriesRepository'
 import { isSafeUrl } from '../services/urlUtils'
+import { draftToEntry } from '../services/captureService'
 import type { ReviewDraft } from '../services/extractMetadataFromUrl'
 import type { EntryDomain, EntryType } from '../services/db'
 
@@ -98,31 +99,27 @@ export function ReviewPage() {
     savingRef.current = true
     setIsSaving(true)
     setSaveError(null)
-    // Validate sourceUrl scheme — never persist javascript: or other unsafe protocols
+    // Validate sourceUrl scheme — never persist javascript: or other unsafe protocols (T-13-04)
     const safeSourceUrl = sourceUrl && isSafeUrl(sourceUrl) ? sourceUrl : undefined
     // Parse manual-entry numeric + date fields
     const parsedAmount = parseFloat(amount)
     // WR-03: local midnight — appending T00:00:00 makes the spec parse as local, not UTC
     const parsedDate   = occurredAt ? Date.parse(`${occurredAt}T00:00:00`) : NaN
     const parsedTags   = tags.split(',').map((t) => t.trim()).filter(Boolean)
-    // Build the full Omit<LifeLogEntry, 'id'> — every required field present (Pitfall 5)
-    const entry = {
-      domain: domain as EntryDomain,
-      type: type as EntryType,
-      title: title.trim() || 'Untitled',
-      recordedAt: Date.now(),
-      tags: parsedTags,                                                    // was hardcoded []
-      metadata: initialDraft.metadata ?? {},
-      syncedAt: null as number | null,
-      // Optional fields — omit when empty
-      ...(safeSourceUrl         ? { sourceUrl: safeSourceUrl }   : {}),
-      ...(location_             ? { location: location_ }         : {}),
-      ...(description           ? { description }                 : {}),
-      ...(!isNaN(parsedAmount)  ? { amount: parsedAmount }        : {}),
-      ...(!isNaN(parsedDate)    ? { occurredAt: parsedDate }      : {}),
+    // Assemble ReviewDraft from form state; draftToEntry is the single construction site.
+    // See: src/services/captureService.ts draftToEntry (shared contract — RESEARCH Pitfall 3).
+    const formDraft: ReviewDraft = {
+      title,
+      location:    location_    || undefined,
+      description: description  || undefined,
+      sourceUrl:   safeSourceUrl,                                         // isSafeUrl gate above
+      amount:      !isNaN(parsedAmount) ? parsedAmount : undefined,
+      occurredAt:  !isNaN(parsedDate)   ? parsedDate   : undefined,
+      tags:        parsedTags,
+      metadata:    initialDraft.metadata ?? {},
     }
     try {
-      await entriesRepository.create(entry)
+      await entriesRepository.create(draftToEntry(formDraft, type as EntryType, domain as EntryDomain))
       navigate(`/d/${domain}`)
     } catch (err) {
       setSaveError('Save failed. Please try again.')
