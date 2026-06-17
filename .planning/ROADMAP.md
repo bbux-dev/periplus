@@ -97,7 +97,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
   4. After a direct save (`confirm:false`), a "Saved · Undo" toast appears; tapping Undo calls `entriesRepository.delete` and confirms the entry is gone.
   5. A named-hole placeholder in a `dslTemplate` causes the fill-the-hole prompt to ask for that specific named field, not only empty positional slots.
 **Plans**: 3 plans
-  - [ ] 13-01-PLAN.md — captureService (draftToEntry, detectHoles, {} token, applyFills/buildDSLPreview) + ReviewPage refactor to draftToEntry [wave 1, logic]
+  - [x] 13-01-PLAN.md — captureService (draftToEntry, detectHoles, {} token, applyFills/buildDSLPreview) + ReviewPage refactor to draftToEntry [wave 1, logic]
   - [ ] 13-02-PLAN.md — HoleSheet (keypad/presets/live preview) + SavedToast components [wave 2, UI]
   - [ ] 13-03-PLAN.md — useShortcutCapture orchestrator hook + DashboardPage wire-in + integration tests [wave 3, wiring]
 **UI hint**: yes
@@ -142,6 +142,6 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 | 10. Docs & Examples | v0.2.0 | 1/1 | Complete | 2026-06-16 |
 | 11. Config Model, Schema & Storage | v0.3.0 | 1/1 | Complete   | 2026-06-17 |
 | 12. Dashboard Rendering & Layout Switcher | v0.3.0 | 2/2 | Complete   | 2026-06-17 |
-| 13. Tap-to-Capture Flow | v0.3.0 | 0/3 | Not started | - |
+| 13. Tap-to-Capture Flow | v0.3.0 | 1/3 | In Progress|  |
 | 14. Import / Export Config | v0.3.0 | 0/? | Not started | - |
 | 15. Authoring Tool | v0.3.0 | 0/? | Not started | - |

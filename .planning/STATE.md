@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v0.3.0
 milestone_name: Dashboard Shortcut Layouts
-status: verifying
+status: executing
 stopped_at: Completed 11-config-model-schema-storage/11-01-PLAN.md
-last_updated: "2026-06-17T16:00:54.460Z"
+last_updated: "2026-06-17T16:48:34.386Z"
 last_activity: 2026-06-17
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 6
+  completed_plans: 4
   percent: 40
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-17)
 
 **Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 12 — Dashboard Rendering & Layout Switcher
+**Current focus:** Phase 13 — Tap-to-Capture Flow
 
 ## Current Position
 
-Phase: 12 (Dashboard Rendering & Layout Switcher) — EXECUTING
-Plan: 2 of 2
-Status: Phase complete — ready for verification
+Phase: 13 (Tap-to-Capture Flow) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-06-17
 
 ```
@@ -36,7 +36,7 @@ Last activity: 2026-06-17
 [Phase 13: Tap-to-Capture Flow               ] — not started
 [Phase 14: Import / Export Config            ] — not started
 [Phase 15: Authoring Tool                    ] — not started
-Progress: [██████████] 100%
+Progress: [███████░░░] 67%
 ```
 
 ## Performance Metrics
@@ -83,6 +83,7 @@ Progress: [██████████] 100%
 | Phase 11-config-model-schema-storage P01 | 5min | 3 tasks | 7 files |
 | Phase 12-dashboard-rendering-layout-switcher P01 | 8min | 2 tasks | 4 files |
 | Phase 12-dashboard-rendering-layout-switcher P2 | 4min | 2 tasks | 5 files |
+| Phase 13-tap-to-capture-flow P01 | 8min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -125,6 +126,10 @@ architecture-template.md SPEC + spec.md:
 - [Phase 12-01]: DEFAULT_SHORTCUT_CONFIG is inert data — parseDSL not called at module load; DSL validity asserted in tests only (T-12-01 accept)
 - [Phase 12-01]: ACTIVE_LAYOUT_KEY = 'activeLayoutName' in db.settings; separate key from shortcutConfig, no schema bump, no db.ts modification
 - [Phase 12-01]: useActiveLayoutName has NO default (undefined = loading/unset); callers derive activeLayout with layouts.find() ?? layouts[0]
+- [Phase 13-01]: HOLE_TOKEN='{}' as CAP-04 named-hole convention (no DSL delimiter collision; visually clear as empty slot)
+- [Phase 13-01]: detectHoles uses POSITIONAL_SCHEMA[type].filter exclusively — not parser warning strings (Pitfall 2 prevention)
+- [Phase 13-01]: draftToEntry is the single entry-construction source; ReviewPage.handleSave refactored to call it (Pitfall 3 prevention)
+- [Phase 13-01]: isSafeUrl gate stays at ReviewPage boundary before formDraft assembly; draftToEntry passes through sourceUrl when truthy (T-13-04)
 
 ### Pending Todos
 
@@ -144,8 +149,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-17T16:00:54.450Z
-Stopped at: Completed 11-config-model-schema-storage/11-01-PLAN.md
+Last session: 2026-06-17T16:48:34.376Z
+Stopped at: Completed 13-tap-to-capture-flow/13-01-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
