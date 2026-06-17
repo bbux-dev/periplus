@@ -27,9 +27,16 @@ describe('DashboardPage', () => {
     expect(screen.getByText('Expenditures')).toBeInTheDocument()
   })
 
-  it('renders 3 domain links plus the View All Entries link (4 total)', () => {
+  it('renders Quick Capture + 3 domain links + View All Entries (5 total)', () => {
     renderDashboard()
-    expect(screen.getAllByRole('link')).toHaveLength(4)
+    expect(screen.getAllByRole('link')).toHaveLength(5)
+  })
+
+  it('Quick Capture link targets /capture', () => {
+    renderDashboard()
+    const links = screen.getAllByRole('link')
+    const captureLink = links.find((l) => l.textContent?.includes('Quick Capture'))
+    expect(captureLink?.getAttribute('href')).toBe('/capture')
   })
 
   it('media link targets /d/media', () => {

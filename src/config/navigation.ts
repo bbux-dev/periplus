@@ -68,3 +68,14 @@ export const NAVIGATION: DomainConfig[] = [
 export function getDomainConfig(domain: string): DomainConfig | undefined {
   return NAVIGATION.find((d) => d.domain === domain)
 }
+
+/**
+ * The canonical domain a Quick-Capture entry of `type` lands in. `expense` lives in
+ * both 'trips' and 'expenditures' — a bare expense defaults to 'expenditures'. All
+ * other types belong to exactly one domain.
+ */
+export function defaultDomainForType(type: EntryType): EntryDomain {
+  if (type === 'expense') return 'expenditures'
+  const config = NAVIGATION.find((d) => d.types.some((t) => t.type === type))
+  return config?.domain ?? 'media'
+}

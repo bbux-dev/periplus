@@ -41,16 +41,16 @@ export interface ParseOptions {
 
 // ─── Type registry ────────────────────────────────────────────────────────────────
 
-const TYPE_NAMES = Object.keys(POSITIONAL_SCHEMA) as EntryType[]
+export const TYPE_NAMES = Object.keys(POSITIONAL_SCHEMA) as EntryType[]
 
-const TYPE_ALIASES: Record<string, EntryType> = {
+export const TYPE_ALIASES: Record<string, EntryType> = {
   exp: 'expense',
   mov: 'movie',
   pod: 'podcast',
 }
 
 // Named-param aliases → canonical field key (so users type `date=` not `occurredAt=`).
-const NAMED_ALIASES: Record<string, string> = {
+export const NAMED_ALIASES: Record<string, string> = {
   date: 'occurredAt', when: 'occurredAt',
   note: 'description', notes: 'description', desc: 'description',
   author: 'creator', director: 'creator', host: 'creator', cur: 'currency',
@@ -63,7 +63,7 @@ function fieldKeys(type: EntryType): string[] {
 
 // ─── Quote-aware helpers ────────────────────────────────────────────────────────
 
-function indexOfTopLevel(str: string, delim: string): number {
+export function indexOfTopLevel(str: string, delim: string): number {
   let inStr = false
   let esc = false
   for (let i = 0; i < str.length; i++) {

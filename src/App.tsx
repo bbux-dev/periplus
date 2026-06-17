@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { DashboardPage }   from './pages/DashboardPage'
 import { DomainPage }      from './pages/DomainPage'
+import { QuickCapturePage } from './pages/QuickCapturePage'
 import { CaptureUrlPage }  from './pages/CaptureUrlPage'
 import { ReviewPage }      from './pages/ReviewPage'
 import { ManualEntryPage } from './pages/ManualEntryPage'
@@ -13,6 +14,7 @@ function App() {
     <Routes>
       {/* Phase 3 — real content */}
       <Route path="/"              element={<DashboardPage />} />
+      <Route path="/capture"       element={<QuickCapturePage />} />
       <Route path="/d/:domain"     element={<DomainPage />} />
 
       {/* Phase 4 — URL Capture (default) + Review */}
