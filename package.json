@@ -7,7 +7,14 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "e2e:smoke": "playwright test --project=mobile --project=chromium",
+    "e2e:smoke:all": "playwright test",
+    "e2e:headed": "playwright test --project=chromium --headed",
+    "e2e:debug": "playwright test --project=chromium --debug",
+    "e2e:install": "playwright install",
+    "e2e:report": "playwright show-report",
+    "e2e:codegen": "playwright codegen http://127.0.0.1:5173"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -21,10 +28,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@playwright/test": "^1.61.0",
     "@tailwindcss/vite": "^4.3.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^24.13.2",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.3",

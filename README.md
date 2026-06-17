@@ -112,10 +112,25 @@ parser feasibility spike live under `.planning/notes/quick-capture-dsl-design.md
 ```bash
 npm install
 npm run dev        # Vite dev server
-npx vitest run     # run the test suite
+npx vitest run     # unit + RTL suite (Vitest, co-located src/**/*.test.ts(x))
 npm run build      # tsc -b && vite build (also emits the PWA service worker)
 npm run lint       # eslint
 ```
+
+### End-to-end tests (Playwright)
+
+Browser-level smoke tests live in [`e2e/`](e2e/README.md) — an intermediate check between
+the Vitest suite and manual testing. Conventions follow `patrimonium/apps/e2e`.
+
+```bash
+npm run e2e:install   # one-time: download browser binaries
+npm run e2e:smoke     # smoke suite on mobile (Pixel 7) + chromium (auto-starts the dev server)
+npm run e2e:smoke:all # add firefox + webkit
+npm run e2e:headed    # watch it run; e2e:debug for the Inspector; e2e:report for the HTML report
+```
+
+The config auto-starts `npm run dev`; point at a deployed build with `E2E_BASE_URL=…`.
+See [`e2e/README.md`](e2e/README.md) for layout, selector conventions, and coverage.
 
 ## Data export
 
