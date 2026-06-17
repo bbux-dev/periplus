@@ -69,7 +69,8 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
   2. A well-formed config validates successfully; a structurally invalid config is rejected with a human-readable error message before any storage write.
   3. Writing a config to the Dexie `settings` store and reading it back reactively returns the same config without data loss.
   4. A config exported by an older app version loads successfully in a newer one via the defined forward-compat migration path (version field present and migration logic exercised in tests).
-**Plans**: TBD
+**Plans**: 1 plan
+  - [ ] 11-01-PLAN.md — config types + Heroicons allow-list, JSON Schema spec, hand-rolled validator + migration seam, Dexie settings repository + reactive useShortcutConfig hook
 
 ### Phase 12: Dashboard Rendering & Layout Switcher
 **Goal**: The Dashboard renders the active layout's shortcuts as tappable rows with Heroicons icons, provides a horizontally-scrollable layout chip switcher with persisted selection, and seeds sensible defaults on a fresh install.
