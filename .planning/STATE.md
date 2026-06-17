@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v0.3.0
 milestone_name: Dashboard Shortcut Layouts
-status: verifying
-stopped_at: Completed 13-tap-to-capture-flow/13-01-PLAN.md
-last_updated: "2026-06-17T17:29:12.899Z"
+status: executing
+stopped_at: Completed 14-import-export-config/14-01-PLAN.md
+last_updated: "2026-06-17T18:10:11.434Z"
 last_activity: 2026-06-17
 progress:
   total_phases: 5
   completed_phases: 3
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 8
+  completed_plans: 7
   percent: 60
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-17)
 
 **Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 13 — Tap-to-Capture Flow
+**Current focus:** Phase 14 — Import / Export Config
 
 ## Current Position
 
-Phase: 13 (Tap-to-Capture Flow) — EXECUTING
-Plan: 3 of 3
-Status: Phase complete — ready for verification
+Phase: 14 (Import / Export Config) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
 Last activity: 2026-06-17
 
 ```
@@ -36,7 +36,7 @@ Last activity: 2026-06-17
 [Phase 13: Tap-to-Capture Flow               ] — not started
 [Phase 14: Import / Export Config            ] — not started
 [Phase 15: Authoring Tool                    ] — not started
-Progress: [██████████] 100%
+Progress: [█████████░] 88%
 ```
 
 ## Performance Metrics
@@ -86,6 +86,7 @@ Progress: [██████████] 100%
 | Phase 13-tap-to-capture-flow P01 | 8min | 2 tasks | 3 files |
 | Phase 13-tap-to-capture-flow P02 | 8min | - tasks | - files |
 | Phase 13-tap-to-capture-flow P03 | 40 min | 2 tasks | 4 files |
+| Phase 14-import-export-config P01 | 5min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -134,6 +135,8 @@ architecture-template.md SPEC + spec.md:
 - [Phase 13-01]: isSafeUrl gate stays at ReviewPage boundary before formDraft assembly; draftToEntry passes through sourceUrl when truthy (T-13-04)
 - [Phase ?]: [Phase 13-02]: HoleSheet domain prop accepted in interface but unused in render — forwarded by parent hook in 13-03
 - [Phase ?]: [Phase 13-02]: SavedToast owns NO timer — timer+state lives in DashboardPage, wired in 13-03 per RESEARCH §5
+- [Phase ?]: triggerDownload imported and re-exported from exportEntries in configPort, not duplicated — single source of truth for browser download shim
+- [Phase ?]: importConfig uses file.text() (modern File API); wholesale reject — configRepository.put only called on { ok: true } from migrateConfig
 
 ### Pending Todos
 
@@ -153,8 +156,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-17T17:29:12.891Z
-Stopped at: Completed 13-tap-to-capture-flow/13-01-PLAN.md
+Last session: 2026-06-17T18:10:11.424Z
+Stopped at: Completed 14-import-export-config/14-01-PLAN.md
 Resume file: None
 
 ## Operator Next Steps

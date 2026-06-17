@@ -112,7 +112,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
   3. Importing an invalid or structurally malformed file is rejected before any change is applied, with a clear human-readable error message.
   4. A config exported from an older app version imports successfully via the version migration path defined in Phase 11.
 **Plans**: 2 plans
-  - [ ] 14-01-PLAN.md — configPort.ts: buildConfigExportJson (pure) + importConfig (parse→migrate→put, wholesale reject) [wave 1, service, TDD]
+  - [x] 14-01-PLAN.md — configPort.ts: buildConfigExportJson (pure) + importConfig (parse→migrate→put, wholesale reject) [wave 1, service, TDD]
   - [ ] 14-02-PLAN.md — SettingsPage (export button + file-input import + success/error) + /settings route + Dashboard cog link [wave 2, UI, depends_on 14-01]
 **UI hint**: yes
 
@@ -146,5 +146,5 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 | 11. Config Model, Schema & Storage | v0.3.0 | 1/1 | Complete   | 2026-06-17 |
 | 12. Dashboard Rendering & Layout Switcher | v0.3.0 | 2/2 | Complete   | 2026-06-17 |
 | 13. Tap-to-Capture Flow | v0.3.0 | 3/3 | Complete   | 2026-06-17 |
-| 14. Import / Export Config | v0.3.0 | 0/2 | Not started | - |
+| 14. Import / Export Config | v0.3.0 | 1/2 | In Progress|  |
 | 15. Authoring Tool | v0.3.0 | 0/? | Not started | - |

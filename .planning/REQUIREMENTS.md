@@ -43,9 +43,9 @@ save) — a shortcut is a saved DSL template whose empty slots are the "holes."
 
 ### PORT — import / export
 
-- [ ] **PORT-01**: The user can export the entire shortcut config as a JSON file (mirroring the
+- [x] **PORT-01**: The user can export the entire shortcut config as a JSON file (mirroring the
   existing entries-export `triggerDownload` pattern).
-- [ ] **PORT-02**: The user can import a config JSON file; it is validated against the JSON
+- [x] **PORT-02**: The user can import a config JSON file; it is validated against the JSON
   Schema (with version migration) before being applied, and invalid files are rejected with a
   clear message — this is how a second person seeds their own install without accounts.
 
@@ -74,8 +74,8 @@ save) — a shortcut is a saved DSL template whose empty slots are the "holes."
 | CAP-02 | Phase 13 — Tap-to-Capture Flow | Complete |
 | CAP-03 | Phase 13 — Tap-to-Capture Flow | Complete |
 | CAP-04 | Phase 13 — Tap-to-Capture Flow | Complete |
-| PORT-01 | Phase 14 — Import / Export Config | Pending |
-| PORT-02 | Phase 14 — Import / Export Config | Pending |
+| PORT-01 | Phase 14 — Import / Export Config | Complete |
+| PORT-02 | Phase 14 — Import / Export Config | Complete |
 | EDIT-01 | Phase 15 — Authoring Tool | Pending |
 | EDIT-02 | Phase 15 — Authoring Tool | Pending |
 | EDIT-03 | Phase 15 — Authoring Tool | Pending |
