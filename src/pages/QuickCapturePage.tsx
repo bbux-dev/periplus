@@ -41,8 +41,10 @@ export function QuickCapturePage() {
   const typeSuggestions = ctx.kind === 'type' ? typeMatches(ctx.prefix) : []
 
   const canConfirm = parsed.status === 'ok' && parsed.type != null
-  // EDIT-03: allow saving as a shortcut template when the line is parseable + typed
-  // Broader than canConfirm: allows status='ok' OR 'ambiguous' as long as type is resolved
+  // EDIT-03: allow saving as a shortcut template when the line has a resolved type
+  // and is not in error (status === 'ok' or 'ambiguous', type !== null).
+  // Stricter than just status !== 'error': also requires type to be resolved,
+  // which excludes the ambiguous-but-untyped case (e.g. bare prefix with no type match).
   const canSaveAsShortcut = parsed.type !== null && parsed.status !== 'error'
 
   const handleSaveAsShortcut = () => {
