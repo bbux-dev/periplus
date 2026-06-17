@@ -19,11 +19,16 @@ export function DashboardPage() {
   // "Dexie still opening" from "no config stored". Runs once on mount.
   useEffect(() => {
     let cancelled = false
-    configRepository.get().then((existing) => {
-      if (existing === undefined && !cancelled) {
-        configRepository.put(DEFAULT_SHORTCUT_CONFIG)
+    ;(async () => {
+      try {
+        const existing = await configRepository.get()
+        if (existing === undefined && !cancelled) {
+          await configRepository.put(DEFAULT_SHORTCUT_CONFIG)
+        }
+      } catch (err) {
+        console.error('[DashboardPage] Failed to seed default config:', err)
       }
-    })
+    })()
     return () => { cancelled = true }
   }, [])
 
@@ -33,8 +38,10 @@ export function DashboardPage() {
   const layouts = config?.layouts ?? []
   const activeLayout = layouts.find((l) => l.name === persistedLayoutName) ?? layouts[0]
 
-  async function handleLayoutSelect(name: string) {
-    await activeLayoutRepository.put(name)
+  function handleLayoutSelect(name: string) {
+    activeLayoutRepository.put(name).catch((err) => {
+      console.error('[DashboardPage] Failed to persist active layout:', err)
+    })
   }
 
   return (
