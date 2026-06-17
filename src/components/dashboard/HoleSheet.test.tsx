@@ -11,7 +11,6 @@ const amountHoleMap: HoleMap = { positional: ['amount'], named: [], hasHoles: tr
 const baseProps = {
   isOpen: true,
   type: 'expense' as const,
-  domain: 'expenditures' as const,
   baseValues: { category: 'food' },
   holeMap: amountHoleMap,
   onSave: vi.fn(),
@@ -138,7 +137,6 @@ describe('HoleSheet', () => {
       <HoleSheet
         isOpen
         type="expense"
-        domain="expenditures"
         baseValues={{ amount: '12', category: 'food' }}
         holeMap={{ positional: [], named: ['merchant'], hasHoles: true }}
         onSave={vi.fn()}
@@ -156,7 +154,6 @@ describe('HoleSheet', () => {
       <HoleSheet
         isOpen
         type="expense"
-        domain="expenditures"
         baseValues={{ category: 'food' }}
         holeMap={{ positional: ['amount'], named: ['merchant'], hasHoles: true }}
         onSave={vi.fn()}

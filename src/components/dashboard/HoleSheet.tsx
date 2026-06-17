@@ -20,8 +20,6 @@ import type { EntryType } from '../../services/db'
 interface HoleSheetProps {
   isOpen: boolean
   type: EntryType
-  /** Forwarded to the parent's capture orchestrator; not used in rendering. */
-  domain: string
   /** Clean template values (HOLE_TOKEN already stripped). */
   baseValues: Record<string, string>
   holeMap: HoleMap

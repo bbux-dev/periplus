@@ -128,7 +128,6 @@ export function DashboardPage() {
         <HoleSheet
           isOpen
           type={sheetState.type}
-          domain={sheetState.domain}
           baseValues={sheetState.baseValues}
           holeMap={sheetState.holeMap}
           onSave={handleSheetSave}
