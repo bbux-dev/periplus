@@ -22,7 +22,28 @@ A user can capture a structured life event on their phone in seconds — URL-fir
 
 **Quality at ship:** 221 tests passing; `tsc -b` + `vite build` clean; milestone audit passed (35/35 requirements, 4/4 E2E flows). ~4,900 LOC across 28 source files + 25 test files.
 
-**Next milestone:** scope is open — run `/gsd:new-milestone`. See ROADMAP.md v0.2.0+ for candidate directions.
+**Next milestone:** v0.2.0 — Quick-Capture DSL (in progress).
+
+## Current Milestone: v0.2.0 Quick-Capture DSL
+
+**Goal:** Replace slow multi-field entry with a one-line, URL-esque shorthand
+(`[type] slot1:slot2 ?k=v,k=v`) that parses live into the existing Review screen —
+fastest for expenses, generalized across all 7 entry types. Designed in
+`.planning/notes/quick-capture-dsl-design.md`, de-risked by spike `001-dsl-parser`
+(VALIDATED, 24/24).
+
+**Target features:**
+- Type-agnostic DSL parser with per-type positional schemas beside `ENTRY_FIELDS`,
+  emitting the flat formValues `buildReviewDraft` consumes (statuses ok/ambiguous/error)
+- Hybrid quick-capture omnibar: live parse preview → pre-fills the existing Review
+  screen (never direct-save), with type-token suggestions and history-backed value
+  suggestions
+- `entriesRepository` distinct-values lookup backing value suggestions
+- Docs/README with DSL grammar and worked examples per type
+
+**Key context:** Spike-hardened invariants are non-negotiable — exact-only type
+resolution in the parser (partials → suggestion menu), multi-value params must be
+quoted, and parsed input ALWAYS routes through the Review screen with live preview.
 
 ## Requirements
 
@@ -42,9 +63,12 @@ A user can capture a structured life event on their phone in seconds — URL-fir
 
 ### Active
 
-<!-- Next milestone scope is open — run /gsd:new-milestone. -->
+<!-- v0.2.0 Quick-Capture DSL — see REQUIREMENTS.md for full REQ-IDs. -->
 
-(None — v0.1.0 shipped; next milestone not yet scoped)
+- [ ] DSL parser: one-line `[type] slot1:slot2 ?k=v,k=v` shorthand → entry fields (DSL-01..04)
+- [ ] Quick-capture omnibar with live preview + suggestions, pre-filling Review (OMNI-01..04)
+- [ ] `entriesRepository` distinct-values lookup for value suggestions (DATA-01)
+- [ ] DSL docs with worked examples per type (DOCS-01)
 
 ### Deferred (candidate directions for the next milestone)
 

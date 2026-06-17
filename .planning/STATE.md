@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v0.1.0
-milestone_name: Tracer Bullet — App Shell + DB-Backed Counter
-status: Awaiting next milestone
-stopped_at: Completed 06-05-PLAN.md (EntryDetailPage VIEW-03)
-last_updated: "2026-06-16T00:48:06.618Z"
-last_activity: 2026-06-16 — Milestone v0.1.0 completed and archived
+milestone: v0.2.0
+milestone_name: Quick-Capture DSL
+status: planning
+last_updated: "2026-06-17T03:53:23.222Z"
+last_activity: 2026-06-17
 progress:
-  total_phases: 6
-  completed_phases: 6
-  total_plans: 22
-  completed_plans: 22
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -25,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 
 ## Current Position
 
-Phase: Milestone v0.1.0 complete
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-06-16 — Milestone v0.1.0 completed and archived
+Status: Defining requirements
+Last activity: 2026-06-17 — Milestone v0.2.0 started
 
 ## Performance Metrics
 

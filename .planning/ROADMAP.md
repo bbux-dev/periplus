@@ -3,8 +3,35 @@
 ## Milestones
 
 - ✅ **v0.1.0 — Tracer Bullet → working local life-log** — Phases 1–6 (shipped 2026-06-16)
+- 🚧 **v0.2.0 — Quick-Capture DSL** — Phases 7–10 (in progress)
 
 ## Phases
+
+### 🚧 v0.2.0 — Quick-Capture DSL (Phases 7–10)
+
+A one-line, URL-esque shorthand (`[type] slot1:slot2 ?k=v,k=v`) that parses live into the
+existing Review screen. Design: `notes/quick-capture-dsl-design.md`; de-risked by spike
+`001-dsl-parser`.
+
+- [ ] **Phase 7: DSL Parser** — type-agnostic parser (TS) with per-type positional schemas
+  beside `ENTRY_FIELDS`, emitting the flat formValues `buildReviewDraft` consumes; statuses
+  `ok`/`ambiguous`/`error`. Reqs: DSL-01..04.
+  - Success: all 7 types parse; quoted free text + escapes work; partial/single-letter types
+    return `ambiguous`; malformed input returns `error`; type inferred from domain context.
+- [ ] **Phase 8: Distinct-Values Lookup** — `entriesRepository` distinct-values helper
+  (frequency-ranked, prefix filter) + reactive hook. Reqs: DATA-01.
+  - Success: returns frequency-desc distinct values for category/merchant/tags; prefix filter
+    is case-insensitive; covers the tags array.
+- [ ] **Phase 9: Quick-Capture Omnibar** — omnibar UI with live preview, type-token
+  suggestions (resolving p/e collisions), history-backed value suggestions; pre-fills
+  ReviewPage (never direct-save); reachable from the dashboard. Reqs: OMNI-01..04.
+  - Success: typing a DSL shows live parsed fields; suggestions appear; Confirm lands on the
+    pre-filled Review screen; ambiguous/error states block confirm with a clear message.
+- [ ] **Phase 10: Docs & Examples** — README DSL section with grammar + worked examples per
+  type. Reqs: DOCS-01.
+  - Success: README documents the grammar and a worked example for each of the 7 types.
+
+
 
 <details>
 <summary>✅ v0.1.0 (Phases 1–6) — SHIPPED 2026-06-16</summary>
