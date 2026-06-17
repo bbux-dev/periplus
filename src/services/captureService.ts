@@ -91,10 +91,15 @@ export function detectHoles(
   const cleanVals = cleanValues(rawValues)
   const positional = POSITIONAL_SCHEMA[type].filter((k) => !cleanVals[k])
 
+  // De-duplicate: if a key appears as HOLE_TOKEN for a positional slot (e.g.
+  // `expense :{}` produces category='{}'→ named AND positional both claim it),
+  // keep it only in `positional` so HoleSheet renders it once.
+  const namedDeduped = named.filter((k) => !positional.includes(k))
+
   return {
     positional,
-    named,
-    hasHoles: positional.length + named.length > 0,
+    named: namedDeduped,
+    hasHoles: positional.length + namedDeduped.length > 0,
   }
 }
 

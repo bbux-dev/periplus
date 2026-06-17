@@ -104,6 +104,20 @@ describe('detectHoles', () => {
     const result = detectHoles('expense', { category: 'food' })
     expect(result.positional).toContain('amount')
   })
+
+  it('WR-01: positional field with HOLE_TOKEN value is reported only once (no double-count)', () => {
+    // Template `expense :{}` → parser produces { category: '{}' } (amount absent)
+    // category appears in named (HOLE_TOKEN) AND would appear in positional (absent from cleanVals)
+    // After de-duplication, category should be in positional only, not in named.
+    const result = detectHoles('expense', { category: '{}' })
+    expect(result.positional).toContain('amount')
+    expect(result.positional).toContain('category')
+    expect(result.named).toEqual([])   // category de-duped out of named
+    expect(result.hasHoles).toBe(true)
+    // Ensure category appears exactly once across both arrays
+    const allKeys = [...result.positional, ...result.named]
+    expect(allKeys.filter((k) => k === 'category')).toHaveLength(1)
+  })
 })
 
 // ─── applyFills ───────────────────────────────────────────────────────────────
