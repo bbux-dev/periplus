@@ -55,9 +55,9 @@ save) — a shortcut is a saved DSL template whose empty slots are the "holes."
   `confirm` flag) through an in-app authoring UI.
 - [x] **EDIT-02**: The user can create, edit, and delete layouts and reorder the shortcuts
   within a layout.
-- [ ] **EDIT-03**: The user can "Save current as shortcut" from the quick-capture omnibar,
+- [x] **EDIT-03**: The user can "Save current as shortcut" from the quick-capture omnibar,
   turning the current DSL line into a new shortcut template (the "+ New" chip is an entry point).
-- [ ] **EDIT-04**: The authoring UI validates each shortcut's `dslTemplate` via `parseDSL` so a
+- [x] **EDIT-04**: The authoring UI validates each shortcut's `dslTemplate` via `parseDSL` so a
   template that can't parse cannot be saved.
 
 ## Traceability
@@ -78,8 +78,8 @@ save) — a shortcut is a saved DSL template whose empty slots are the "holes."
 | PORT-02 | Phase 14 — Import / Export Config | Complete |
 | EDIT-01 | Phase 15 — Authoring Tool | Complete |
 | EDIT-02 | Phase 15 — Authoring Tool | Complete |
-| EDIT-03 | Phase 15 — Authoring Tool | Pending |
-| EDIT-04 | Phase 15 — Authoring Tool | Pending |
+| EDIT-03 | Phase 15 — Authoring Tool | Complete |
+| EDIT-04 | Phase 15 — Authoring Tool | Complete |
 
 ## Future Requirements (deferred)
 

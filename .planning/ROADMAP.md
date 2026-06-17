@@ -56,7 +56,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 - [x] **Phase 12: Dashboard Rendering & Layout Switcher** — Variant B chips+rows dashboard with Heroicons, scrollable layout switcher, persisted selection, seeded defaults. Reqs: DASH-01..03. (completed 2026-06-17)
 - [x] **Phase 13: Tap-to-Capture Flow** — fill-the-hole micro-prompt (mobile keypad + live DSL preview), per-shortcut one-tap save + undo toast or ReviewPage route. Reqs: CAP-01..04. (completed 2026-06-17)
 - [x] **Phase 14: Import / Export Config** — export config as JSON, import with JSON Schema validation + version migration, reject invalid with clear message. Reqs: PORT-01..02. (completed 2026-06-17)
-- [ ] **Phase 15: Authoring Tool** — create/edit/delete shortcuts and layouts, reorder shortcuts, "Save current as shortcut" from the omnibar, parseDSL validation before save. Reqs: EDIT-01..04.
+- [x] **Phase 15: Authoring Tool** — create/edit/delete shortcuts and layouts, reorder shortcuts, "Save current as shortcut" from the omnibar, parseDSL validation before save. Reqs: EDIT-01..04. (completed 2026-06-17)
 
 ## Phase Details
 
@@ -129,7 +129,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 **Plans**: 3 plans
   - [x] 15-01-PLAN.md — templateValidator (EDIT-04 predicate) + shortcutMutations pure helpers (CRUD + reorder), TDD [wave 1, logic]
   - [x] 15-02-PLAN.md — ManageShortcutsPage (layout CRUD + shortcut delete/reorder) + /manage route [wave 2, UI, depends_on 15-01]
-  - [ ] 15-03-PLAN.md — IconPicker + ShortcutFormPage (create/edit + EDIT-04 gate) + /manage/shortcut route + omnibar "Save as Shortcut" + "+ New" chip activation [wave 3, UI, depends_on 15-01,15-02]
+  - [x] 15-03-PLAN.md — IconPicker + ShortcutFormPage (create/edit + EDIT-04 gate) + /manage/shortcut route + omnibar "Save as Shortcut" + "+ New" chip activation [wave 3, UI, depends_on 15-01,15-02]
 **UI hint**: yes
 
 ## Progress
@@ -150,4 +150,4 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 | 12. Dashboard Rendering & Layout Switcher | v0.3.0 | 2/2 | Complete   | 2026-06-17 |
 | 13. Tap-to-Capture Flow | v0.3.0 | 3/3 | Complete   | 2026-06-17 |
 | 14. Import / Export Config | v0.3.0 | 2/2 | Complete   | 2026-06-17 |
-| 15. Authoring Tool | v0.3.0 | 2/3 | In Progress|  |
+| 15. Authoring Tool | v0.3.0 | 3/3 | Complete   | 2026-06-17 |
