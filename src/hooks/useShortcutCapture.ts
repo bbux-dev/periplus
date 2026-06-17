@@ -121,6 +121,7 @@ export function useShortcutCapture() {
           showToast(saved.id)
         } catch (err) {
           console.error('[useShortcutCapture] Failed to create entry:', err)
+          // WR-05 (deferred): no user-visible error — see handleSheetSave comment.
         }
         return
       }
@@ -146,6 +147,9 @@ export function useShortcutCapture() {
         showToast(saved.id)
       } catch (err) {
         console.error('[useShortcutCapture] Failed to save sheet entry:', err)
+        // WR-05 (deferred): no user-visible error on create failure — needs a
+        // new error affordance (saveError state + HoleSheet banner). Deferred
+        // as out-of-scope for this polish pass; sheet stays open for retry.
       }
     },
     [sheetState, showToast],
