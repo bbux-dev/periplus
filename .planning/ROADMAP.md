@@ -54,7 +54,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 
 - [x] **Phase 11: Config Model, Schema & Storage** — CFG types, versioned JSON Schema, Dexie `settings` reactive read/write, validator. Foundational; no UI. Reqs: CFG-01..03. (completed 2026-06-17)
 - [x] **Phase 12: Dashboard Rendering & Layout Switcher** — Variant B chips+rows dashboard with Heroicons, scrollable layout switcher, persisted selection, seeded defaults. Reqs: DASH-01..03. (completed 2026-06-17)
-- [ ] **Phase 13: Tap-to-Capture Flow** — fill-the-hole micro-prompt (mobile keypad + live DSL preview), per-shortcut one-tap save + undo toast or ReviewPage route. Reqs: CAP-01..04.
+- [x] **Phase 13: Tap-to-Capture Flow** — fill-the-hole micro-prompt (mobile keypad + live DSL preview), per-shortcut one-tap save + undo toast or ReviewPage route. Reqs: CAP-01..04. (completed 2026-06-17)
 - [ ] **Phase 14: Import / Export Config** — export config as JSON, import with JSON Schema validation + version migration, reject invalid with clear message. Reqs: PORT-01..02.
 - [ ] **Phase 15: Authoring Tool** — create/edit/delete shortcuts and layouts, reorder shortcuts, "Save current as shortcut" from the omnibar, parseDSL validation before save. Reqs: EDIT-01..04.
 
@@ -99,7 +99,7 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 **Plans**: 3 plans
   - [x] 13-01-PLAN.md — captureService (draftToEntry, detectHoles, {} token, applyFills/buildDSLPreview) + ReviewPage refactor to draftToEntry [wave 1, logic]
   - [x] 13-02-PLAN.md — HoleSheet (keypad/presets/live preview) + SavedToast components [wave 2, UI]
-  - [ ] 13-03-PLAN.md — useShortcutCapture orchestrator hook + DashboardPage wire-in + integration tests [wave 3, wiring]
+  - [x] 13-03-PLAN.md — useShortcutCapture orchestrator hook + DashboardPage wire-in + integration tests [wave 3, wiring]
 **UI hint**: yes
 
 ### Phase 14: Import / Export Config
@@ -142,6 +142,6 @@ Audit: [`milestones/v0.1.0-MILESTONE-AUDIT.md`](milestones/v0.1.0-MILESTONE-AUDI
 | 10. Docs & Examples | v0.2.0 | 1/1 | Complete | 2026-06-16 |
 | 11. Config Model, Schema & Storage | v0.3.0 | 1/1 | Complete   | 2026-06-17 |
 | 12. Dashboard Rendering & Layout Switcher | v0.3.0 | 2/2 | Complete   | 2026-06-17 |
-| 13. Tap-to-Capture Flow | v0.3.0 | 2/3 | In Progress|  |
+| 13. Tap-to-Capture Flow | v0.3.0 | 3/3 | Complete   | 2026-06-17 |
 | 14. Import / Export Config | v0.3.0 | 0/? | Not started | - |
 | 15. Authoring Tool | v0.3.0 | 0/? | Not started | - |
