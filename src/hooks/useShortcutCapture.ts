@@ -73,13 +73,16 @@ export function useShortcutCapture() {
   const handleUndo = useCallback(async () => {
     if (timerRef.current) clearTimeout(timerRef.current)
     const id = toastEntryId
-    setToastEntryId(null)
-    if (id) {
-      try {
-        await entriesRepository.delete(id)
-      } catch (err) {
-        console.error('[useShortcutCapture] Failed to delete entry on undo:', err)
-      }
+    // Guard: no-op if toast already dismissed (double-undo / undo-after-dismiss)
+    if (!id) return
+    try {
+      await entriesRepository.delete(id)
+      // Dismiss toast only after successful delete — avoids orphaned entry with
+      // no retry path if IndexedDB write fails.
+      setToastEntryId(null)
+    } catch (err) {
+      console.error('[useShortcutCapture] Failed to delete entry on undo:', err)
+      // Toast intentionally kept visible so the user can retry.
     }
   }, [toastEntryId])
 
