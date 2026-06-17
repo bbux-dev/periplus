@@ -41,10 +41,16 @@ export function SettingsPage() {
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
-    const result = await importConfig(file)
-    setImportStatus(result)
-    // Reset so re-picking the same file fires onChange again
-    e.target.value = ''
+    setImportStatus(null) // clear stale status before async work (WR-02)
+    try {
+      const result = await importConfig(file)
+      setImportStatus(result)
+    } catch {
+      setImportStatus({ ok: false, reason: 'Unexpected error. Please try again.' })
+    } finally {
+      // Reset so re-picking the same file fires onChange again — even on throw (WR-01)
+      e.target.value = ''
+    }
   }
 
   return (
@@ -79,6 +85,7 @@ export function SettingsPage() {
           accept=".json,application/json"
           className="sr-only"
           aria-label="Choose config file"
+          tabIndex={-1}
           onChange={handleFileChange}
         />
         <button

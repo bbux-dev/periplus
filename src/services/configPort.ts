@@ -63,7 +63,13 @@ export async function importConfig(file: File): Promise<ImportResult> {
   }
   const result = migrateConfig(raw)
   if (!result.ok) return { ok: false, reason: result.reason }
-  await configRepository.put(result.config)
+  try {
+    await configRepository.put(result.config)
+  } catch {
+    // IndexedDB write failure (quota, blocked, etc.) — wholesale reject so the
+    // caller surfaces an error instead of an unhandled rejection (WR-01).
+    return { ok: false, reason: 'Failed to save the config. Please try again.' }
+  }
   return { ok: true }
 }
 
