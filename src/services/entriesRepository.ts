@@ -53,6 +53,63 @@ export const entriesRepository = {
   async delete(id: string): Promise<void> {
     await db.entries.delete(id)
   },
+
+  /**
+   * Distinct values for a suggestable field across all entries, ranked by
+   * frequency (most-used first, ties broken alphabetically). Backs the
+   * Quick-Capture history-backed value suggestions (DATA-01 / OMNI-04).
+   *
+   * - `category` / `merchant` live in `metadata` (string values only are counted).
+   * - `tags` is the core string array — each tag counted individually.
+   *
+   * Optional `prefix` filters case-insensitively (typeahead). Returned values keep
+   * their original casing (the most frequent casing wins on case-insensitive ties).
+   *
+   * Full scan, NOT an index — `metadata`/`tags` are intentionally unindexed
+   * (see db.ts). Correct at personal-log scale; revisit if entry counts grow large.
+   */
+  async listDistinctValues(
+    field: DistinctField,
+    prefix = '',
+  ): Promise<DistinctValue[]> {
+    const entries = await db.entries.toArray()
+    const pfx = prefix.trim().toLowerCase()
+
+    // Aggregate case-insensitively; the first-seen casing becomes the display label.
+    const counts = new Map<string, { count: number; display: string }>()
+    const bump = (raw: unknown) => {
+      if (typeof raw !== 'string') return
+      const value = raw.trim()
+      if (!value) return
+      if (pfx && !value.toLowerCase().startsWith(pfx)) return
+      const key = value.toLowerCase()
+      const cur = counts.get(key)
+      if (cur) cur.count++
+      else counts.set(key, { count: 1, display: value })
+    }
+
+    for (const e of entries) {
+      if (field === 'tags') {
+        for (const t of e.tags) bump(t)
+      } else {
+        bump(e.metadata[field])
+      }
+    }
+
+    return Array.from(counts.values())
+      .map((c) => ({ value: c.display, count: c.count }))
+      .sort((a, b) => b.count - a.count || a.value.localeCompare(b.value))
+  },
+}
+
+// ─── Distinct-values types (DATA-01) ──────────────────────────────────────────
+
+/** Fields the Quick-Capture omnibar can suggest values for from prior entries. */
+export type DistinctField = 'category' | 'merchant' | 'tags'
+
+export interface DistinctValue {
+  value: string
+  count: number
 }
 
 // ─── Reactive hooks (DATA-05) ────────────────────────────────────────────────
@@ -105,5 +162,19 @@ export function useEntry(id: string): LifeLogEntry | null | undefined {
     () => db.entries.get(id).then((e) => e ?? null),
     [id],
     // No default value: callers distinguish undefined (loading) from null (not found)
+  )
+}
+
+/**
+ * Reactive frequency-ranked distinct values for a suggestable field (DATA-01).
+ * Re-runs when `field` or `prefix` changes, or when entries change. Defaults to
+ * `[]` so suggestion dropdowns can render immediately (empty = no suggestions).
+ */
+export function useDistinctValues(field: DistinctField, prefix = ''): DistinctValue[] {
+  return (
+    useLiveQuery(
+      () => entriesRepository.listDistinctValues(field, prefix),
+      [field, prefix],
+    ) ?? []
   )
 }
