@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 Phase: Milestone v0.3.0 complete
 Plan: —
 Status: Awaiting next milestone
-Last activity: 2026-06-17 — Milestone v0.3.0 completed and archived
+Last activity: 2026-06-18 - Completed quick task 260618-8pp: home button and hamburger nav menu
 
 ## Performance Metrics
 
@@ -144,6 +144,12 @@ architecture-template.md SPEC + spec.md:
 ### Blockers/Concerns
 
 None yet.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260618-8pp | home button and hamburger nav menu | 2026-06-18 | 7694865 | [260618-8pp-home-button-and-hamburger-nav-menu](./quick/260618-8pp-home-button-and-hamburger-nav-menu/) |
 
 ## Deferred Items
 
