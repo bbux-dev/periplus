@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import { AppShell }        from './components/layout/AppShell'
 import { DashboardPage }   from './pages/DashboardPage'
 import { DomainPage }      from './pages/DomainPage'
 import { QuickCapturePage } from './pages/QuickCapturePage'
@@ -14,6 +15,7 @@ import { ShortcutFormPage } from './pages/ShortcutFormPage'
 
 function App() {
   return (
+    <AppShell>
     <Routes>
       {/* Phase 3 — real content */}
       <Route path="/"              element={<DashboardPage />} />
@@ -41,6 +43,7 @@ function App() {
       {/* Catch-all: unknown paths show a graceful not-found page */}
       <Route path="*" element={<PlaceholderPage title="Page Not Found" />} />
     </Routes>
+    </AppShell>
   )
 }
 
