@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v0.5.0
 milestone_name: Trips MVP UI Refactor
-status: verifying
+status: executing
 stopped_at: Roadmap created for v0.5.0 (Phases 20–24)
-last_updated: "2026-06-19T14:24:17.904Z"
+last_updated: "2026-06-19T15:00:54.199Z"
 last_activity: 2026-06-19
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 6
+  completed_plans: 3
   percent: 20
 ---
 
@@ -21,17 +21,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-19)
 
 **Core value:** A user can capture a structured life event on their phone in seconds and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 20 — Trip Data Model + Engine Extensions
+**Current focus:** Phase 21 — App Shell + Routing Rewrite + Atomic Drop
 
 ## Current Position
 
-Phase: 20 (Trip Data Model + Engine Extensions) — EXECUTING
-Plan: 2 of 2
-Status: Phase complete — ready for verification
+Phase: 21 (App Shell + Routing Rewrite + Atomic Drop) — EXECUTING
+Plan: 2 of 4
+Status: Ready to execute
 Last activity: 2026-06-19
 
 ```
-Progress: [██████████] 100%
+Progress: [█████░░░░░] 50%
 ```
 
 ## Deferred Items
@@ -46,7 +46,7 @@ Items acknowledged and deferred at milestone close on 2026-06-19:
 
 **Velocity:**
 
-- Total plans completed: 3
+- Total plans completed: 5
 - Average duration: ~5 min/plan
 - Total execution time: ~15 min (Phase 1)
 
@@ -55,6 +55,7 @@ Items acknowledged and deferred at milestone close on 2026-06-19:
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | Phase 01 | 3 | ~15min | ~5min |
+| 20 | 2 | - | - |
 
 **Recent Trend:**
 
@@ -95,6 +96,7 @@ Items acknowledged and deferred at milestone close on 2026-06-19:
 | Phase 15-authoring-tool P03 | 18 | 3 tasks | 10 files |
 | Phase 20-trip-data-model-engine-extensions P01 | 5 | 2 tasks | 8 files |
 | Phase 20-trip-data-model-engine-extensions P02 | 8min | 2 tasks | 2 files |
+| Phase 21 P01 | 5min | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -185,7 +187,7 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-19T14:24:17.893Z
+Last session: 2026-06-19T15:00:54.189Z
 Stopped at: Roadmap created for v0.5.0 (Phases 20–24)
 Resume file: None
 

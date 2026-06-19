@@ -84,7 +84,7 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 - [ ] **UI-02**: `AppShell` is rewritten to the trip-only top-level navigation (no domain tiles / shortcut config)
 - [ ] **UI-03**: Settings is reduced to JSON export (reuses `exportEntries`); no shortcut/layout authoring UI
 - [ ] **UI-04**: The router exposes only trip-flow routes; unknown paths still resolve gracefully
-- [ ] **UI-05**: Reused low-level primitives (`Button`, `FormField`, `Input`, `cn`, `HoleSheet`, `SavedToast`) and the engine are not duplicated — new screens compose them
+- [x] **UI-05**: Reused low-level primitives (`Button`, `FormField`, `Input`, `cn`, `HoleSheet`, `SavedToast`) and the engine are not duplicated — new screens compose them
 
 ---
 
@@ -125,7 +125,7 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 | UI-02 | Phase 21 | Pending |
 | UI-03 | Phase 21 | Pending |
 | UI-04 | Phase 21 | Pending |
-| UI-05 | Phase 21 | Pending |
+| UI-05 | Phase 21 | Complete |
 | TRIP-01 | Phase 22 | Pending |
 | TRIP-03 | Phase 22 | Pending |
 | HOME-01 | Phase 22 | Pending |
