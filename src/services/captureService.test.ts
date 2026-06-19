@@ -412,6 +412,65 @@ describe('withDefaultOccurredAt (DATE-01)', () => {
   })
 })
 
+// ─── STAMP-01: active-mode stamping ───────────────────────────────────────────
+
+describe('draftToEntry — active-mode stamping (STAMP-01)', () => {
+  it('stamps metadata.mode + metadata.modeLabel when an active mode is passed', () => {
+    const draft = makeReviewDraft({ title: 'Coffee' })
+    const entry = draftToEntry(draft, 'expense', 'expenditures', {
+      mode: 'Travel',
+      label: 'Oregon',
+    })
+    expect(entry.metadata).toEqual({ mode: 'Travel', modeLabel: 'Oregon' })
+  })
+
+  it('merges mode/modeLabel over existing draft.metadata (preserves prior keys)', () => {
+    const draft = makeReviewDraft({
+      title: 'Coffee',
+      metadata: { category: 'coffee', currency: 'USD' },
+    })
+    const entry = draftToEntry(draft, 'expense', 'expenditures', {
+      mode: 'Travel',
+      label: 'Oregon',
+    })
+    expect(entry.metadata).toEqual({
+      category: 'coffee',
+      currency: 'USD',
+      mode: 'Travel',
+      modeLabel: 'Oregon',
+    })
+  })
+
+  it('does NOT write mode/modeLabel when activeMode is undefined', () => {
+    const draft = makeReviewDraft({ title: 'Coffee', metadata: { category: 'coffee' } })
+    const entry = draftToEntry(draft, 'expense', 'expenditures', undefined)
+    expect(entry.metadata).toEqual({ category: 'coffee' })
+    expect('mode' in entry.metadata).toBe(false)
+    expect('modeLabel' in entry.metadata).toBe(false)
+  })
+
+  it('does NOT write mode/modeLabel when activeMode is null', () => {
+    const draft = makeReviewDraft({ title: 'Coffee' })
+    const entry = draftToEntry(draft, 'expense', 'expenditures', null)
+    expect('mode' in entry.metadata).toBe(false)
+    expect('modeLabel' in entry.metadata).toBe(false)
+  })
+
+  it('does NOT write mode/modeLabel when the mode string is empty', () => {
+    const draft = makeReviewDraft({ title: 'Coffee', metadata: { category: 'coffee' } })
+    const entry = draftToEntry(draft, 'expense', 'expenditures', { mode: '', label: '' })
+    expect(entry.metadata).toEqual({ category: 'coffee' })
+    expect('mode' in entry.metadata).toBe(false)
+    expect('modeLabel' in entry.metadata).toBe(false)
+  })
+
+  it('omitting the activeMode arg entirely behaves like no active mode', () => {
+    const draft = makeReviewDraft({ title: 'Coffee', metadata: { category: 'coffee' } })
+    const entry = draftToEntry(draft, 'expense', 'expenditures')
+    expect(entry.metadata).toEqual({ category: 'coffee' })
+  })
+})
+
 describe('draftToEntry — full entry shape (draftToEntry vs buildDSLPreview round-trip)', () => {
   it('complete expense draft produces all expected fields', () => {
     const draft = makeReviewDraft({

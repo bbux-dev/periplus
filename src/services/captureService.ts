@@ -13,6 +13,7 @@
 import { ENTRY_FIELDS, POSITIONAL_SCHEMA } from '../config/entryFields'
 import type { EntryDomain, EntryType, LifeLogEntry } from './db'
 import type { ReviewDraft } from './extractMetadataFromUrl'
+import type { ActiveMode } from './activeMode'
 
 // ─── CAP-04 Named-Hole Token ──────────────────────────────────────────────────
 
@@ -169,14 +170,22 @@ export function draftToEntry(
   draft: ReviewDraft,
   type: EntryType,
   domain: EntryDomain,
+  activeMode?: ActiveMode | null,
 ): Omit<LifeLogEntry, 'id'> {
+  // STAMP-01: stamp mode provenance ONLY when a mode is actually active (non-empty
+  // mode string). Otherwise write NEITHER key — no empty/placeholder values.
+  const baseMetadata = draft.metadata ?? {}
+  const metadata =
+    activeMode?.mode
+      ? { ...baseMetadata, mode: activeMode.mode, modeLabel: activeMode.label }
+      : baseMetadata
   return {
     domain,
     type,
     title:      draft.title?.trim() || 'Untitled',  // mirrors: title.trim() || 'Untitled'
     recordedAt: Date.now(),                          // mirrors: Date.now()
     tags:       draft.tags ?? [],                    // draft.tags is already string[] (no re-split)
-    metadata:   draft.metadata ?? {},                // mirrors: initialDraft.metadata ?? {}
+    metadata,                                        // base metadata, optionally mode-stamped (STAMP-01)
     syncedAt:   null as number | null,               // mirrors: null as number | null
     // Optional fields — included only when truthy / not null-or-NaN:
     ...(draft.sourceUrl
