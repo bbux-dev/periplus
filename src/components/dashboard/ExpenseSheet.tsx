@@ -255,7 +255,7 @@ export function ExpenseSheet({
           <Button
             variant="primary"
             type="button"
-            disabled={!canSave || saving}
+            disabled={saving}
             onClick={() => void handleSave()}
             className="flex-1"
           >
