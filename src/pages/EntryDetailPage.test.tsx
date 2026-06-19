@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { db } from '../services/db'
@@ -175,5 +176,75 @@ describe('EntryDetailPage: not-found guard', () => {
     // Extra not-found case: a syntactically valid id that simply has no matching entry
     renderDetail('00000000-0000-0000-0000-000000000000')
     expect(await screen.findByText('Entry not found.')).toBeInTheDocument()
+  })
+})
+
+// ─── SC5: Edit + Delete affordances (Phase 17) ────────────────────────────────
+
+/** Detail mounted alongside edit-route and list-route stubs for nav assertions. */
+function renderDetailWithRoutes(id: string) {
+  return render(
+    <MemoryRouter initialEntries={[`/entries/${id}`]}>
+      <Routes>
+        <Route path="/entries/:id" element={<EntryDetailPage />} />
+        <Route path="/entries/:id/edit" element={<div>Edit Stub</div>} />
+        <Route path="/entries" element={<div>Entry List Stub</div>} />
+      </Routes>
+    </MemoryRouter>,
+  )
+}
+
+describe('EntryDetailPage: Edit affordance', () => {
+  it('navigates to the edit route when the Edit affordance is clicked', async () => {
+    const user = userEvent.setup()
+    const created = await entriesRepository.create(makeEntryData())
+    renderDetailWithRoutes(created.id)
+    await screen.findByRole('heading', { name: 'The Pragmatic Programmer' })
+
+    await user.click(screen.getByRole('button', { name: /edit/i }))
+    expect(await screen.findByText('Edit Stub')).toBeInTheDocument()
+  })
+})
+
+describe('EntryDetailPage: Delete with inline confirm', () => {
+  it('reveals an inline confirm (not window.confirm) when Delete is clicked', async () => {
+    const user = userEvent.setup()
+    const created = await entriesRepository.create(makeEntryData())
+    renderDetailWithRoutes(created.id)
+    await screen.findByRole('heading', { name: 'The Pragmatic Programmer' })
+
+    await user.click(screen.getByRole('button', { name: /^delete$/i }))
+    expect(screen.getByText(/delete this entry\?/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /confirm/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument()
+  })
+
+  it('Cancel dismisses the confirm and leaves the entry intact', async () => {
+    const user = userEvent.setup()
+    const created = await entriesRepository.create(makeEntryData())
+    renderDetailWithRoutes(created.id)
+    await screen.findByRole('heading', { name: 'The Pragmatic Programmer' })
+
+    await user.click(screen.getByRole('button', { name: /^delete$/i }))
+    await user.click(screen.getByRole('button', { name: /cancel/i }))
+
+    // Confirm prompt gone, still on the detail view
+    expect(screen.queryByText(/delete this entry\?/i)).toBeNull()
+    expect(screen.getByRole('heading', { name: 'The Pragmatic Programmer' })).toBeInTheDocument()
+    // Entry still present in the db
+    expect(await entriesRepository.get(created.id)).toBeDefined()
+  })
+
+  it('Confirm deletes the entry via the repository and navigates to /entries', async () => {
+    const user = userEvent.setup()
+    const created = await entriesRepository.create(makeEntryData())
+    renderDetailWithRoutes(created.id)
+    await screen.findByRole('heading', { name: 'The Pragmatic Programmer' })
+
+    await user.click(screen.getByRole('button', { name: /^delete$/i }))
+    await user.click(screen.getByRole('button', { name: /confirm/i }))
+
+    expect(await screen.findByText('Entry List Stub')).toBeInTheDocument()
+    expect(await entriesRepository.get(created.id)).toBeUndefined()
   })
 })

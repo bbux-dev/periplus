@@ -1,9 +1,11 @@
-import { useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { ChevronLeftIcon } from '@heroicons/react/24/outline'
-import { useEntry } from '../services/entriesRepository'
+import { useEntry, entriesRepository } from '../services/entriesRepository'
 import { isSafeUrl } from '../services/urlUtils'
 import { getDomainConfig } from '../config/navigation'
 import { useBackOrHome } from '../hooks/useBackOrHome'
+import { Button } from '../components/ui/Button'
 
 // ─── Back button (shared layout) ─────────────────────────────────────────────
 
@@ -54,6 +56,14 @@ export function EntryDetailPage() {
   const id = useParams<{ id: string }>().id ?? ''
   const entry = useEntry(id)
   const goBack = useBackOrHome('/entries')
+  const navigate = useNavigate()
+  // Inline two-step delete confirm (no window.confirm — keeps it testable)
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
+
+  const handleConfirmDelete = async () => {
+    await entriesRepository.delete(id)
+    navigate('/entries')
+  }
 
   // ── Loading state ──────────────────────────────────────────────────────────
   if (entry === undefined) {
@@ -86,6 +96,36 @@ export function EntryDetailPage() {
 
         <h1 className="text-2xl font-bold tracking-tight">{entry.title}</h1>
         <p className="text-sm opacity-60">{typeLabel}</p>
+
+        {/* Edit + Delete affordances (Phase 17) */}
+        <div className="flex items-center gap-2">
+          <Button variant="secondary" onClick={() => navigate(`/entries/${id}/edit`)}>
+            Edit
+          </Button>
+          {!confirmingDelete && (
+            <Button
+              variant="secondary"
+              className="text-red-500"
+              onClick={() => setConfirmingDelete(true)}
+            >
+              Delete
+            </Button>
+          )}
+        </div>
+
+        {confirmingDelete && (
+          <div className="flex flex-col gap-2 p-3 rounded-md border border-[var(--color-border)] bg-[var(--color-muted)]">
+            <p className="text-sm">Delete this entry?</p>
+            <div className="flex items-center gap-2">
+              <Button variant="primary" className="text-red-500" onClick={handleConfirmDelete}>
+                Confirm
+              </Button>
+              <Button variant="secondary" onClick={() => setConfirmingDelete(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Description */}
         {entry.description && (
