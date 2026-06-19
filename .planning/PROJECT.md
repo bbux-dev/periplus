@@ -24,7 +24,7 @@ A user can capture a structured life event on their phone in seconds — URL-fir
 
 **Next milestone:** v0.2.0 — Quick-Capture DSL (in progress).
 
-## Previous Milestone: v0.2.0 Quick-Capture DSL — ✅ SHIPPED 2026-06-16
+## Earlier Milestone: v0.2.0 Quick-Capture DSL — ✅ SHIPPED 2026-06-16
 
 **Outcome:** All 4 phases (7–10) shipped; 10/10 requirements met; 277 tests green, build +
 PWA clean. The DSL omnibar (`/capture`) parses a one-line shorthand live into the existing
@@ -32,14 +32,49 @@ Review screen with type-token + history-backed value suggestions — no new save
 silent mis-saves. Parser was ported directly from the VALIDATED spike `001-dsl-parser`.
 Full details in `.planning/MILESTONES.md`.
 
-## Current Milestone: v0.3.0 Dashboard Shortcut Layouts — ✅ SHIPPED 2026-06-17
+## Current Milestone: v0.4.0 "Active Mode" De-Clunk + Editable Entries
+
+**Goal:** Cut steady-state navigation noise to the bone — the dashboard shows only the *active
+mode*'s buttons — and make saved entries first-class: editable, deletable, and provenance-stamped
+with the mode they were captured under.
+
+**Core insight:** Navigation feels clunky not because layouts are missing (they exist) but because
+everything that *isn't* the active mode is ever-present noise. A user stays in one mode (e.g.
+Travel) for days; the fix is to **remove** the other modes and the switcher from steady state, not
+add more controls. A "Mode" is the existing **Layout** reframed as a durable template; activating
+one starts a labeled **instance** (`mode="Travel", label="Oregon-Jun-2026"`) that persists and
+stamps every entry captured under it. Switching is rare and lives in the hamburger menu.
+
+**Target features:**
+- **Default `occurredAt` to today** — quick win; one fewer field on the common capture path (the
+  date is a default, not a lock).
+- **Editable & deletable saved entries** — wire `EntryDetailPage` to an edit form (reusing
+  `ENTRY_FIELDS` + `buildReviewDraft`) over the existing `entriesRepository.update`/`.delete`: edit
+  metadata, fix core fields (amount/date/title/location), delete with confirm; `recordedAt` stays
+  immutable.
+- **Active Mode model + instance stamping** — modes are independent named button lists (the v0.3.0
+  layouts); activating one starts a free-text-labeled instance persisted in Dexie `settings`; every
+  capture is stamped with `metadata.mode` / `metadata.modeLabel` in the single `draftToEntry` path.
+- **Active Mode navigation + dashboard de-clunk** — switch via a hamburger-menu "Active Mode" item
+  with a label prompt; the app bar shows `mode · label`; the dashboard renders **only** the active
+  mode's buttons (the on-dashboard switcher is removed).
+
+**Key context:** North-star constraint (`seeds/fewest-buttons-slickest.md`): every nav/dashboard/
+capture decision is measured against "does this remove buttons/interactions, or add them?" — prefer
+removing, defaulting, inferring, or pushing into the DSL. The "Mode" concept layers over the
+existing `Layout` data structure (no risky wholesale rename required); instance labels and active-
+mode selection reuse the established `activeLayoutRepository` Dexie-`settings` persistence pattern.
+`entriesRepository.update`/`.delete` already exist and are unused — this milestone finally wires
+them. Designs: `notes/active-mode-navigation-design.md`, `notes/editable-saved-entries-design.md`.
+
+## Previous Milestone: v0.3.0 Dashboard Shortcut Layouts — ✅ SHIPPED 2026-06-17
 
 **Outcome:** All 5 phases (11–15) shipped; 16/16 requirements satisfied; 500 tests green, `tsc -b`
 clean, zero new runtime dependencies. The Dashboard now renders customizable one-tap shortcut
 layouts (chips + rows) backed by a JSON-Schema-validated config in the Dexie `settings` store, with
 tap-to-capture (one-tap save + undo / fill-the-hole keypad sheet / ReviewPage), portable
 import/export, and a full in-app authoring tool. The milestone audit caught and fixed a real
-cross-phase blocker (export/import envelope mismatch). Next milestone: open.
+cross-phase blocker (export/import envelope mismatch).
 
 **Goal:** Customizable one-tap shortcut buttons on the Dashboard, grouped into switchable
 **layouts** (DayToDay / Travel / WorkTrip), built on top of the v0.2.0 Quick-Capture DSL —
@@ -95,9 +130,18 @@ out of the v0.2.0 "always Review" invariant for trusted shortcuts, paired with u
 
 ### Active
 
-<!-- Next milestone scope is open — run /gsd:new-milestone. -->
+<!-- v0.4.0 "Active Mode" De-Clunk + Editable Entries — scoped 2026-06-18 -->
 
-(None — v0.3.0 shipped; next milestone not yet scoped)
+- [ ] Default `occurredAt` to today on capture paths that have a date field (DATE-01) — v0.4.0
+- [ ] Edit a saved entry's metadata from the detail view (EEDIT-01) — v0.4.0
+- [ ] Fix a saved entry's core fields; `recordedAt` immutable (EEDIT-02) — v0.4.0
+- [ ] Delete a saved entry with confirmation (EEDIT-03) — v0.4.0
+- [ ] Modes as independent named button lists (existing layouts become modes) (MODE-01) — v0.4.0
+- [ ] Activate a mode → labeled instance, persisted across reloads (MODE-02) — v0.4.0
+- [ ] Switch the active mode from a hamburger-menu "Active Mode" item (MODE-03) — v0.4.0
+- [ ] App bar shows the active mode · instance label (MODE-04) — v0.4.0
+- [ ] Dashboard renders only the active mode's buttons; switcher removed (DASH-04) — v0.4.0
+- [ ] Stamp every capture with `metadata.mode` / `modeLabel` via `draftToEntry` (STAMP-01) — v0.4.0
 
 ### Deferred (candidate directions for future milestones)
 
@@ -176,4 +220,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-17 — after completing milestone v0.3.0 (Dashboard Shortcut Layouts shipped)*
+*Last updated: 2026-06-18 — started milestone v0.4.0 ("Active Mode" De-Clunk + Editable Entries)*

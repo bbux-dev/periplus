@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v0.3.0
-milestone_name: Dashboard Shortcut Layouts
-status: Awaiting next milestone
-stopped_at: Completed 15-authoring-tool/15-01-PLAN.md
-last_updated: "2026-06-17T20:03:04.566Z"
-last_activity: 2026-06-17 — Milestone v0.3.0 completed and archived
+milestone: v0.4.0
+milestone_name: Active Mode De-Clunk + Editable Entries
+status: planning
+last_updated: "2026-06-19T02:30:09.465Z"
+last_activity: 2026-06-19
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 11
-  completed_plans: 11
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -25,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 
 ## Current Position
 
-Phase: Milestone v0.3.0 complete
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-06-18 - Completed quick task 260618-8pp: home button and hamburger nav menu
+Status: Defining requirements
+Last activity: 2026-06-19 — Milestone v0.4.0 started
 
 ## Performance Metrics
 

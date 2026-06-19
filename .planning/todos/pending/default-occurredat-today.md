@@ -3,6 +3,7 @@ title: Default occurredAt to today's date for date entities
 date: 2026-06-18
 priority: medium
 context: /gsd:explore session — slick-capture quick win
+resolves_phase: 16
 ---
 
 # Default `occurredAt` to today's date

@@ -1,0 +1,82 @@
+# Requirements: Life Log
+
+Milestone-scoped requirements with stable REQ-IDs. Shipped milestones (v0.1.0–v0.3.0)
+are recorded as Validated in `PROJECT.md`; this file tracks the **active** milestone.
+
+## Milestone v0.4.0 — "Active Mode" De-Clunk + Editable Entries
+
+Source designs: `notes/active-mode-navigation-design.md`,
+`notes/editable-saved-entries-design.md`, `todos/pending/default-occurredat-today.md`.
+North-star constraint: `seeds/fewest-buttons-slickest.md`.
+
+### Date Defaulting (DATE)
+
+- [ ] **DATE-01**: When a user captures an entry whose type has an `occurredAt` date field,
+  the date defaults to today (local) in both the ReviewPage form and the one-tap direct-save
+  path. It is a default, not a lock — the user can still edit or clear it. Types without a
+  date field are unaffected.
+
+### Editable Entries (EEDIT)
+
+- [ ] **EEDIT-01**: A user can edit a saved entry's metadata (tags, mode/`modeLabel`, merchant,
+  category, notes/description) from the entry detail view, persisted via
+  `entriesRepository.update`. The edit form reuses `ENTRY_FIELDS[type]` + `buildReviewDraft`
+  so it matches the create form.
+- [ ] **EEDIT-02**: A user can fix a saved entry's core fields (amount, `occurredAt` date,
+  title, location) from the entry detail view. `recordedAt` is immutable and never editable.
+- [ ] **EEDIT-03**: A user can delete a saved entry from the entry detail view, behind a
+  confirmation step, via `entriesRepository.delete`, returning to the entry list afterward.
+
+### Active Mode (MODE)
+
+- [ ] **MODE-01**: Modes are independent, named button lists (durable templates); the existing
+  v0.3.0 layouts are the seed modes. Overlap between modes (e.g. Travel "Taxi" vs WorkTrip
+  "Work Taxi") is acceptable — lists are independent, not a shared pool.
+- [ ] **MODE-02**: Activating a mode starts an instance with a free-text label (sensible
+  default, e.g. `<Mode>-<Mon>-<Year>`). The active mode + instance label persist across reloads
+  in the Dexie `settings` store (mirroring the existing active-layout persistence pattern).
+- [ ] **MODE-03**: A user switches the active mode from a hamburger-menu "Active Mode" item
+  (mode list → tap to activate → confirm/edit the instance label). No on-screen mode switcher
+  in steady state.
+- [ ] **MODE-04**: The app bar reflects the current active mode and instance label
+  (e.g. `Travel · Oregon-Jun-2026`).
+
+### Dashboard De-Clunk (DASH)
+
+- [ ] **DASH-04**: The dashboard renders only the active mode's buttons. The on-dashboard
+  layout/mode switcher (v0.3.0 chips) is removed from steady state — this is the core de-clunk.
+
+### Capture Provenance (STAMP)
+
+- [ ] **STAMP-01**: Every entry captured while a mode is active is stamped with
+  `metadata.mode` and `metadata.modeLabel`, written in the single capture path
+  (`captureService.draftToEntry`) so both one-tap save and ReviewPage inherit it. Captures with
+  no active mode are not stamped (no empty/placeholder values written).
+
+## Traceability
+
+Filled by the roadmap — every requirement maps to exactly one phase.
+
+| REQ-ID   | Phase | Status |
+|----------|-------|--------|
+| DATE-01  | 16    | Pending |
+| EEDIT-01 | 17    | Pending |
+| EEDIT-02 | 17    | Pending |
+| EEDIT-03 | 17    | Pending |
+| MODE-01  | 18    | Pending |
+| MODE-02  | 18    | Pending |
+| STAMP-01 | 18    | Pending |
+| MODE-03  | 19    | Pending |
+| MODE-04  | 19    | Pending |
+| DASH-04  | 19    | Pending |
+
+## Out of Scope (this milestone)
+
+- Wholesale rename of `Layout` → `Mode` across the codebase — "Mode" is the user-facing concept
+  layered over the existing `Layout` data structure; internal renames are an implementation
+  choice, not a requirement.
+- Querying/filtering entries by mode instance ("everything I logged during the Oregon trip") —
+  the stamp (STAMP-01) *enables* this, but the filtered view is a future milestone.
+- JSON import of entries, backend sync — unchanged from prior milestones (deferred).
+- Auto-detecting or cycling modes on-screen — explicitly rejected in the design in favor of the
+  menu-driven switch (MODE-03).
