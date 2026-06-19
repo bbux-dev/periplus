@@ -80,7 +80,7 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 
 ### UI Rewrite (UI)
 
-- [ ] **UI-01**: All 13 non-trip screens/routes are removed (Dashboard, Domain, CaptureUrl, Review, ManualEntry, EntryList/Detail/Edit, QuickCapture, ManageShortcuts, ShortcutForm, Placeholder), along with the dead DSL/shortcut/layout UI subsystem; their test files are deleted atomically so the suite stays green
+- [x] **UI-01**: All 13 non-trip screens/routes are removed (Dashboard, Domain, CaptureUrl, Review, ManualEntry, EntryList/Detail/Edit, QuickCapture, ManageShortcuts, ShortcutForm, Placeholder), along with the dead DSL/shortcut/layout UI subsystem; their test files are deleted atomically so the suite stays green
 - [x] **UI-02**: `AppShell` is rewritten to the trip-only top-level navigation (no domain tiles / shortcut config)
 - [x] **UI-03**: Settings is reduced to JSON export (reuses `exportEntries`); no shortcut/layout authoring UI
 - [x] **UI-04**: The router exposes only trip-flow routes; unknown paths still resolve gracefully
@@ -121,7 +121,7 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 | ENG-04 | Phase 20 | Complete |
 | TRIP-02 | Phase 21 | Complete |
 | TRIP-04 | Phase 21 | Complete |
-| UI-01 | Phase 21 | Pending |
+| UI-01 | Phase 21 | Complete |
 | UI-02 | Phase 21 | Complete |
 | UI-03 | Phase 21 | Complete |
 | UI-04 | Phase 21 | Complete |
