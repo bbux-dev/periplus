@@ -32,9 +32,9 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 ### Trip Context (TRIP)
 
 - [ ] **TRIP-01**: User can create a trip by name; it is written as a `type='trip'` entry and becomes the active trip
-- [ ] **TRIP-02**: When no active trip exists, the app shows a "Create a Trip" empty/first-run screen (name input + Save)
+- [x] **TRIP-02**: When no active trip exists, the app shows a "Create a Trip" empty/first-run screen (name input + Save)
 - [ ] **TRIP-03**: On save, the new trip is activated and the user is navigated to that trip's Home screen
-- [ ] **TRIP-04**: The active trip persists across reloads (reuses the `activeMode` settings persistence)
+- [x] **TRIP-04**: The active trip persists across reloads (reuses the `activeMode` settings persistence)
 
 ### Trip Home (HOME)
 
@@ -82,7 +82,7 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 
 - [ ] **UI-01**: All 13 non-trip screens/routes are removed (Dashboard, Domain, CaptureUrl, Review, ManualEntry, EntryList/Detail/Edit, QuickCapture, ManageShortcuts, ShortcutForm, Placeholder), along with the dead DSL/shortcut/layout UI subsystem; their test files are deleted atomically so the suite stays green
 - [ ] **UI-02**: `AppShell` is rewritten to the trip-only top-level navigation (no domain tiles / shortcut config)
-- [ ] **UI-03**: Settings is reduced to JSON export (reuses `exportEntries`); no shortcut/layout authoring UI
+- [x] **UI-03**: Settings is reduced to JSON export (reuses `exportEntries`); no shortcut/layout authoring UI
 - [ ] **UI-04**: The router exposes only trip-flow routes; unknown paths still resolve gracefully
 - [x] **UI-05**: Reused low-level primitives (`Button`, `FormField`, `Input`, `cn`, `HoleSheet`, `SavedToast`) and the engine are not duplicated — new screens compose them
 
@@ -119,11 +119,11 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 | ENG-02 | Phase 20 | Complete |
 | ENG-03 | Phase 20 | Complete |
 | ENG-04 | Phase 20 | Complete |
-| TRIP-02 | Phase 21 | Pending |
-| TRIP-04 | Phase 21 | Pending |
+| TRIP-02 | Phase 21 | Complete |
+| TRIP-04 | Phase 21 | Complete |
 | UI-01 | Phase 21 | Pending |
 | UI-02 | Phase 21 | Pending |
-| UI-03 | Phase 21 | Pending |
+| UI-03 | Phase 21 | Complete |
 | UI-04 | Phase 21 | Pending |
 | UI-05 | Phase 21 | Complete |
 | TRIP-01 | Phase 22 | Pending |

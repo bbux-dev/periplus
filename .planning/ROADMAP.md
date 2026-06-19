@@ -75,7 +75,7 @@ Plans:
 **Plans**: 4 plans
 Plans:
 - [x] 21-01-PLAN.md — Move ReviewDraft into captureService.ts + repoint importers (compile-safety decouple)
-- [ ] 21-02-PLAN.md — New CreateTripPage + TripHomePage stub (loading guard) + export-only SettingsPage
+- [x] 21-02-PLAN.md — New CreateTripPage + TripHomePage stub (loading guard) + export-only SettingsPage
 - [ ] 21-03-PLAN.md — Trip-only AppShell + router rewrite + remove listModes from activeMode
 - [ ] 21-04-PLAN.md — Atomic deletion of 11 pages + dead subsystem; final tsc/vitest green gate
 **Key pitfalls**: Delete implementation + test file pairs atomically — never leave a dead import across a commit boundary (suite turns fully red); `useActiveMode() === undefined` means loading OR no-trip — MUST distinguish with a loading skeleton before showing empty state; complete AppShell rewrite in one pass — no partial edits leaving dangling `NAVIGATION`/shortcut references; `ReviewDraft` type must be moved out of `extractMetadataFromUrl.ts` into `captureService.ts` before `extractMetadataFromUrl.ts` is deleted
@@ -210,7 +210,7 @@ Full details: [`milestones/v0.1.0-ROADMAP.md`](milestones/v0.1.0-ROADMAP.md).
 | 18. Active Mode Model + Instance Stamping | v0.4.0 | 1/1 | Complete | 2026-06-18 |
 | 19. Active Mode Navigation + Dashboard De-Clunk | v0.4.0 | 1/1 | Complete | 2026-06-18 |
 | 20. Trip Data Model + Engine Extensions | v0.5.0 | 2/2 | Complete    | 2026-06-19 |
-| 21. App Shell + Routing Rewrite + Atomic Drop | v0.5.0 | 1/4 | In Progress|  |
+| 21. App Shell + Routing Rewrite + Atomic Drop | v0.5.0 | 2/4 | In Progress|  |
 | 22. Trip Home + Expense Capture | v0.5.0 | 0/1 | Not started | - |
 | 23. Activity Capture | v0.5.0 | 0/1 | Not started | - |
 | 24. Previous Trips + Trip Detail + Expense Report | v0.5.0 | 0/1 | Not started | - |

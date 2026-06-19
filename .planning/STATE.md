@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v0.5.0
 milestone_name: Trips MVP UI Refactor
 status: executing
-stopped_at: Roadmap created for v0.5.0 (Phases 20–24)
-last_updated: "2026-06-19T15:00:54.199Z"
+stopped_at: Completed 21-02-PLAN.md
+last_updated: "2026-06-19T15:06:09.792Z"
 last_activity: 2026-06-19
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 6
-  completed_plans: 3
+  completed_plans: 4
   percent: 20
 ---
 
@@ -26,12 +26,12 @@ See: .planning/PROJECT.md (updated 2026-06-19)
 ## Current Position
 
 Phase: 21 (App Shell + Routing Rewrite + Atomic Drop) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-06-19
 
 ```
-Progress: [█████░░░░░] 50%
+Progress: [███████░░░] 67%
 ```
 
 ## Deferred Items
@@ -97,6 +97,7 @@ Items acknowledged and deferred at milestone close on 2026-06-19:
 | Phase 20-trip-data-model-engine-extensions P01 | 5 | 2 tasks | 8 files |
 | Phase 20-trip-data-model-engine-extensions P02 | 8min | 2 tasks | 2 files |
 | Phase 21 P01 | 5min | 1 tasks | 3 files |
+| Phase 21 P02 | 2min | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -159,6 +160,8 @@ architecture-template.md SPEC + spec.md:
 - [v0.5.0 Roadmap]: Previous Trips stats use single-pass db.entries.toArray() grouping — no per-trip N+1 Dexie filter loop
 - [v0.5.0 Roadmap]: StarRating uses <button> elements with aria-label; role="radiogroup" pattern for accessibility + iOS tap compatibility
 - [v0.5.0 Roadmap]: No "Delete Trip" in v0.5.0 — entry-level delete only from TripDetailPage (avoids orphaned-entries cascade complexity)
+- [Phase ?]: TripHomePage uses declarative Navigate (not imperative navigate) — avoids React 'cannot update during render' warning
+- [Phase ?]: dbReady settled signal via useLiveQuery db.settings.count default=false distinguishes loading from no-trip
 
 ### Pending Todos
 
@@ -187,8 +190,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-19T15:00:54.189Z
-Stopped at: Roadmap created for v0.5.0 (Phases 20–24)
+Last session: 2026-06-19T15:06:09.781Z
+Stopped at: Completed 21-02-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
