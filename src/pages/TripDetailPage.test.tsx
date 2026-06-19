@@ -1,4 +1,5 @@
-import { render, screen, act } from '@testing-library/react'
+import { render, screen, act, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { db } from '../services/db'
@@ -206,5 +207,69 @@ describe('TripDetailPage', () => {
     expect(updated?.metadata.tripId).toBe(trip.id)   // preserved
     expect(updated?.metadata.mode).toBe('trip')       // preserved
     expect(updated?.metadata.modeLabel).toBe('Paris') // preserved
+  })
+
+  it('delete removes entry and report reactively updates (confirm=true)', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    const trip = await createAndActivateTrip('Rome')
+    await act(async () => {
+      await db.entries.add({
+        id: 'e-del',
+        domain: 'trips',
+        type: 'expense',
+        title: 'Coffee',
+        amount: 5,
+        recordedAt: Date.now(),
+        tags: [],
+        metadata: { tripId: trip.id, category: 'Food' },
+        syncedAt: null,
+      })
+    })
+    renderTripDetail(trip.id)
+    expect(await screen.findByText('$5.00')).toBeInTheDocument()
+
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
+    // Timeline rows each have a Delete button — click the one on the row
+    await userEvent.click(screen.getByRole('button', { name: /delete/i }))
+
+    // useLiveQuery re-renders reactively; $5.00 should disappear
+    await waitFor(() => expect(screen.queryByText('$5.00')).not.toBeInTheDocument())
+  })
+
+  it('edit flow: open modal, change amount, save, report and timeline recompute reactively', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    const trip = await createAndActivateTrip('Berlin')
+    await act(async () => {
+      await db.entries.add({
+        id: 'e-edit',
+        domain: 'trips',
+        type: 'expense',
+        title: 'Dinner',
+        amount: 20,
+        recordedAt: Date.now(),
+        tags: [],
+        metadata: { tripId: trip.id, category: 'Food' },
+        syncedAt: null,
+      })
+    })
+    renderTripDetail(trip.id)
+    expect(await screen.findAllByText('$20.00')).not.toHaveLength(0)
+
+    // Click the Edit button on the timeline row
+    await userEvent.click(screen.getByRole('button', { name: /^edit$/i }))
+
+    // EditEntryModal is now open — operate within the dialog
+    const dialog = screen.getByRole('dialog')
+    const amountInput = within(dialog).getByLabelText(/^amount$/i)
+    await userEvent.clear(amountInput)
+    await userEvent.type(amountInput, '35')
+
+    // Click Save inside the dialog
+    await userEvent.click(within(dialog).getByRole('button', { name: /^save$/i }))
+
+    // Modal closes; useLiveQuery re-renders — $35.00 appears (Food subtotal + grand total)
+    await waitFor(() => expect(screen.getAllByText('$35.00')).not.toHaveLength(0))
+    // Old amount no longer present
+    expect(screen.queryByText('$20.00')).not.toBeInTheDocument()
   })
 })
