@@ -126,6 +126,42 @@ describe('ExpenseReport', () => {
     expect(screen.getByText('$0.00')).toBeInTheDocument()
   })
 
+  it('category button has aria-controls referencing the expanded panel id (WR-08)', async () => {
+    const user = userEvent.setup()
+    const entries: LifeLogEntry[] = [makeExpense('e1', 10, 'Food')]
+    render(<ExpenseReport entries={entries} />)
+    const btn = screen.getByRole('button', { name: /food/i })
+    const controlId = btn.getAttribute('aria-controls')
+    expect(controlId).toBeTruthy()
+    // Panel does not exist until expanded
+    expect(document.getElementById(controlId!)).not.toBeInTheDocument()
+    // Click to expand — panel with that id must appear in the DOM
+    await user.click(btn)
+    expect(document.getElementById(controlId!)).toBeInTheDocument()
+  })
+
+  it('Uncategorized bucket renders as a toggle button (WR-09)', () => {
+    const entries: LifeLogEntry[] = [makeExpense('e1', 7)] // no category → Uncategorized
+    render(<ExpenseReport entries={entries} />)
+    // WR-09: must be a button, not a plain <li>
+    const btn = screen.getByRole('button', { name: /uncategorized/i })
+    expect(btn).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('clicking Uncategorized row reveals individual expense entries (WR-09)', async () => {
+    const user = userEvent.setup()
+    const entries: LifeLogEntry[] = [
+      makeExpense('e1', 7, undefined, 'Mystery Vendor', 'Mystery charge'),
+    ]
+    render(<ExpenseReport entries={entries} />)
+    // Entry hidden initially
+    expect(screen.queryByText('Mystery Vendor')).not.toBeInTheDocument()
+    // Click the Uncategorized button to expand
+    await user.click(screen.getByRole('button', { name: /uncategorized/i }))
+    // Merchant name is now visible
+    expect(screen.getByText('Mystery Vendor')).toBeInTheDocument()
+  })
+
   it('non-expense entries (activity, trip) are excluded from report', () => {
     const entries: LifeLogEntry[] = [
       {

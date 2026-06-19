@@ -65,7 +65,12 @@ export function PreviousTripsPage() {
                 tabIndex={0}
                 onClick={() => navigate(`/trips/${trip.id}`)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') navigate(`/trips/${trip.id}`)
+                  // WR-07: WAI-ARIA requires role="button" to activate on both Enter AND Space.
+                  // e.preventDefault() on Space suppresses the browser's default page scroll.
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    navigate(`/trips/${trip.id}`)
+                  }
                 }}
                 aria-label={trip.title}
                 className="flex flex-col py-3 border-b border-[var(--color-border)] cursor-pointer"

@@ -21,7 +21,8 @@ function App() {
         <Route path="/settings"     element={<SettingsPage />} />
 
         {/* Phase 22–23 placeholders — reuse PlaceholderPage with descriptive title */}
-        <Route path="/expense"         element={<PlaceholderPage title="Log Expense" />} />
+        {/* IN-01: /expense removed — expense entry uses the ExpenseSheet bottom-sheet modal,
+            not a routed page; no navigation call targets this route */}
         <Route path="/activity"        element={<ActivityTypePage />} />
         <Route path="/activity/:type"  element={<ActivityFormPage />} />
 

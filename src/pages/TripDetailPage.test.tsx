@@ -31,10 +31,24 @@ function renderTripDetail(tripId: string) {
 
 describe('TripDetailPage', () => {
   it('renders loading skeleton while Dexie is opening', async () => {
-    // Delete DB without reopening — useTripEntries returns undefined
+    // Delete DB without reopening — both useEntry and useTripEntries return undefined
     await db.delete()
     renderTripDetail('some-id')
     expect(screen.getByText(/loading/i)).toBeInTheDocument()
+  })
+
+  it('shows the real trip name in the page heading (WR-05)', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    const trip = await createAndActivateTrip('Paris')
+    renderTripDetail(trip.id)
+    // h1 must show the actual trip title, not the hardcoded "Trip Report" string
+    expect(await screen.findByRole('heading', { name: /paris/i })).toBeInTheDocument()
+  })
+
+  it('shows "Trip not found" for an unknown UUID (WR-06)', async () => {
+    // DB is open (beforeEach) but no trip with this id exists
+    renderTripDetail('00000000-0000-0000-0000-000000000000')
+    expect(await screen.findByText(/trip not found/i)).toBeInTheDocument()
   })
 
   it('shows category subtotals and float-safe grand total ($15.30 for 10.10 + 5.20)', async () => {

@@ -21,6 +21,21 @@ export function ExpenseReport({ entries }: ExpenseReportProps) {
   // Expenses not matching any EXPENSE_CATEGORIES key land in 'Uncategorized'
   const hasUncategorized = categoryMap.has('Uncategorized')
 
+  // WR-09: pre-compute uncategorized entries for the expand/collapse panel
+  const uncatEntries = hasUncategorized
+    ? entries.filter(
+        (e) =>
+          e.type === 'expense' &&
+          (typeof e.metadata.category === 'string'
+            ? e.metadata.category
+            : 'Uncategorized') === 'Uncategorized',
+      )
+    : []
+
+  // WR-09: expand state and control id for the Uncategorized row
+  const uncatIsExpanded = expandedCats.has('Uncategorized')
+  const uncatControlId = 'cat-entries-Uncategorized'
+
   function toggleExpand(cat: string) {
     setExpandedCats((prev) => {
       const next = new Set(prev)
@@ -36,6 +51,8 @@ export function ExpenseReport({ entries }: ExpenseReportProps) {
         {rows.map((cat) => {
           const subtotal = categoryMap.get(cat)!
           const isExpanded = expandedCats.has(cat)
+          // WR-08: unique id for the expanded panel so aria-controls can reference it
+          const controlId = `cat-entries-${cat.replace(/\W/g, '-')}`
           const catEntries = entries.filter(
             (e) =>
               e.type === 'expense' &&
@@ -51,13 +68,14 @@ export function ExpenseReport({ entries }: ExpenseReportProps) {
                 onClick={() => toggleExpand(cat)}
                 className="flex justify-between w-full py-2 text-sm"
                 aria-expanded={isExpanded}
+                aria-controls={controlId}
               >
                 <span>{cat}</span>
                 <span className="font-medium">{formatUSD(subtotal)}</span>
               </button>
               {/* Individual expense entries — only visible when expanded */}
               {isExpanded && (
-                <ul className="pl-4 flex flex-col gap-1 mb-1">
+                <ul id={controlId} className="pl-4 flex flex-col gap-1 mb-1">
                   {catEntries.map((e) => (
                     <li
                       key={e.id}
@@ -76,13 +94,39 @@ export function ExpenseReport({ entries }: ExpenseReportProps) {
             </li>
           )
         })}
-        {/* Uncategorized bucket — only rendered when the map has that key */}
+        {/* WR-09: Uncategorized bucket — now an expandable toggle button consistent
+            with the canonical category rows, so individual expenses are reachable */}
         {hasUncategorized && (
-          <li className="flex justify-between py-2 text-sm">
-            <span className="text-[var(--color-muted)]">Uncategorized</span>
-            <span className="font-medium">
-              {formatUSD(categoryMap.get('Uncategorized')!)}
-            </span>
+          <li key="Uncategorized">
+            <button
+              type="button"
+              onClick={() => toggleExpand('Uncategorized')}
+              className="flex justify-between w-full py-2 text-sm"
+              aria-expanded={uncatIsExpanded}
+              aria-controls={uncatControlId}
+            >
+              <span className="text-[var(--color-muted)]">Uncategorized</span>
+              <span className="font-medium">
+                {formatUSD(categoryMap.get('Uncategorized')!)}
+              </span>
+            </button>
+            {uncatIsExpanded && (
+              <ul id={uncatControlId} className="pl-4 flex flex-col gap-1 mb-1">
+                {uncatEntries.map((e) => (
+                  <li
+                    key={e.id}
+                    className="flex justify-between text-xs text-[var(--color-muted)]"
+                  >
+                    <span>
+                      {typeof e.metadata.merchant === 'string'
+                        ? e.metadata.merchant
+                        : e.title}
+                    </span>
+                    <span>{formatUSD(e.amount ?? 0)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         )}
       </ul>

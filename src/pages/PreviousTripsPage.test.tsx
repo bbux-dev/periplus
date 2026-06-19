@@ -118,6 +118,25 @@ describe('PreviousTripsPage', () => {
     expect(await screen.findByTestId('detail-probe')).toBeInTheDocument()
   })
 
+  it('pressing Space on a trip row navigates to /trips/:tripId (WR-07)', async () => {
+    await createAndActivateTrip('Tokyo')
+
+    render(
+      <MemoryRouter initialEntries={['/trips']}>
+        <Routes>
+          <Route path="/trips" element={<PreviousTripsPage />} />
+          <Route path="/trips/:tripId" element={<div data-testid="detail-probe" />} />
+        </Routes>
+      </MemoryRouter>,
+    )
+
+    const row = await screen.findByRole('button', { name: /Tokyo/i })
+    row.focus()
+    // Space key — WR-07 fix adds this handler with e.preventDefault() for scroll suppression
+    await userEvent.keyboard(' ')
+    expect(await screen.findByTestId('detail-probe')).toBeInTheDocument()
+  })
+
   it('renders a trip with $0.00 total and 0 activities for an empty trip', async () => {
     await createAndActivateTrip('Empty Trip')
 

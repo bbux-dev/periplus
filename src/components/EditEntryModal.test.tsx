@@ -122,6 +122,69 @@ describe('EditEntryModal', () => {
     expect(stillExists).toBeDefined()
   })
 
+  it('moves focus into the dialog panel on mount (WR-01)', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    const entry = await entriesRepository.create({
+      domain: 'trips',
+      type: 'expense',
+      title: 'Coffee',
+      amount: 12.5,
+      recordedAt: Date.now(),
+      tags: [],
+      metadata: { tripId: 'trip-1', mode: 'trip', modeLabel: 'Paris' },
+      syncedAt: null,
+    })
+    const onClose = vi.fn()
+    render(<EditEntryModal entry={entry} onClose={onClose} />)
+    // The dialog panel (tabIndex={-1}) should have received programmatic focus via useEffect
+    const dialog = screen.getByRole('dialog')
+    expect(document.activeElement).toBe(dialog)
+  })
+
+  it('sets body overflow=hidden on mount and restores it on unmount (WR-02)', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    const entry = await entriesRepository.create({
+      domain: 'trips',
+      type: 'expense',
+      title: 'Coffee',
+      amount: 12.5,
+      recordedAt: Date.now(),
+      tags: [],
+      metadata: { tripId: 'trip-1', mode: 'trip', modeLabel: 'Paris' },
+      syncedAt: null,
+    })
+    const onClose = vi.fn()
+    const { unmount } = render(<EditEntryModal entry={entry} onClose={onClose} />)
+    expect(document.body.style.overflow).toBe('hidden')
+    unmount()
+    // Cleanup restores the previous value (empty string in the test environment)
+    expect(document.body.style.overflow).toBe('')
+  })
+
+  it('delete error: shows error message and keeps modal open when delete throws (WR-03)', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    const entry = await entriesRepository.create({
+      domain: 'trips',
+      type: 'expense',
+      title: 'Coffee',
+      amount: 12.5,
+      recordedAt: Date.now(),
+      tags: [],
+      metadata: { tripId: 'trip-1', mode: 'trip', modeLabel: 'Paris' },
+      syncedAt: null,
+    })
+    vi.spyOn(entriesRepository, 'delete').mockRejectedValue(new Error('DB error'))
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
+    const onClose = vi.fn()
+    render(<EditEntryModal entry={entry} onClose={onClose} />)
+
+    await userEvent.click(screen.getByRole('button', { name: /delete/i }))
+
+    // Error message visible; modal stays open
+    expect(await screen.findByRole('alert')).toHaveTextContent(/could not delete/i)
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
   it('double-submit guard: rapid Save clicks call update at most once', async () => {
     vi.useFakeTimers({ toFake: ['Date'] })
     const entry = await entriesRepository.create({

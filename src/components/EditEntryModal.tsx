@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { ENTRY_FIELDS, formValuesFromEntry, buildEntryUpdate } from '../config/entryFields'
 import { entriesRepository } from '../services/entriesRepository'
 import { FormField } from './ui/FormField'
@@ -18,8 +18,29 @@ export function EditEntryModal({ entry, onClose }: EditEntryModalProps) {
   )
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-  // WR-02 synchronous double-submit guard — checked before any async await
+  // Synchronous double-submit guard for save — checked before any async await
   const savingRef = useRef(false)
+  // IN-02: synchronous double-submit guard for delete
+  const deletingRef = useRef(false)
+  // WR-01: dialog container ref for focus management
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  // WR-01: Move focus into the dialog on mount so the Escape onKeyDown handler
+  // is reachable via keyboard (key events bubble to the focused element's ancestors,
+  // not to sibling/cousin subtrees like the button that opened the modal).
+  useEffect(() => {
+    dialogRef.current?.focus()
+  }, [])
+
+  // WR-02: Body scroll lock — prevent background page scrolling while modal is open.
+  // Mirrors the pattern used in ExpenseSheet.tsx.
+  useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [])
 
   async function handleSave() {
     if (savingRef.current) return
@@ -41,10 +62,19 @@ export function EditEntryModal({ entry, onClose }: EditEntryModalProps) {
     }
   }
 
+  // WR-03: try/catch surfaces delete failures; IN-02: deletingRef prevents double-submit
   async function handleDelete() {
+    if (deletingRef.current) return
     if (!confirm('Delete this entry? This cannot be undone.')) return
-    await entriesRepository.delete(entry.id)
-    onClose()
+    deletingRef.current = true
+    try {
+      await entriesRepository.delete(entry.id)
+      onClose()
+    } catch (_err) {
+      setError('Could not delete. Please try again.')
+    } finally {
+      deletingRef.current = false
+    }
   }
 
   return (
@@ -55,8 +85,9 @@ export function EditEntryModal({ entry, onClose }: EditEntryModalProps) {
         onClick={onClose}
         aria-hidden="true"
       />
-      {/* Dialog panel */}
+      {/* Dialog panel — ref + tabIndex={-1} allow programmatic focus (WR-01) */}
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label={`Edit ${entry.type}`}

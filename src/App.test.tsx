@@ -63,12 +63,12 @@ describe('App — settings route', () => {
 // ─── Placeholder routes (Phase 22–24 stubs) ──────────────────────────────────
 
 describe('App — placeholder routes', () => {
+  // IN-01: /expense removed — expense entry is via ExpenseSheet bottom-sheet, not a routed page
   it.each([
-    ['/expense',       'Log Expense'],
     ['/activity',      'Log Activity'],
     ['/trips',         'Previous Trips'],
   ])(
-    'route %s renders the "%s" placeholder heading',
+    'route %s renders the "%s" heading',
     async (path, title) => {
       renderAt(path)
       expect(await screen.findByRole('heading', { name: new RegExp(title, 'i') })).toBeInTheDocument()
