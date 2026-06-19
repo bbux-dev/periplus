@@ -17,6 +17,7 @@ import type { ShortcutConfig } from '../config/shortcutConfig'
 export interface ActiveMode {
   mode: string
   label: string
+  tripId?: string   // NEW: the LifeLogEntry UUID of the active trip (ENG-02)
 }
 
 /** Fixed key under which the active mode is stored in the Dexie settings table. */
@@ -71,12 +72,20 @@ export function defaultInstanceLabel(mode: string, now: Date = new Date()): stri
 /**
  * Activates a mode, persisting `{ mode, label }`. A blank/whitespace label (or
  * none) falls back to defaultInstanceLabel(mode); a provided label is trimmed.
+ *
+ * The optional `tripId` param (ENG-02) persists the trip UUID when activating a
+ * trip mode. All existing two-arg callers remain unchanged and unaffected.
  */
-export async function activateMode(mode: string, label?: string): Promise<void> {
+export async function activateMode(
+  mode: string,
+  label?: string,
+  tripId?: string,  // NEW optional param — all existing two-arg callers unchanged
+): Promise<void> {
   const trimmed = label?.trim()
   await activeModeRepository.put({
     mode,
     label: trimmed || defaultInstanceLabel(mode),
+    ...(tripId ? { tripId } : {}),
   })
 }
 

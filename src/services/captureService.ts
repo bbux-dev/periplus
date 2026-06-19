@@ -172,12 +172,19 @@ export function draftToEntry(
   domain: EntryDomain,
   activeMode?: ActiveMode | null,
 ): Omit<LifeLogEntry, 'id'> {
-  // STAMP-01: stamp mode provenance ONLY when a mode is actually active (non-empty
-  // mode string). Otherwise write NEITHER key — no empty/placeholder values.
+  // STAMP-01/02: stamp mode provenance ONLY when a mode is actually active (non-empty
+  // mode string). Otherwise write NONE of mode, modeLabel, tripId.
+  // STAMP-02: tripId spread sits inside the same activeMode?.mode guard so it inherits
+  // the undefined/null/empty-mode protection automatically.
   const baseMetadata = draft.metadata ?? {}
   const metadata =
     activeMode?.mode
-      ? { ...baseMetadata, mode: activeMode.mode, modeLabel: activeMode.label }
+      ? {
+          ...baseMetadata,
+          mode: activeMode.mode,
+          modeLabel: activeMode.label,
+          ...(activeMode.tripId ? { tripId: activeMode.tripId } : {}),  // STAMP-02 (ENG-03)
+        }
       : baseMetadata
   return {
     domain,
