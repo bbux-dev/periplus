@@ -1,0 +1,118 @@
+# Requirements — Life Log v0.5.0 (Trips MVP UI Refactor)
+
+**Milestone goal:** Aggressively rewrite the UI to expose ONLY a minimal, mobile-first trip logger —
+create/activate a trip, log expenses and activities tied to the active trip, view prior trips, and
+see per-trip expense reports grouped by category — while preserving the headless engine (Dexie
+storage, `entriesRepository`, active-mode/context stamping, `draftToEntry`).
+
+**Framing:** UI **rewrite**, not a feature hide. All 13 existing screens/routes are dropped; the
+engine and low-level `components/ui/*` primitives are reused. A trip is a `LifeLogEntry` of
+`type='trip'` (stable UUID) that is set as the active mode (`activateMode('trip', name, tripId)`);
+expense/activity entries are stamped with `metadata.tripId` via the existing `draftToEntry` path.
+
+**Locked product decisions (from research + user):**
+- Expense categories (8): **Hotel, Rental Car, Flight, Taxi/Uber, Food, Gas, Parking, Other**.
+- Trip end is **implicit** — creating/activating a new trip closes the previous one; no "End Trip" UI.
+- Trip Detail offers **entry-level edit/delete only** — no "Delete Trip" (avoids orphaned entries).
+- Zero new runtime dependencies.
+
+---
+
+## v0.5.0 Requirements
+
+### Engine Extensions (ENG)
+
+<!-- Minimal additive changes to the preserved engine — no Dexie schema version bump. -->
+
+- [ ] **ENG-01**: `EntryType` union includes `trip` and `activity` (TypeScript only; `type` is unindexed)
+- [ ] **ENG-02**: `ActiveMode` carries an optional `tripId`, and `activateMode()` accepts it
+- [ ] **ENG-03**: `draftToEntry` stamps `metadata.tripId` (and existing `mode`/`modeLabel`) when a trip is active
+- [ ] **ENG-04**: `tripService` provides create-and-activate, list-trips, list-trip-entries, and pure stat helpers (date range, expense total, expenses-by-category, activity count)
+
+### Trip Context (TRIP)
+
+- [ ] **TRIP-01**: User can create a trip by name; it is written as a `type='trip'` entry and becomes the active trip
+- [ ] **TRIP-02**: When no active trip exists, the app shows a "Create a Trip" empty/first-run screen (name input + Save)
+- [ ] **TRIP-03**: On save, the new trip is activated and the user is navigated to that trip's Home screen
+- [ ] **TRIP-04**: The active trip persists across reloads (reuses the `activeMode` settings persistence)
+
+### Trip Home (HOME)
+
+- [ ] **HOME-01**: Home screen shows the active trip name prominently (e.g. "Trip: Oregon Road Trip")
+- [ ] **HOME-02**: Home shows primary `Expense` and `Activity` action buttons
+- [ ] **HOME-03**: Home shows the active trip's running expense total (currency-formatted)
+- [ ] **HOME-04**: Home shows recent entries for the active trip (most recent first)
+- [ ] **HOME-05**: Top-level navigation exists for Home / Previous Trips / Settings (Export)
+
+### Expense Capture (EXP)
+
+- [ ] **EXP-01**: Tapping `Expense` opens a small mobile-first modal/sheet
+- [ ] **EXP-02**: Expense requires an Amount (numeric input)
+- [ ] **EXP-03**: Expense requires a Category chosen from the 8 fixed categories (large tap targets, not a dropdown)
+- [ ] **EXP-04**: Expense accepts an optional Vendor and optional Notes
+- [ ] **EXP-05**: Expense date defaults to today (local date; no UTC off-by-one) and the trip defaults to the active trip
+- [ ] **EXP-06**: Saving creates an `expense` entry (`domain='trips'`) stamped with the active `tripId`; fast path is Expense → amount → category → save
+
+### Activity Capture (ACT)
+
+- [ ] **ACT-01**: Tapping `Activity` navigates to an Activity Type screen with buttons: Hike, Show, Restaurant, Cafe, Other
+- [ ] **ACT-02**: Choosing Hike/Show/Restaurant/Cafe opens a form with Name (required), Location (optional), Rating (optional), Notes (optional)
+- [ ] **ACT-03**: Choosing Other opens the same form plus a required free-text Type field
+- [ ] **ACT-04**: Rating is entered with a clickable, accessible 1–5 star control (tap to set/clear)
+- [ ] **ACT-05**: Activity date defaults to today (local) and the trip defaults to the active trip
+- [ ] **ACT-06**: Saving creates an `activity` entry stamped with `activityType` and the active `tripId`
+
+### Previous Trips (PREV)
+
+- [ ] **PREV-01**: A Previous Trips screen lists all trips, newest first
+- [ ] **PREV-02**: Each trip row shows trip name, date range (if available), total expenses, and activity count
+- [ ] **PREV-03**: Tapping a trip drills into its Trip Detail screen
+- [ ] **PREV-04**: Trip list stats are derived in a single pass over entries (no per-trip N+1 scans)
+
+### Trip Detail & Expense Report (RPT)
+
+- [ ] **RPT-01**: Trip Detail shows the trip total expense (currency-formatted, float-safe)
+- [ ] **RPT-02**: Trip Detail shows expenses grouped by category with per-category subtotals
+- [ ] **RPT-03**: Category rows show their individual expenses (under each category or expandable rows)
+- [ ] **RPT-04**: Trip Detail shows a timeline/list of the trip's expenses and activities
+- [ ] **RPT-05**: User can edit an existing entry from Trip Detail (reuses `entriesRepository.update`)
+- [ ] **RPT-06**: User can delete an existing entry from Trip Detail with confirmation (reuses `entriesRepository.delete`)
+
+### UI Rewrite (UI)
+
+- [ ] **UI-01**: All 13 non-trip screens/routes are removed (Dashboard, Domain, CaptureUrl, Review, ManualEntry, EntryList/Detail/Edit, QuickCapture, ManageShortcuts, ShortcutForm, Placeholder), along with the dead DSL/shortcut/layout UI subsystem; their test files are deleted atomically so the suite stays green
+- [ ] **UI-02**: `AppShell` is rewritten to the trip-only top-level navigation (no domain tiles / shortcut config)
+- [ ] **UI-03**: Settings is reduced to JSON export (reuses `exportEntries`); no shortcut/layout authoring UI
+- [ ] **UI-04**: The router exposes only trip-flow routes; unknown paths still resolve gracefully
+- [ ] **UI-05**: Reused low-level primitives (`Button`, `FormField`, `Input`, `cn`, `HoleSheet`, `SavedToast`) and the engine are not duplicated — new screens compose them
+
+---
+
+## Future Requirements (deferred to v0.5.x / later)
+
+- [ ] Explicit "End Trip" / archive action (current model ends a trip implicitly on new-trip activation)
+- [ ] "Delete Trip" with cascade delete of its entries
+- [ ] Per-day expense grouping, per-trip budgets, charts/visualizations
+- [ ] Multi-currency, receipt OCR, CSV/PDF export, photo attachments
+- [ ] Filter/search within a trip's timeline
+
+---
+
+## Out of Scope (explicit exclusions)
+
+<!-- Carried from PROJECT.md Out of Scope + milestone-specific anti-features from research. -->
+
+- Media / books / podcasts / general life-event logging UI — removed in this rewrite
+- Generic Groups system, arbitrary custom group/layout editor, shortcut/DSL capture UI — removed
+- NLP / LLM / URL-extraction capture — not part of the trip logger
+- Multi-currency, receipt scanning, budget limits, expense charts, split expenses, mileage tracking
+- User accounts / backend / sync — prototype is single-user, local-only (sync seam stays dormant)
+- Changing money storage to integer cents (would require a Dexie migration) — format floats at display time instead
+
+---
+
+## Traceability
+
+<!-- Filled by the roadmapper: REQ-ID → Phase. -->
+
+(To be populated by roadmap creation.)
