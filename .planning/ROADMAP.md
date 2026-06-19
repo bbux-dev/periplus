@@ -22,10 +22,10 @@ first-class (editable, deletable, mode-stamped). Designs: `notes/active-mode-nav
   reusing `ENTRY_FIELDS` + `buildReviewDraft` over the existing `entriesRepository.update`/`.delete`:
   edit metadata, fix core fields, delete with confirm; `recordedAt` immutable. Reqs: EEDIT-01..03.
   (completed 2026-06-18; +31 tests; new `/entries/:id/edit` route)
-- [ ] **Phase 18: Active Mode Model + Instance Stamping** — model the active mode + free-text
+- [x] **Phase 18: Active Mode Model + Instance Stamping** — model the active mode + free-text
   instance label persisted in Dexie `settings` (mirroring `activeLayoutRepository`); stamp every
   capture with `metadata.mode` / `modeLabel` in the single `draftToEntry` path. No nav UI yet.
-  Reqs: MODE-01, MODE-02, STAMP-01.
+  Reqs: MODE-01, MODE-02, STAMP-01. (completed 2026-06-18; +26 tests; new `services/activeMode.ts`)
 - [ ] **Phase 19: Active Mode Navigation + Dashboard De-Clunk** — hamburger-menu "Active Mode"
   item (mode list → activate → label prompt), app bar shows `mode · label`, dashboard renders only
   the active mode's buttons (remove the on-dashboard switcher). Reqs: MODE-03, MODE-04, DASH-04.
@@ -134,5 +134,5 @@ Full details: [`milestones/v0.1.0-ROADMAP.md`](milestones/v0.1.0-ROADMAP.md).
 | 11–15. (v0.3.0) | v0.3.0 | 11/11 | Complete | 2026-06-17 |
 | 16. Default occurredAt to Today | v0.4.0 | 1/1 | Complete | 2026-06-18 |
 | 17. Editable & Deletable Saved Entries | v0.4.0 | 1/1 | Complete | 2026-06-18 |
-| 18. Active Mode Model + Instance Stamping | v0.4.0 | 0/? | Not Started | — |
+| 18. Active Mode Model + Instance Stamping | v0.4.0 | 1/1 | Complete | 2026-06-18 |
 | 19. Active Mode Navigation + Dashboard De-Clunk | v0.4.0 | 0/? | Not Started | — |
