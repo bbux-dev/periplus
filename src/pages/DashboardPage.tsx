@@ -1,53 +1,57 @@
 import { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { QueueListIcon, BoltIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
 import { NAVIGATION } from '../config/navigation'
 import { cn } from '../components/ui/cn'
 import {
   configRepository,
   useShortcutConfig,
-  activeLayoutRepository,
-  useActiveLayoutName,
 } from '../services/configRepository'
+import {
+  useActiveMode,
+  activateMode,
+  activeModeRepository,
+} from '../services/activeMode'
 import { DEFAULT_SHORTCUT_CONFIG } from '../config/shortcutConfig'
-import { LayoutChips } from '../components/dashboard/LayoutChips'
 import { ShortcutRow } from '../components/dashboard/ShortcutRow'
 import { useShortcutCapture } from '../hooks/useShortcutCapture'
 import { HoleSheet } from '../components/dashboard/HoleSheet'
 import { SavedToast } from '../components/dashboard/SavedToast'
 
 export function DashboardPage() {
-  const navigate = useNavigate()
-
-  // ─── One-shot seeding effect (DASH-03) ────────────────────────────────────────
+  // ─── One-shot seeding + first-run mode activation (DASH-03 / DASH-04) ──────────
   // Uses the awaited configRepository.get() — NOT the hook — to distinguish
   // "Dexie still opening" from "no config stored". Runs once on mount.
+  // First-run activation is idempotent: it only activates a default mode when no
+  // active mode has been persisted yet — it never overwrites an existing selection.
   useEffect(() => {
     let cancelled = false
     ;(async () => {
       try {
-        const existing = await configRepository.get()
-        if (existing === undefined && !cancelled) {
+        let existing = await configRepository.get()
+        if (existing === undefined) {
           await configRepository.put(DEFAULT_SHORTCUT_CONFIG)
+          existing = DEFAULT_SHORTCUT_CONFIG
+        }
+        if (cancelled) return
+        const active = await activeModeRepository.get()
+        if (active === undefined && existing.layouts.length > 0) {
+          await activateMode(existing.layouts[0].name)
         }
       } catch (err) {
-        console.error('[DashboardPage] Failed to seed default config:', err)
+        console.error('[DashboardPage] Failed to seed default config/mode:', err)
       }
     })()
     return () => { cancelled = true }
   }, [])
 
-  // ─── Reactive config + active layout derivation (DASH-01/02) ─────────────────
+  // ─── Reactive config + active-mode-driven layout derivation (DASH-04) ─────────
+  // The dashboard renders ONLY the active mode's buttons. The active MODE drives
+  // which layout is shown; while it loads we fall back to the first layout.
   const config = useShortcutConfig()
-  const persistedLayoutName = useActiveLayoutName()
+  const activeMode = useActiveMode()
   const layouts = config?.layouts ?? []
-  const activeLayout = layouts.find((l) => l.name === persistedLayoutName) ?? layouts[0]
-
-  function handleLayoutSelect(name: string) {
-    activeLayoutRepository.put(name).catch((err) => {
-      console.error('[DashboardPage] Failed to persist active layout:', err)
-    })
-  }
+  const activeLayout = layouts.find((l) => l.name === activeMode?.mode) ?? layouts[0]
 
   // ─── Capture orchestrator (Phase 13 CAP-01/02/03/04) ─────────────────────────
   const {
@@ -64,15 +68,9 @@ export function DashboardPage() {
       <div className="w-full max-w-sm mx-auto flex flex-col gap-4">
         <h1 className="text-2xl font-bold tracking-tight mb-4">Life Log</h1>
 
-        {/* Shortcut section — null while config loads to avoid layout shift */}
+        {/* Active mode's shortcut rows — null while config loads to avoid layout shift */}
         {config !== undefined && (
           <>
-            <LayoutChips
-              layouts={layouts}
-              activeLayoutName={activeLayout?.name}
-              onSelect={handleLayoutSelect}
-              onManage={() => navigate('/manage')}
-            />
             {activeLayout?.shortcuts.map((s) => (
               <ShortcutRow
                 key={s.name}

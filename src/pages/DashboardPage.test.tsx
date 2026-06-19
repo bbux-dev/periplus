@@ -3,7 +3,9 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { db } from '../services/db'
-import { configRepository, activeLayoutRepository } from '../services/configRepository'
+import { configRepository } from '../services/configRepository'
+import { activeModeRepository } from '../services/activeMode'
+import { DEFAULT_SHORTCUT_CONFIG } from '../config/shortcutConfig'
 import type { ShortcutConfig } from '../config/shortcutConfig'
 import type { Shortcut } from '../config/shortcutConfig'
 import { entriesRepository } from '../services/entriesRepository'
@@ -27,109 +29,118 @@ describe('DashboardPage', () => {
 
   it('seeds DEFAULT_SHORTCUT_CONFIG on fresh install', async () => {
     renderDashboard()
-    expect(await screen.findByRole('button', { name: 'DayToDay' })).toBeInTheDocument()
+    // No chips anymore — the seeded config's first layout (DayToDay) renders its
+    // shortcut rows directly (via the `?? layouts[0]` fallback while the active
+    // mode loads).
+    expect(await screen.findByRole('button', { name: /^Coffee/ })).toBeInTheDocument()
   })
 
   it('does NOT overwrite an existing config on remount', async () => {
     const customConfig: ShortcutConfig = {
       version: 1,
-      layouts: [{ name: 'MyLayout', shortcuts: [], icon: 'HomeIcon' }],
+      layouts: [
+        {
+          name: 'MyLayout',
+          icon: 'HomeIcon',
+          shortcuts: [{ name: 'MyShortcut', dslTemplate: 'expense 1:x', confirm: false }],
+        },
+      ],
     }
-    await configRepository.put(customConfig)
+    await act(async () => {
+      await configRepository.put(customConfig)
+    })
     renderDashboard()
-    await screen.findByRole('button', { name: 'MyLayout' })
+    await screen.findByRole('button', { name: /^MyShortcut/ })
     const stored = await configRepository.get()
     expect(stored?.layouts[0].name).toBe('MyLayout')
   })
 
-  // ─── Chips (DASH-02) ──────────────────────────────────────────────────────────
+  // ─── De-clunk: no on-dashboard switcher (DASH-04) ─────────────────────────────
 
-  it('active chip has aria-pressed="true"', async () => {
+  it('renders NO layout-switcher chips on the dashboard', async () => {
     renderDashboard()
-    const chip = await screen.findByRole('button', { name: 'DayToDay' })
-    expect(chip).toHaveAttribute('aria-pressed', 'true')
+    await screen.findByRole('button', { name: /^Coffee/ })
+    // The old LayoutChips switcher group + its "+ New" chip are gone.
+    expect(screen.queryByRole('group', { name: /layout switcher/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: '+ New' })).not.toBeInTheDocument()
+    // The mode names themselves are NOT rendered as on-dashboard switch buttons.
+    expect(screen.queryByRole('button', { name: 'DayToDay' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Travel' })).not.toBeInTheDocument()
   })
 
-  it('+ New chip is enabled (no longer a disabled placeholder)', async () => {
+  // ─── Active-mode-driven rendering (DASH-04) ───────────────────────────────────
+
+  it('renders only the active mode (first layout) shortcut names as buttons', async () => {
     renderDashboard()
-    await screen.findByRole('button', { name: 'DayToDay' })
-    expect(screen.getByRole('button', { name: '+ New' })).not.toBeDisabled()
-  })
-
-  it('clicking + New chip navigates to /manage', async () => {
-    const user = userEvent.setup()
-    function ManageProbe() { return <div data-testid="manage-probe">Manage</div> }
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/manage" element={<ManageProbe />} />
-        </Routes>
-      </MemoryRouter>,
-    )
-    await screen.findByRole('button', { name: 'DayToDay' })
-    await user.click(screen.getByRole('button', { name: '+ New' }))
-    expect(await screen.findByTestId('manage-probe')).toBeInTheDocument()
-  })
-
-  it('clicking a chip persists selection and updates rows (DASH-02)', async () => {
-    const user = userEvent.setup()
-    renderDashboard()
-    // Wait for chips to appear
-    await screen.findByRole('button', { name: 'DayToDay' })
-
-    // Click the Travel chip
-    const travelChip = screen.getByRole('button', { name: 'Travel' })
-    await user.click(travelChip)
-
-    // Rows update to Travel's shortcuts (regex prefix — button also shows dslTemplate text)
-    expect(await screen.findByRole('button', { name: /^Taxi/ })).toBeInTheDocument()
-
-    // Persisted via activeLayoutRepository
-    const persisted = await activeLayoutRepository.get()
-    expect(persisted).toBe('Travel')
-  })
-
-  // ─── Shortcut rows (DASH-01) ──────────────────────────────────────────────────
-
-  it('renders the active layout shortcut names as buttons', async () => {
-    renderDashboard()
-    await screen.findByRole('button', { name: 'DayToDay' })
-    // Shortcut row buttons include name + dslTemplate text — match by regex prefix
-    expect(screen.getByRole('button', { name: /^Coffee/ })).toBeInTheDocument()
+    // DayToDay (layouts[0]) shortcuts render; Travel's do not.
+    expect(await screen.findByRole('button', { name: /^Coffee/ })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^Groceries/ })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /^Taxi/ })).not.toBeInTheDocument()
+  })
+
+  it('changing the active mode changes which mode the dashboard renders', async () => {
+    await act(async () => {
+      await configRepository.put(DEFAULT_SHORTCUT_CONFIG)
+      await activeModeRepository.put({ mode: 'Travel', label: 'Trip-1' })
+    })
+    renderDashboard()
+    // Travel's shortcuts render…
+    expect(await screen.findByRole('button', { name: /^Taxi/ })).toBeInTheDocument()
+    // …and DayToDay's do not.
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /^Coffee/ })).not.toBeInTheDocument()
+    })
+  })
+
+  it('first-run mount persists a default active mode (idempotent)', async () => {
+    renderDashboard()
+    await screen.findByRole('button', { name: /^Coffee/ })
+    await waitFor(async () => {
+      const active = await activeModeRepository.get()
+      expect(active?.mode).toBe('DayToDay')
+    })
+  })
+
+  it('does NOT overwrite an already-active mode on mount', async () => {
+    await act(async () => {
+      await configRepository.put(DEFAULT_SHORTCUT_CONFIG)
+      await activeModeRepository.put({ mode: 'Travel', label: 'Preserved' })
+    })
+    renderDashboard()
+    await screen.findByRole('button', { name: /^Taxi/ })
+    const active = await activeModeRepository.get()
+    expect(active).toEqual({ mode: 'Travel', label: 'Preserved' })
   })
 
   // ─── Existing nav regression ──────────────────────────────────────────────────
 
   it('shows the Media domain tile', async () => {
     renderDashboard()
-    await screen.findByRole('button', { name: /DayToDay/i })
+    await screen.findByRole('button', { name: /^Coffee/ })
     expect(screen.getByText('Media')).toBeInTheDocument()
   })
 
   it('shows the Trips domain tile', async () => {
     renderDashboard()
-    await screen.findByRole('button', { name: /DayToDay/i })
+    await screen.findByRole('button', { name: /^Coffee/ })
     expect(screen.getByText('Trips')).toBeInTheDocument()
   })
 
   it('shows the Expenditures domain tile', async () => {
     renderDashboard()
-    await screen.findByRole('button', { name: /DayToDay/i })
+    await screen.findByRole('button', { name: /^Coffee/ })
     expect(screen.getByText('Expenditures')).toBeInTheDocument()
   })
 
   it('renders Quick Capture + 3 domain links + View All Entries + Shortcuts Config (6 total)', async () => {
     renderDashboard()
-    // Wait for async seeding to complete (shortcut rows are <button>, not <a>, so link count is unchanged)
-    await screen.findByRole('button', { name: /DayToDay/i })
+    await screen.findByRole('button', { name: /^Coffee/ })
     expect(screen.getAllByRole('link')).toHaveLength(6)
   })
 
   it('Quick Capture link targets /capture', async () => {
     renderDashboard()
-    await screen.findByRole('button', { name: /DayToDay/i })
+    await screen.findByRole('button', { name: /^Coffee/ })
     const links = screen.getAllByRole('link')
     const captureLink = links.find((l) => l.textContent?.includes('Quick Capture'))
     expect(captureLink?.getAttribute('href')).toBe('/capture')
@@ -137,7 +148,7 @@ describe('DashboardPage', () => {
 
   it('media link targets /d/media', async () => {
     renderDashboard()
-    await screen.findByRole('button', { name: /DayToDay/i })
+    await screen.findByRole('button', { name: /^Coffee/ })
     const links = screen.getAllByRole('link')
     const mediaLink = links.find((l) => l.textContent?.includes('Media'))
     expect(mediaLink?.getAttribute('href')).toBe('/d/media')
@@ -145,7 +156,7 @@ describe('DashboardPage', () => {
 
   it('View All Entries link targets /entries', async () => {
     renderDashboard()
-    await screen.findByRole('button', { name: /DayToDay/i })
+    await screen.findByRole('button', { name: /^Coffee/ })
     const links = screen.getAllByRole('link')
     const entriesLink = links.find((l) => l.textContent?.includes('View All Entries'))
     expect(entriesLink?.getAttribute('href')).toBe('/entries')
@@ -197,7 +208,7 @@ describe('DashboardPage', () => {
         { name: 'Coffee', dslTemplate: 'expense 5:coffee', confirm: false },
       ]))
       renderDashboard()
-      await screen.findByRole('button', { name: 'Test' })
+      await screen.findByRole('button', { name: /^Coffee/ })
 
       await user.click(screen.getByRole('button', { name: /^Coffee/ }))
 
@@ -219,7 +230,7 @@ describe('DashboardPage', () => {
         { name: 'Lunch', dslTemplate: 'expense :food', confirm: false },
       ]))
       renderDashboard()
-      await screen.findByRole('button', { name: 'Test' })
+      await screen.findByRole('button', { name: /^Lunch/ })
 
       await user.click(screen.getByRole('button', { name: /^Lunch/ }))
 
@@ -255,7 +266,7 @@ describe('DashboardPage', () => {
         { name: 'New Movie', dslTemplate: 'movie :', confirm: true },
       ]))
       renderDashboardWithRoutes()
-      await screen.findByRole('button', { name: 'Test' })
+      await screen.findByRole('button', { name: /^New Movie/ })
 
       await user.click(screen.getByRole('button', { name: /^New Movie/ }))
 
@@ -273,7 +284,7 @@ describe('DashboardPage', () => {
         { name: 'Coffee', dslTemplate: 'expense 5:coffee', confirm: false },
       ]))
       renderDashboard()
-      await screen.findByRole('button', { name: 'Test' })
+      await screen.findByRole('button', { name: /^Coffee/ })
 
       await user.click(screen.getByRole('button', { name: /^Coffee/ }))
 
@@ -308,7 +319,7 @@ describe('DashboardPage', () => {
       ]))
       renderDashboard()
       // Wait for page to load with real timers (Dexie config load works fine)
-      await screen.findByRole('button', { name: 'Test' })
+      await screen.findByRole('button', { name: /^Coffee/ })
 
       // Only fake setTimeout/clearTimeout for the 4 s dismiss timer.
       // setImmediate, setInterval, MessageChannel stay real so Dexie and
@@ -355,7 +366,7 @@ describe('DashboardPage', () => {
         { name: 'Shop', dslTemplate: 'expense 5:food?merchant={}', confirm: false },
       ]))
       renderDashboard()
-      await screen.findByRole('button', { name: 'Test' })
+      await screen.findByRole('button', { name: /^Shop/ })
 
       await user.click(screen.getByRole('button', { name: /^Shop/ }))
 
