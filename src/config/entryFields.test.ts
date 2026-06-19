@@ -31,14 +31,24 @@ function makeEntry(overrides?: Partial<LifeLogEntry>): LifeLogEntry {
 
 describe('ENTRY_FIELDS', () => {
   const ALL_ENTRY_TYPES: EntryType[] = [
-    'show', 'movie', 'book', 'podcast', 'place', 'event', 'expense',
+    'show', 'movie', 'book', 'podcast', 'place', 'event', 'expense', 'trip', 'activity',
   ]
 
-  it('covers all 7 EntryType values', () => {
+  it('covers all 9 EntryType values', () => {
     for (const type of ALL_ENTRY_TYPES) {
       expect(ENTRY_FIELDS[type], `ENTRY_FIELDS missing entry for type: ${type}`).toBeDefined()
       expect(ENTRY_FIELDS[type].length).toBeGreaterThan(0)
     }
+  })
+
+  it('trip: "name" field maps to core.title', () => {
+    const nameField = ENTRY_FIELDS.trip.find((f) => f.key === 'name')
+    expect(nameField?.mapTo).toEqual({ kind: 'core', field: 'title' })
+  })
+
+  it('activity: "activityType" field maps to metadata.activityType', () => {
+    const activityTypeField = ENTRY_FIELDS.activity.find((f) => f.key === 'activityType')
+    expect(activityTypeField?.mapTo).toEqual({ kind: 'metadata', key: 'activityType' })
   })
 
   it('has correct creator labels: book="Author", movie="Director", podcast="Host", show="Creator"', () => {

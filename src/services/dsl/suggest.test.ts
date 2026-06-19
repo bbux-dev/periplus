@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { typeMatches, suggestionContext, applyValueSuggestion, quoteValue } from './suggest'
+import { POSITIONAL_SCHEMA } from '../../config/entryFields'
 
 describe('typeMatches (OMNI-03)', () => {
   it('resolves single-letter collisions to a menu', () => {
@@ -13,8 +14,8 @@ describe('typeMatches (OMNI-03)', () => {
   it('includes alias matches (exp → expense)', () => {
     expect(typeMatches('exp')).toContain('expense')
   })
-  it('empty prefix returns all seven types', () => {
-    expect(typeMatches('').length).toBe(7)
+  it('empty prefix returns all types', () => {
+    expect(typeMatches('').length).toBe(Object.keys(POSITIONAL_SCHEMA).length)
   })
 })
 

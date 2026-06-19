@@ -9,9 +9,11 @@ export type EntryType =
   | 'movie'     // media
   | 'book'      // media
   | 'podcast'   // media
-  | 'place'     // trips
-  | 'event'     // trips
-  | 'expense'   // trips OR expenditures
+  | 'place'     // trips legacy (kept for data compat)
+  | 'event'     // trips legacy (kept for data compat)
+  | 'expense'   // trips + expenditures
+  | 'trip'      // NEW: trip record
+  | 'activity'  // NEW: hike/show/restaurant/cafe/other
 
 export interface LifeLogEntry {
   id: string                          // UUID; provided by entriesRepository.create()

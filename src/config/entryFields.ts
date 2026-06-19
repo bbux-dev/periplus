@@ -89,6 +89,20 @@ export const ENTRY_FIELDS: Record<EntryType, FieldDescriptor[]> = {
     { key: 'description', label: 'Notes',    inputType: 'text',                    mapTo: { kind: 'core', field: 'description' } },
     { key: 'tags',        label: 'Tags',     inputType: 'tags',   placeholder: 'tag1, tag2', mapTo: { kind: 'core', field: 'tags' } },
   ],
+  // ─── Trip types (v0.5.0) ─────────────────────────────────────────────────────
+  trip: [
+    // A trip record: only the name is captured; ties entries via metadata.tripId.
+    { key: 'name', label: 'Name', inputType: 'text', required: true, mapTo: { kind: 'core', field: 'title' } },
+  ],
+  activity: [
+    // Activity within a trip (hike / show / restaurant / cafe / other).
+    { key: 'name',         label: 'Name',     inputType: 'text',   required: true,  mapTo: { kind: 'core', field: 'title' } },
+    { key: 'location',     label: 'Location', inputType: 'text',                    mapTo: { kind: 'core', field: 'location' } },
+    { key: 'occurredAt',   label: 'Date',     inputType: 'date',                    mapTo: { kind: 'core', field: 'occurredAt' } },
+    { key: 'rating',       label: 'Rating',   inputType: 'number', placeholder: '1-5', min: 1, max: 5, mapTo: { kind: 'metadata', key: 'rating' } },
+    { key: 'description',  label: 'Notes',    inputType: 'text',                    mapTo: { kind: 'core', field: 'description' } },
+    { key: 'activityType', label: 'Type',     inputType: 'text',                    mapTo: { kind: 'metadata', key: 'activityType' } },
+  ],
 }
 
 // ─── Positional schema (Quick-Capture DSL) ────────────────────────────────────
@@ -103,13 +117,15 @@ export const ENTRY_FIELDS: Record<EntryType, FieldDescriptor[]> = {
 // exactly why a bare expense (`12.50:food`) reads naturally.
 
 export const POSITIONAL_SCHEMA: Record<EntryType, string[]> = {
-  show:    ['title', 'creator'],
-  movie:   ['title', 'creator'],
-  book:    ['title', 'creator'],
-  podcast: ['title', 'creator'],
-  place:   ['name', 'address'],
-  event:   ['title', 'location'],
-  expense: ['amount', 'category'],
+  show:     ['title', 'creator'],
+  movie:    ['title', 'creator'],
+  book:     ['title', 'creator'],
+  podcast:  ['title', 'creator'],
+  place:    ['name', 'address'],
+  event:    ['title', 'location'],
+  expense:  ['amount', 'category'],
+  trip:     ['name'],
+  activity: ['name', 'location'],
 }
 
 // ─── buildReviewDraft mapper ──────────────────────────────────────────────────
