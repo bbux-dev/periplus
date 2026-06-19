@@ -1,5 +1,40 @@
 # Milestones
 
+## v0.5.0 Trips MVP UI Refactor (Shipped: 2026-06-19)
+
+**Phases completed:** 5 phases (20–24), 15 plans · 40/40 requirements · milestone audit passed
+**Quality at ship:** 363 tests green, `tsc -b` + `vite build` clean, zero new runtime dependencies.
+Net: +13.7k/−9.6k LOC across ~140 files (51 dead files removed). Cross-phase integration verified clean.
+
+**Delivered:** The UI was aggressively rewritten to a single-purpose, mobile-first **trip logger** over
+the *preserved* headless engine. All 13 prior screens + the DSL/shortcut/layout subsystem were dropped;
+low-level ui primitives + the Dexie/`entriesRepository`/`activeMode`/`draftToEntry` engine were reused.
+
+**Key accomplishments:**
+
+- **Engine extended additively (no Dexie bump):** `EntryType` += `trip`/`activity`; `ActiveMode.tripId`
+  + backward-compatible `activateMode`; `draftToEntry` stamps `metadata.tripId`; new `tripService`
+  (create-and-activate, list, single-pass `summarizeTrips`, pure stat helpers, reactive hooks).
+- **A trip IS the active mode:** `createAndActivateTrip` writes a `type:'trip'` entry (stable UUID) and
+  activates it; every expense/activity is stamped with `metadata.tripId` via the single capture path —
+  write key == read key across capture, list, and report.
+- **Atomic UI rewrite:** 11 non-trip pages + the DSL/shortcut/layout subsystem deleted in one commit
+  (51 files) with the suite staying green; trip-only router + reworked `AppShell`; export-only Settings.
+- **Fast expense + activity capture:** `ExpenseSheet` (amount → 8-category grid → save, `domain:'trips'`,
+  local-date) and Activity flow (type page → form + accessible 1–5 `StarRating`, Other free-text type).
+- **Read/report side:** `PreviousTripsPage` (single-pass, no N+1) → `TripDetailPage` drill-in by UUID →
+  category-grouped float-safe `ExpenseReport` + chronological timeline + merge-preserving inline
+  edit/delete (reactive).
+- Built autonomously via the GSD pipeline (research → context → pattern-map → plan → plan-check →
+  TDD execute → verify → code-review+fix per phase); each phase's review caught real bugs
+  (StarRating keyboard race, ExpenseSheet `parseFloat` truncation, TripHomePage loading-vs-no-trip race).
+
+**Known deferred at close:** Phase 24 verification `human_needed` for 3 browser-only visual checks
+(row layout, accordion UX, edit-modal animation) — logic verified 10/10, user accepted. Pre-existing
+v0.4.0 quick-task tracking artifact (`260618-…-nav-menu`) still `missing` (feature shipped; no undone work).
+
+---
+
 ## v0.4.0 Active Mode De-Clunk + Editable Entries (Shipped: 2026-06-19)
 
 **Phases completed:** 4 phases, 4 plans, 11 tasks

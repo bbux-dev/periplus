@@ -32,12 +32,28 @@ Review screen with type-token + history-backed value suggestions — no new save
 silent mis-saves. Parser was ported directly from the VALIDATED spike `001-dsl-parser`.
 Full details in `.planning/MILESTONES.md`.
 
-## Current Milestone: v0.5.0 Trips MVP UI Refactor (in progress)
+## Current State: v0.5.0 SHIPPED (2026-06-19) — next milestone open
+
+**What shipped:** Life Log is now a single-purpose, mobile-first **trip logger**. The UI was
+aggressively rewritten over the *preserved* headless engine: create/activate a trip → home dashboard
+→ fast expense + activity capture → previous trips → category-grouped expense report with inline
+edit/delete. All 13 prior screens + the DSL/shortcut/layout subsystem were dropped (51 files removed
+atomically); ui primitives + the Dexie/`entriesRepository`/`activeMode`/`draftToEntry` engine were
+reused. 40/40 requirements satisfied, milestone audit passed, integration clean. 363 tests green,
+`tsc -b` + `vite build` clean, zero new runtime dependencies. Run `/gsd:new-milestone` to scope next.
+
+## Previous Milestone: v0.5.0 Trips MVP UI Refactor — ✅ SHIPPED 2026-06-19
 
 **Goal:** Aggressively rewrite the UI to expose ONLY a minimal trip logger — create/activate a trip,
 log expenses and activities tied to the active trip, view prior trips, and see per-trip expense
 reports grouped by category — while preserving the headless engine (typed entries, Dexie storage,
 active-mode/context stamping, `draftToEntry`).
+
+**Core insight:** A "trip" IS the existing **active mode** specialized — `createAndActivateTrip` writes
+a `type:'trip'` entry (stable UUID) and activates it; every expense/activity is stamped with
+`metadata.tripId` via the single `draftToEntry` capture path, so the write key equals the read key
+across capture, list, and report. The engine needed only additive changes (no Dexie version bump);
+the milestone was 90% UI deletion + rebuild over an unchanged data layer.
 
 **Framing:** This is a UI **rewrite**, not a feature hide. All 13 existing screens/routes
 (Dashboard, Domain, CaptureUrl, Review, ManualEntry, EntryList/Detail/Edit, QuickCapture, Settings,
@@ -186,22 +202,30 @@ out of the v0.2.0 "always Review" invariant for trusted shortcuts, paired with u
 - ✓ App bar shows the active mode · instance label (MODE-04) — v0.4.0
 - ✓ Dashboard renders only the active mode's buttons; switcher removed (DASH-04) — v0.4.0
 - ✓ Every capture stamped with `metadata.mode` / `modeLabel` via `draftToEntry` (STAMP-01) — v0.4.0
+- ✓ Engine understands trips/activities: `EntryType` += trip/activity, `ActiveMode.tripId`, `draftToEntry` stamps tripId, `tripService` (ENG-01..04) — v0.5.0
+- ✓ Trip-only UI rewrite: 13 screens + DSL/shortcut subsystem dropped atomically; trip nav; export-only Settings (UI-01..05) — v0.5.0
+- ✓ Create + activate a trip; empty-state Create-a-Trip; active trip persists (TRIP-01..04) — v0.5.0
+- ✓ Trip Home: active trip + Expense/Activity CTAs + recent entries + running total (HOME-01..05) — v0.5.0
+- ✓ Expense capture: amount + 8-category grid + vendor/notes → stamped save, `domain:'trips'`, local-date (EXP-01..06) — v0.5.0
+- ✓ Activity capture: type page → form + accessible 1–5 star rating; Other free-text type (ACT-01..06) — v0.5.0
+- ✓ Previous Trips (single-pass) + Trip Detail: category-grouped float-safe report + timeline + inline edit/delete (PREV-01..04, RPT-01..06) — v0.5.0
 
 ### Active
 
-<!-- v0.5.0 Trips MVP UI Refactor — REQ-IDs defined in REQUIREMENTS.md. -->
+<!-- v0.5.0 shipped; next milestone scope is open — run /gsd:new-milestone. -->
 
-- [ ] Create a trip and make it the active trip context (TRIP-*)
-- [ ] Empty/first-run "Create a Trip" screen when no active trip (TRIP-*)
-- [ ] Trip Home: active trip + Expense/Activity buttons + recent entries + expense total (HOME-*)
-- [ ] Log an expense (amount, category, vendor, notes) tied to the active trip (EXP-*)
-- [ ] Log an activity (type → name/location/rating/notes) tied to the active trip (ACT-*)
-- [ ] Previous Trips list + Trip Detail with category-grouped expense report (PREV-*, RPT-*)
-- [ ] Rewrite UI to trip-only; drop non-trip screens, reuse engine + ui components (UI-*)
+(None — v0.5.0 shipped; next milestone not yet scoped. Candidate directions in Deferred below.)
 
 ### Deferred (candidate directions for future milestones)
 
-<!-- Seams already exist in code for the first two. -->
+<!-- v0.5.0 trip-logger deferrals (locked product decisions for the MVP). -->
+
+- [ ] Explicit "End Trip" / archive action (v0.5.0 ends a trip implicitly on new-trip activation)
+- [ ] "Delete Trip" with cascade delete of its entries (v0.5.0 is entry-level delete only)
+- [ ] Per-day expense grouping, per-trip budgets, charts/visualizations on the report
+- [ ] Multi-currency, receipt OCR, CSV/PDF export, photo attachments; in-trip filter/search
+- [ ] Edit-form input-type polish & remove orphaned `useTrips`/`listTrips` + stale doc-comments (minor v0.5.0 tech debt; edit-form input types already fixed at close)
+<!-- Seams already exist in code for the first two below. -->
 
 - [ ] Filter / group entries by mode instance ("everything I logged during the Oregon trip") — the
   STAMP-01 provenance shipped in v0.4.0 enables this; the filtered view is the natural next milestone
@@ -263,6 +287,9 @@ out of the v0.2.0 "always Review" invariant for trusted shortcuts, paired with u
 | Active mode is the dashboard's source of truth (not `activeLayoutName`) | One steady-state selector; switcher removed for the de-clunk | ✓ Good — shipped v0.4.0 |
 | Capture stamp via an optional `activeMode` arg on `draftToEntry` | Single capture path stamps all save routes; no stamp when inactive | ✓ Good — shipped v0.4.0 |
 | Entry edits merge metadata (preserve unknown keys) | Mode/modeLabel + DSL/URL keys survive edits and stay correctable | ✓ Good — shipped v0.4.0 |
+| A trip IS the active mode (type:'trip' entry + activateMode + tripId stamp) | Reuse the engine; no new store; tripId is the stable join key (survives duplicate names/zero-entry trips) | ✓ Good — shipped v0.5.0 |
+| Aggressive UI rewrite (drop 13 screens atomically) over preserved engine | Engine was sound; clunkiness was UI surface area — remove it, don't add config | ✓ Good — shipped v0.5.0 |
+| Money stays a JS number; round + formatUSD at display (no integer-cents migration) | Avoids a Dexie migration; float artifacts fixed at the display boundary | ✓ Good — shipped v0.5.0 |
 
 ## Evolution
 
@@ -282,4 +309,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-19 — started milestone v0.5.0 (Trips MVP UI Refactor — UI rewrite to trip-only logger over the preserved engine)*
+*Last updated: 2026-06-19 — after completing milestone v0.5.0 (Trips MVP UI Refactor shipped; UI rewritten to a trip-only logger over the preserved engine)*

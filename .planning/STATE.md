@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v0.5.0
 milestone_name: Trips MVP UI Refactor
-status: verifying
+status: Awaiting next milestone
 stopped_at: Completed 24-01-PLAN.md
-last_updated: "2026-06-19T21:04:33.592Z"
-last_activity: 2026-06-19
+last_updated: "2026-06-19T21:50:39.700Z"
+last_activity: 2026-06-19 — Milestone v0.5.0 completed and archived
 progress:
   total_phases: 5
   completed_phases: 5
@@ -21,32 +21,30 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-19)
 
 **Core value:** A user can capture a structured life event on their phone in seconds and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 24 — Previous Trips + Trip Detail + Expense Report
+**Current focus:** Milestone complete
 
 ## Current Position
 
-Phase: 24 (Previous Trips + Trip Detail + Expense Report) — EXECUTING
-Plan: 3 of 3
-Status: Phase complete — ready for verification
-Last activity: 2026-06-19
-
-```
-Progress: [██████████] 100%
-```
+Phase: Milestone v0.5.0 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-06-19 — Milestone v0.5.0 completed and archived
 
 ## Deferred Items
 
-Items acknowledged and deferred at milestone close on 2026-06-19:
+Items acknowledged and deferred at v0.5.0 milestone close on 2026-06-19:
 
 | Category | Item | Status | Note |
 |----------|------|--------|------|
-| quick_task | 260618-8pp-home-button-and-hamburger-nav-menu | missing | Feature shipped (commits 6762cef, 012475c — AppShell home button + hamburger nav); only the completion tracking artifact is missing. No undone work. |
+| verification_gap | Phase 24 `24-VERIFICATION.md` | human_needed | 10/10 must-haves verified by logic/tests; 3 browser-only visual checks deferred (trip-list row layout, category accordion UX, edit-modal animation). User accepted "proceed to close". |
+| tech_debt (v0.5.0) | Orphaned `tripService.useTrips`/`listTrips`; stale JSDoc referencing deleted ReviewPage/DashboardPage | non-blocking | Edit-form input-types + stale `currency` field already FIXED at close (282b02b); remaining items are cosmetic. |
+| quick_task | 260618-8pp-home-button-and-hamburger-nav-menu | missing | Feature shipped in v0.4.0 (6762cef, 012475c); only the tracking artifact is missing. No undone work. |
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 15
+- Total plans completed: 18
 - Average duration: ~5 min/plan
 - Total execution time: ~15 min (Phase 1)
 
@@ -59,6 +57,7 @@ Items acknowledged and deferred at milestone close on 2026-06-19:
 | 21 | 4 | - | - |
 | 22 | 3 | - | - |
 | 23 | 3 | - | - |
+| 24 | 3 | - | - |
 
 **Recent Trend:**
 
@@ -217,4 +216,4 @@ Resume file: None
 
 ## Operator Next Steps
 
-- Run `/gsd:plan-phase 20` to plan Phase 20 (Trip Data Model + Engine Extensions)
+- Start the next milestone with /gsd-new-milestone

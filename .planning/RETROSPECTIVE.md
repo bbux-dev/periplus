@@ -146,6 +146,55 @@ label`, dashboard renders only the active mode's buttons (P19).
 - Per phase: 1 pre-written plan + 1 gsd-executor (TDD, atomic commits) + main-thread verification;
   no researcher/pattern-mapper/checker overhead (phases were well-understood reframings).
 
+## Milestone: v0.5.0 — Trips MVP UI Refactor
+
+**Shipped:** 2026-06-19
+**Phases:** 5 (20–24) | **Plans:** 15 | **Tests at ship:** 363 | **Audit:** passed (40/40)
+
+### What Was Built
+A single-purpose, mobile-first trip logger over the *preserved* engine: additive engine extensions
+(trip/activity types, `tripId` stamping, `tripService`); an atomic UI rewrite that dropped 11 pages +
+the DSL/shortcut/layout subsystem (51 files) while the suite stayed green; trip home + fast expense
+sheet + activity flow with an accessible star rating; and the read side (single-pass Previous Trips →
+UUID drill-in → category-grouped float-safe report + timeline + merge-preserving inline edit/delete).
+
+### What Worked
+- **Milestone-level research up front** (4 researchers → synthesis) gave every phase a pre-vetted
+  build order + pitfalls list, so per-phase research was skipped (nyquist off) with no quality loss.
+- **The full per-phase pipeline** (context → pattern-map → plan → plan-check → TDD execute → verify →
+  code-review+fix) caught real bugs that tests-alone missed: a StarRating keyboard-anchor race,
+  `parseFloat("12.5.0")` silent truncation in ExpenseSheet, a TripHomePage loading-vs-no-trip
+  two-query race, and a non-atomic create+activate.
+- **The "trip IS the active mode" decision** kept the data layer untouched — no Dexie migration, the
+  write key (`metadata.tripId`) equals the read key everywhere (integration check confirmed clean).
+- **Atomic delete + decouple-first ordering** (move `ReviewDraft`, drop `listModes` before the big
+  deletion) kept `tsc`/tests green at every commit boundary during the riskiest phase.
+
+### What Was Inefficient
+- The milestone-audit CLI's accomplishment extraction produced empty "One-liner:" rows because phase
+  SUMMARYs lacked a clean `one_liner` frontmatter field — the MILESTONES entry was hand-written.
+- A few small code-review findings recurred across phases (missing save-error catch, double-submit
+  guard, modal focus/scroll-lock) — they could be a shared `useModal`/`useAsyncSubmit` primitive.
+
+### Patterns Established
+- **Settled-signal guard** (`useLiveQuery(() => get().then(r => ({ready:true, mode:r})), [], {ready:false})`)
+  to distinguish Dexie-loading from no-active-trip — reused in TripHome, TripDetail, ActivityForm.
+- **Single capture path:** all UI writes go through `draftToEntry(draft, type, 'trips', activeMode)` —
+  stamping is centralized, never hand-set.
+- **Float-safe money:** `formatUSD` (rounds + guards NaN) is the only path to the DOM for amounts.
+
+### Key Lessons
+- For a "de-clunk/rewrite" milestone, the win is *deletion*: 51 files removed, net behavior simpler.
+  Investing in compile-safe ordering (decouple → build → delete) made a scary atomic drop routine.
+- Visual-only `human_needed` verification is the right terminal state for UI polish — don't force it
+  to `passed`; surface the 3 browser checks and let the user decide (they accepted at close).
+
+### Cost Observations
+- Model mix: opus for planning (5 phases), sonnet for research/pattern-map/execute/verify/review/fix.
+- Fully autonomous run (`skip_discuss`, UI phase/review off); per phase ≈ pattern-map + opus plan +
+  plan-check + 2–4 sonnet executors + verify + review + fix. ~75 commits across the milestone.
+- Notable: per-phase code-review+fix caught 1 critical + ~20 warnings that the green test suite missed.
+
 ## Cross-Milestone Trends
 
 | Milestone | Phases | Plans | Tests at ship | Audit | Notes |
@@ -154,3 +203,4 @@ label`, dashboard renders only the active mode's buttons (P19).
 | v0.2.0 | 4 | 4 | 277 | passed (10/10) | Quick-Capture DSL omnibar; parser ported from validated spike |
 | v0.3.0 | 5 | 11 | 500 | passed (16/16) | Shortcut layouts on the DSL; audit caught a real cross-phase blocker |
 | v0.4.0 | 4 | 4 | 592 | passed (10/10) | Active-mode de-clunk + editable entries; reframed Layout→Mode, zero new deps |
+| v0.5.0 | 5 | 15 | 363 | passed (40/40) | Trips MVP UI rewrite over preserved engine; 51 dead files dropped atomically, zero new deps |
