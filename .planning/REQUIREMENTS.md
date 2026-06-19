@@ -46,12 +46,12 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 
 ### Expense Capture (EXP)
 
-- [ ] **EXP-01**: Tapping `Expense` opens a small mobile-first modal/sheet
-- [ ] **EXP-02**: Expense requires an Amount (numeric input)
+- [x] **EXP-01**: Tapping `Expense` opens a small mobile-first modal/sheet
+- [x] **EXP-02**: Expense requires an Amount (numeric input)
 - [x] **EXP-03**: Expense requires a Category chosen from the 8 fixed categories (large tap targets, not a dropdown)
-- [ ] **EXP-04**: Expense accepts an optional Vendor and optional Notes
-- [ ] **EXP-05**: Expense date defaults to today (local date; no UTC off-by-one) and the trip defaults to the active trip
-- [ ] **EXP-06**: Saving creates an `expense` entry (`domain='trips'`) stamped with the active `tripId`; fast path is Expense → amount → category → save
+- [x] **EXP-04**: Expense accepts an optional Vendor and optional Notes
+- [x] **EXP-05**: Expense date defaults to today (local date; no UTC off-by-one) and the trip defaults to the active trip
+- [x] **EXP-06**: Saving creates an `expense` entry (`domain='trips'`) stamped with the active `tripId`; fast path is Expense → amount → category → save
 
 ### Activity Capture (ACT)
 
@@ -133,12 +133,12 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 | HOME-03 | Phase 22 | Complete |
 | HOME-04 | Phase 22 | Pending |
 | HOME-05 | Phase 22 | Pending |
-| EXP-01 | Phase 22 | Pending |
-| EXP-02 | Phase 22 | Pending |
+| EXP-01 | Phase 22 | Complete |
+| EXP-02 | Phase 22 | Complete |
 | EXP-03 | Phase 22 | Complete |
-| EXP-04 | Phase 22 | Pending |
-| EXP-05 | Phase 22 | Pending |
-| EXP-06 | Phase 22 | Pending |
+| EXP-04 | Phase 22 | Complete |
+| EXP-05 | Phase 22 | Complete |
+| EXP-06 | Phase 22 | Complete |
 | ACT-01 | Phase 23 | Pending |
 | ACT-02 | Phase 23 | Pending |
 | ACT-03 | Phase 23 | Pending |
