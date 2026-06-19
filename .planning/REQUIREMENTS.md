@@ -40,7 +40,7 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 
 - [ ] **HOME-01**: Home screen shows the active trip name prominently (e.g. "Trip: Oregon Road Trip")
 - [ ] **HOME-02**: Home shows primary `Expense` and `Activity` action buttons
-- [ ] **HOME-03**: Home shows the active trip's running expense total (currency-formatted)
+- [x] **HOME-03**: Home shows the active trip's running expense total (currency-formatted)
 - [ ] **HOME-04**: Home shows recent entries for the active trip (most recent first)
 - [ ] **HOME-05**: Top-level navigation exists for Home / Previous Trips / Settings (Export)
 
@@ -48,7 +48,7 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 
 - [ ] **EXP-01**: Tapping `Expense` opens a small mobile-first modal/sheet
 - [ ] **EXP-02**: Expense requires an Amount (numeric input)
-- [ ] **EXP-03**: Expense requires a Category chosen from the 8 fixed categories (large tap targets, not a dropdown)
+- [x] **EXP-03**: Expense requires a Category chosen from the 8 fixed categories (large tap targets, not a dropdown)
 - [ ] **EXP-04**: Expense accepts an optional Vendor and optional Notes
 - [ ] **EXP-05**: Expense date defaults to today (local date; no UTC off-by-one) and the trip defaults to the active trip
 - [ ] **EXP-06**: Saving creates an `expense` entry (`domain='trips'`) stamped with the active `tripId`; fast path is Expense → amount → category → save
@@ -130,12 +130,12 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 | TRIP-03 | Phase 22 | Pending |
 | HOME-01 | Phase 22 | Pending |
 | HOME-02 | Phase 22 | Pending |
-| HOME-03 | Phase 22 | Pending |
+| HOME-03 | Phase 22 | Complete |
 | HOME-04 | Phase 22 | Pending |
 | HOME-05 | Phase 22 | Pending |
 | EXP-01 | Phase 22 | Pending |
 | EXP-02 | Phase 22 | Pending |
-| EXP-03 | Phase 22 | Pending |
+| EXP-03 | Phase 22 | Complete |
 | EXP-04 | Phase 22 | Pending |
 | EXP-05 | Phase 22 | Pending |
 | EXP-06 | Phase 22 | Pending |

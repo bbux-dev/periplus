@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v0.5.0
 milestone_name: Trips MVP UI Refactor
-status: verifying
+status: executing
 stopped_at: Completed 21-03-PLAN.md
-last_updated: "2026-06-19T15:16:44.543Z"
+last_updated: "2026-06-19T15:56:03.796Z"
 last_activity: 2026-06-19
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 9
+  completed_plans: 7
   percent: 40
 ---
 
@@ -21,17 +21,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-19)
 
 **Core value:** A user can capture a structured life event on their phone in seconds and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 21 — App Shell + Routing Rewrite + Atomic Drop
+**Current focus:** Phase 22 — Trip Home + Expense Capture
 
 ## Current Position
 
-Phase: 21 (App Shell + Routing Rewrite + Atomic Drop) — EXECUTING
-Plan: 4 of 4
-Status: Phase complete — ready for verification
+Phase: 22 (Trip Home + Expense Capture) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-06-19
 
 ```
-Progress: [██████████] 100%
+Progress: [████████░░] 78%
 ```
 
 ## Deferred Items
@@ -46,7 +46,7 @@ Items acknowledged and deferred at milestone close on 2026-06-19:
 
 **Velocity:**
 
-- Total plans completed: 5
+- Total plans completed: 9
 - Average duration: ~5 min/plan
 - Total execution time: ~15 min (Phase 1)
 
@@ -56,6 +56,7 @@ Items acknowledged and deferred at milestone close on 2026-06-19:
 |-------|-------|-------|----------|
 | Phase 01 | 3 | ~15min | ~5min |
 | 20 | 2 | - | - |
+| 21 | 4 | - | - |
 
 **Recent Trend:**
 
@@ -100,6 +101,7 @@ Items acknowledged and deferred at milestone close on 2026-06-19:
 | Phase 21 P02 | 2min | 3 tasks | 6 files |
 | Phase 21 P03 | 4min | 2 tasks | 6 files |
 | Phase 21 P04 | 5min | 2 tasks | 51 files |
+| Phase 22-trip-home-expense-capture P01 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -166,6 +168,7 @@ architecture-template.md SPEC + spec.md:
 - [Phase ?]: dbReady settled signal via useLiveQuery db.settings.count default=false distinguishes loading from no-trip
 - [Phase ?]: AppShell hamburger contains exactly Home / Previous Trips / Settings — no domain-tree or mode-switcher
 - [Phase ?]: App.tsx imports only TripHomePage/CreateTripPage/SettingsPage/PlaceholderPage; path=* catch-all provides graceful 404 (T-21-04)
+- [Phase ?]: [22-01]
 
 ### Pending Todos
 
@@ -194,7 +197,7 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-19T15:16:44.535Z
+Last session: 2026-06-19T15:56:03.786Z
 Stopped at: Completed 21-03-PLAN.md
 Resume file: None
 
