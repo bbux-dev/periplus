@@ -240,9 +240,9 @@ export function todayLocalMidnightEpoch(): number {
 /**
  * True iff the type's ENTRY_FIELDS config has a core occurredAt descriptor.
  *
- * All 7 current types do; the gate is kept for correctness/future-proofing so a
- * type without a date field never gets an invented date. Tolerates an unknown
- * type (optional chaining + `?? false`).
+ * Currently: activity, event, expense, place, show, movie, book, podcast (yes);
+ * trip (no — trip entries record only a name, no per-entry date).
+ * The optional-chain + `?? false` handles any unknown future type safely.
  */
 export function typeHasDateField(type: EntryType): boolean {
   return (

@@ -28,6 +28,9 @@ export function tripExpenseTotal(entries: LifeLogEntry[]): number {
  * Non-string or missing category keys fall under `'Uncategorized'`.
  * Only `type === 'expense'` entries are counted.
  *
+ * Raw floats accumulated — callers round each value via `Math.round(x * 100) / 100`
+ * before display (see PITFALLS Pitfall 4).
+ *
  * Mirrors the `bump()` string-guard in `entriesRepository.listDistinctValues`.
  */
 export function tripExpensesByCategory(entries: LifeLogEntry[]): Map<string, number> {
@@ -53,7 +56,10 @@ export function tripDateRange(
     .map((e) => e.occurredAt)
     .filter((d): d is number => d != null)
   if (dates.length === 0) return null
-  return { start: Math.min(...dates), end: Math.max(...dates) }
+  return {
+    start: dates.reduce((min, d) => (d < min ? d : min), dates[0]),
+    end:   dates.reduce((max, d) => (d > max ? d : max), dates[0]),
+  }
 }
 
 /**
@@ -67,34 +73,36 @@ export function tripActivityCount(entries: LifeLogEntry[]): number {
 
 /**
  * Creates a new `type='trip'` entry and immediately activates trip mode with the
- * entry's UUID as `tripId`. Two sequential writes: entriesRepository.create then
- * activateMode (both await before returning).
+ * entry's UUID as `tripId`. Both writes are wrapped in a single Dexie transaction
+ * (db.entries + db.settings) so a quota or write failure on activateMode cannot
+ * leave an orphaned trip entry in db.entries.
  *
  * Duplicate names are acceptable — the UUID (`entry.id`) is the stable join key.
  * A blank/whitespace name falls back to 'Untitled Trip'.
  */
 export async function createAndActivateTrip(name: string): Promise<LifeLogEntry> {
-  const entry = await entriesRepository.create({
-    type: 'trip',
-    domain: 'trips',
-    title: name.trim() || 'Untitled Trip',
-    recordedAt: Date.now(),
-    tags: [],
-    metadata: {},
-    syncedAt: null,
+  const trimmedName = name.trim() || 'Untitled Trip'
+  let created: LifeLogEntry | undefined
+  await db.transaction('rw', db.entries, db.settings, async () => {
+    created = await entriesRepository.create({
+      type: 'trip',
+      domain: 'trips',
+      title: trimmedName,
+      recordedAt: Date.now(),
+      tags: [],
+      metadata: {},
+      syncedAt: null,
+    })
+    await activateMode('trip', trimmedName, created.id)
   })
-  await activateMode('trip', name, entry.id)
-  return entry
+  return created!
 }
 
 /**
  * Returns all `type === 'trip'` entries, newest-first by `recordedAt`.
- * Uses the `domain` index to narrow the scan to the 'trips' domain, then
- * applies a client-side type filter and sorts by `recordedAt` descending.
- *
- * Note: `.reverse()` on a domain-indexed query orders by primary key (UUID),
- * not `recordedAt`. We use `orderBy('recordedAt').reverse()` to ensure
- * newest-first semantics (Rule 1: auto-fix correct ordering).
+ * Scans all entries ordered by the `recordedAt` index (newest-first), applies a
+ * JS-side filter for `domain === 'trips' && type === 'trip'`.
+ * O(n) over all entries — acceptable at personal-app scale.
  */
 export async function listTrips(): Promise<LifeLogEntry[]> {
   return db.entries

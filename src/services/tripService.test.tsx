@@ -216,6 +216,9 @@ describe('createAndActivateTrip', () => {
   it('falls back to Untitled Trip for a blank/whitespace name', async () => {
     const entry = await createAndActivateTrip('   ')
     expect(entry.title).toBe('Untitled Trip')
+    const active = await activeModeRepository.get()
+    expect(active?.label).toBe('Untitled Trip')   // must match entry.title (WR-01)
+    expect(active?.tripId).toBe(entry.id)
   })
 })
 
