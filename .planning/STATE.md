@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v0.5.0
 milestone_name: Trips MVP UI Refactor
 status: executing
-stopped_at: Completed 21-02-PLAN.md
-last_updated: "2026-06-19T15:06:09.792Z"
+stopped_at: Completed 21-03-PLAN.md
+last_updated: "2026-06-19T15:12:35.726Z"
 last_activity: 2026-06-19
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 6
-  completed_plans: 4
+  completed_plans: 5
   percent: 20
 ---
 
@@ -26,12 +26,12 @@ See: .planning/PROJECT.md (updated 2026-06-19)
 ## Current Position
 
 Phase: 21 (App Shell + Routing Rewrite + Atomic Drop) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-06-19
 
 ```
-Progress: [███████░░░] 67%
+Progress: [████████░░] 83%
 ```
 
 ## Deferred Items
@@ -98,6 +98,7 @@ Items acknowledged and deferred at milestone close on 2026-06-19:
 | Phase 20-trip-data-model-engine-extensions P02 | 8min | 2 tasks | 2 files |
 | Phase 21 P01 | 5min | 1 tasks | 3 files |
 | Phase 21 P02 | 2min | 3 tasks | 6 files |
+| Phase 21 P03 | 4min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -162,6 +163,8 @@ architecture-template.md SPEC + spec.md:
 - [v0.5.0 Roadmap]: No "Delete Trip" in v0.5.0 — entry-level delete only from TripDetailPage (avoids orphaned-entries cascade complexity)
 - [Phase ?]: TripHomePage uses declarative Navigate (not imperative navigate) — avoids React 'cannot update during render' warning
 - [Phase ?]: dbReady settled signal via useLiveQuery db.settings.count default=false distinguishes loading from no-trip
+- [Phase ?]: AppShell hamburger contains exactly Home / Previous Trips / Settings — no domain-tree or mode-switcher
+- [Phase ?]: App.tsx imports only TripHomePage/CreateTripPage/SettingsPage/PlaceholderPage; path=* catch-all provides graceful 404 (T-21-04)
 
 ### Pending Todos
 
@@ -190,8 +193,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-19T15:06:09.781Z
-Stopped at: Completed 21-02-PLAN.md
+Last session: 2026-06-19T15:12:35.716Z
+Stopped at: Completed 21-03-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
