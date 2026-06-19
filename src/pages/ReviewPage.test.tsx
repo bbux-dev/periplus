@@ -405,6 +405,68 @@ describe('ReviewPage — IN-02: unknown domain shows graceful error', () => {
   })
 })
 
+// ─── DATE-01: occurredAt defaults to today (default, not lock) ────────────────
+
+describe('ReviewPage — DATE-01: date field defaults to today', () => {
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('pre-fills today (local) in the date input when the draft has no occurredAt', async () => {
+    // Fake only Date so RTL findBy timers still run.
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-06-18T14:00:00'))
+    const draft: ExtractedDraft = {
+      sourceUrl: '',
+      title: 'Coffee',
+      metadata: {},
+    }
+    renderWithDraft('expenditures', 'expense', draft)
+
+    const dateInput = await screen.findByLabelText('Date')
+    expect(dateInput).toHaveValue('2026-06-18')
+  })
+
+  it('shows the explicit draft date unchanged when occurredAt is present', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-06-18T14:00:00'))
+    const explicit = Date.parse('2024-01-15T00:00:00')
+    const draft: ExtractedDraft = {
+      sourceUrl: '',
+      title: 'Old Expense',
+      metadata: {},
+      // ExtractedDraft is structurally a ReviewDraft superset; occurredAt is allowed
+      occurredAt: explicit,
+    } as ExtractedDraft & { occurredAt: number }
+    renderWithDraft('expenditures', 'expense', draft)
+
+    const dateInput = await screen.findByLabelText('Date')
+    expect(dateInput).toHaveValue('2024-01-15')
+  })
+
+  it('clearing the pre-filled date then saving persists an entry with no occurredAt', async () => {
+    const user = userEvent.setup()
+    const draft: ExtractedDraft = {
+      sourceUrl: '',
+      title: 'Coffee',
+      metadata: {},
+    }
+    renderWithDraft('expenditures', 'expense', draft)
+
+    const dateInput = await screen.findByLabelText('Date')
+    // Pre-filled with today (real timers) — clear it
+    await user.clear(dateInput)
+    expect(dateInput).toHaveValue('')
+
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+    await screen.findByTestId('domain-probe')
+
+    const entries = await entriesRepository.list()
+    expect(entries).toHaveLength(1)
+    expect('occurredAt' in entries[0]).toBe(false)
+  })
+})
+
 // ─── Guard: no draft → redirect to capture ───────────────────────────────────
 
 describe('ReviewPage — guard: no draft redirects to capture', () => {

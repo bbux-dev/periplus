@@ -7,7 +7,7 @@ import { FormField } from '../components/ui/FormField'
 import { Button } from '../components/ui/Button'
 import { entriesRepository } from '../services/entriesRepository'
 import { isSafeUrl } from '../services/urlUtils'
-import { draftToEntry } from '../services/captureService'
+import { draftToEntry, todayLocalDate, typeHasDateField } from '../services/captureService'
 import type { ReviewDraft } from '../services/extractMetadataFromUrl'
 import type { EntryDomain, EntryType } from '../services/db'
 
@@ -41,10 +41,14 @@ export function ReviewPage() {
 
   // NEW: Manual-entry fields threaded from ReviewDraft → LifeLogEntry
   // WR-03: use toLocaleDateString('en-CA') → 'YYYY-MM-DD' in local tz (toISOString is UTC)
+  // DATE-01: when the draft carries no date and the type has a date field, default
+  // to today's local date — a DEFAULT the user sees and can still clear, not a lock.
   const [occurredAt, setOccurredAt] = useState(
     initialDraft?.occurredAt
       ? new Date(initialDraft.occurredAt).toLocaleDateString('en-CA')
-      : '',
+      : typeHasDateField(type as EntryType)
+        ? todayLocalDate()
+        : '',
   )
   const [amount, setAmount] = useState(
     initialDraft?.amount != null ? String(initialDraft.amount) : '',
