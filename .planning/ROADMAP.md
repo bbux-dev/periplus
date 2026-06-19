@@ -18,9 +18,10 @@ first-class (editable, deletable, mode-stamped). Designs: `notes/active-mode-nav
 - [x] **Phase 16: Default occurredAt to Today** — quick win: default the date field to today
   (local) on both the ReviewPage form and the one-tap direct-save path, for types that have an
   `occurredAt` field; default not lock. Reqs: DATE-01. (completed 2026-06-18; +16 tests)
-- [ ] **Phase 17: Editable & Deletable Saved Entries** — wire `EntryDetailPage` to an edit form
+- [x] **Phase 17: Editable & Deletable Saved Entries** — wire `EntryDetailPage` to an edit form
   reusing `ENTRY_FIELDS` + `buildReviewDraft` over the existing `entriesRepository.update`/`.delete`:
   edit metadata, fix core fields, delete with confirm; `recordedAt` immutable. Reqs: EEDIT-01..03.
+  (completed 2026-06-18; +31 tests; new `/entries/:id/edit` route)
 - [ ] **Phase 18: Active Mode Model + Instance Stamping** — model the active mode + free-text
   instance label persisted in Dexie `settings` (mirroring `activeLayoutRepository`); stamp every
   capture with `metadata.mode` / `modeLabel` in the single `draftToEntry` path. No nav UI yet.
@@ -132,6 +133,6 @@ Full details: [`milestones/v0.1.0-ROADMAP.md`](milestones/v0.1.0-ROADMAP.md).
 | 7–10. (v0.2.0) | v0.2.0 | 4/4 | Complete | 2026-06-16 |
 | 11–15. (v0.3.0) | v0.3.0 | 11/11 | Complete | 2026-06-17 |
 | 16. Default occurredAt to Today | v0.4.0 | 1/1 | Complete | 2026-06-18 |
-| 17. Editable & Deletable Saved Entries | v0.4.0 | 0/? | Not Started | — |
+| 17. Editable & Deletable Saved Entries | v0.4.0 | 1/1 | Complete | 2026-06-18 |
 | 18. Active Mode Model + Instance Stamping | v0.4.0 | 0/? | Not Started | — |
 | 19. Active Mode Navigation + Dashboard De-Clunk | v0.4.0 | 0/? | Not Started | — |

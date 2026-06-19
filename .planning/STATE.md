@@ -7,10 +7,10 @@ last_updated: "2026-06-19T02:45:00.000Z"
 last_activity: 2026-06-19
 progress:
   total_phases: 4
-  completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
-  percent: 25
+  completed_phases: 2
+  total_plans: 2
+  completed_plans: 2
+  percent: 50
 ---
 
 # Project State
@@ -24,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 
 ## Current Position
 
-Phase: 17 — Editable & Deletable Saved Entries (next)
+Phase: 18 — Active Mode Model + Instance Stamping (next)
 Plan: —
-Status: Phase 16 complete (DATE-01 ✅); autonomous run continuing
-Last activity: 2026-06-19 — Phase 16 done: occurredAt defaults to today (528 tests green, tsc + build clean)
+Status: Phases 16–17 complete (DATE-01, EEDIT-01..03 ✅); autonomous run continuing
+Last activity: 2026-06-19 — Phase 17 done: editable/deletable entries via /entries/:id/edit (559 tests green, tsc + build clean)
 
 ## Performance Metrics
 
