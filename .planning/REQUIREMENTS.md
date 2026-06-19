@@ -75,8 +75,8 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 - [x] **RPT-02**: Trip Detail shows expenses grouped by category with per-category subtotals
 - [x] **RPT-03**: Category rows show their individual expenses (under each category or expandable rows)
 - [x] **RPT-04**: Trip Detail shows a timeline/list of the trip's expenses and activities
-- [ ] **RPT-05**: User can edit an existing entry from Trip Detail (reuses `entriesRepository.update`)
-- [ ] **RPT-06**: User can delete an existing entry from Trip Detail with confirmation (reuses `entriesRepository.delete`)
+- [x] **RPT-05**: User can edit an existing entry from Trip Detail (reuses `entriesRepository.update`)
+- [x] **RPT-06**: User can delete an existing entry from Trip Detail with confirmation (reuses `entriesRepository.delete`)
 
 ### UI Rewrite (UI)
 
@@ -153,5 +153,5 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 | RPT-02 | Phase 24 | Complete |
 | RPT-03 | Phase 24 | Complete |
 | RPT-04 | Phase 24 | Complete |
-| RPT-05 | Phase 24 | Pending |
-| RPT-06 | Phase 24 | Pending |
+| RPT-05 | Phase 24 | Complete |
+| RPT-06 | Phase 24 | Complete |
