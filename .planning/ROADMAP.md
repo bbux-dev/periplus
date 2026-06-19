@@ -26,9 +26,10 @@ first-class (editable, deletable, mode-stamped). Designs: `notes/active-mode-nav
   instance label persisted in Dexie `settings` (mirroring `activeLayoutRepository`); stamp every
   capture with `metadata.mode` / `modeLabel` in the single `draftToEntry` path. No nav UI yet.
   Reqs: MODE-01, MODE-02, STAMP-01. (completed 2026-06-18; +26 tests; new `services/activeMode.ts`)
-- [ ] **Phase 19: Active Mode Navigation + Dashboard De-Clunk** — hamburger-menu "Active Mode"
+- [x] **Phase 19: Active Mode Navigation + Dashboard De-Clunk** — hamburger-menu "Active Mode"
   item (mode list → activate → label prompt), app bar shows `mode · label`, dashboard renders only
   the active mode's buttons (remove the on-dashboard switcher). Reqs: MODE-03, MODE-04, DASH-04.
+  (completed 2026-06-18; +7 net tests; the milestone de-clunk)
 
 <details>
 <summary>✅ v0.3.0 — Dashboard Shortcut Layouts (Phases 11–15) — SHIPPED 2026-06-17</summary>
@@ -135,4 +136,4 @@ Full details: [`milestones/v0.1.0-ROADMAP.md`](milestones/v0.1.0-ROADMAP.md).
 | 16. Default occurredAt to Today | v0.4.0 | 1/1 | Complete | 2026-06-18 |
 | 17. Editable & Deletable Saved Entries | v0.4.0 | 1/1 | Complete | 2026-06-18 |
 | 18. Active Mode Model + Instance Stamping | v0.4.0 | 1/1 | Complete | 2026-06-18 |
-| 19. Active Mode Navigation + Dashboard De-Clunk | v0.4.0 | 0/? | Not Started | — |
+| 19. Active Mode Navigation + Dashboard De-Clunk | v0.4.0 | 1/1 | Complete | 2026-06-18 |
