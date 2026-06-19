@@ -56,11 +56,11 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 ### Activity Capture (ACT)
 
 - [x] **ACT-01**: Tapping `Activity` navigates to an Activity Type screen with buttons: Hike, Show, Restaurant, Cafe, Other
-- [ ] **ACT-02**: Choosing Hike/Show/Restaurant/Cafe opens a form with Name (required), Location (optional), Rating (optional), Notes (optional)
-- [ ] **ACT-03**: Choosing Other opens the same form plus a required free-text Type field
+- [x] **ACT-02**: Choosing Hike/Show/Restaurant/Cafe opens a form with Name (required), Location (optional), Rating (optional), Notes (optional)
+- [x] **ACT-03**: Choosing Other opens the same form plus a required free-text Type field
 - [x] **ACT-04**: Rating is entered with a clickable, accessible 1–5 star control (tap to set/clear)
-- [ ] **ACT-05**: Activity date defaults to today (local) and the trip defaults to the active trip
-- [ ] **ACT-06**: Saving creates an `activity` entry stamped with `activityType` and the active `tripId`
+- [x] **ACT-05**: Activity date defaults to today (local) and the trip defaults to the active trip
+- [x] **ACT-06**: Saving creates an `activity` entry stamped with `activityType` and the active `tripId`
 
 ### Previous Trips (PREV)
 
@@ -140,11 +140,11 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 | EXP-05 | Phase 22 | Complete |
 | EXP-06 | Phase 22 | Complete |
 | ACT-01 | Phase 23 | Complete |
-| ACT-02 | Phase 23 | Pending |
-| ACT-03 | Phase 23 | Pending |
+| ACT-02 | Phase 23 | Complete |
+| ACT-03 | Phase 23 | Complete |
 | ACT-04 | Phase 23 | Complete |
-| ACT-05 | Phase 23 | Pending |
-| ACT-06 | Phase 23 | Pending |
+| ACT-05 | Phase 23 | Complete |
+| ACT-06 | Phase 23 | Complete |
 | PREV-01 | Phase 24 | Pending |
 | PREV-02 | Phase 24 | Pending |
 | PREV-03 | Phase 24 | Pending |
