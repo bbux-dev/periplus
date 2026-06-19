@@ -100,21 +100,27 @@ export function EditEntryModal({ entry, onClose }: EditEntryModalProps) {
                    px-6 pt-6 pb-[max(2rem,env(safe-area-inset-bottom))]
                    max-h-[90vh] overflow-y-auto outline-none"
       >
-        {/* One FormField per ENTRY_FIELDS[entry.type] descriptor */}
+        {/* One FormField per ENTRY_FIELDS[entry.type] descriptor.
+            currency is excluded: never populated by the trip Expense flow. */}
         <div className="flex flex-col gap-4 mb-4">
-          {fields.map((field) => (
-            <FormField
-              key={field.key}
-              id={`edit-${field.key}`}
-              label={field.label}
-              required={field.required}
-              value={formValues[field.key] ?? ''}
-              onChange={(e) =>
-                setFormValues((prev) => ({ ...prev, [field.key]: e.target.value }))
-              }
-              placeholder={field.placeholder}
-            />
-          ))}
+          {fields
+            .filter((field) => field.key !== 'currency')
+            .map((field) => (
+              <FormField
+                key={field.key}
+                id={`edit-${field.key}`}
+                label={field.label}
+                required={field.required}
+                value={formValues[field.key] ?? ''}
+                onChange={(e) =>
+                  setFormValues((prev) => ({ ...prev, [field.key]: e.target.value }))
+                }
+                placeholder={field.placeholder}
+                type={field.inputType === 'tags' ? 'text' : field.inputType}
+                min={field.min}
+                max={field.max}
+              />
+            ))}
         </div>
 
         {/* Save error */}

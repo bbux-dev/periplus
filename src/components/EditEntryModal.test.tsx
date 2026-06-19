@@ -185,6 +185,45 @@ describe('EditEntryModal', () => {
     expect(onClose).not.toHaveBeenCalled()
   })
 
+  it('date field renders as type="date" (input type from FieldDescriptor)', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    const entry = await entriesRepository.create({
+      domain: 'trips',
+      type: 'expense',
+      title: 'Coffee',
+      amount: 12.5,
+      recordedAt: Date.now(),
+      tags: [],
+      metadata: { tripId: 'trip-1', mode: 'trip', modeLabel: 'Paris' },
+      syncedAt: null,
+    })
+    const onClose = vi.fn()
+    render(<EditEntryModal entry={entry} onClose={onClose} />)
+
+    // occurredAt has inputType: 'date' — the rendered input must have type="date"
+    const dateInput = screen.getByLabelText(/^date$/i)
+    expect(dateInput).toHaveAttribute('type', 'date')
+  })
+
+  it('currency field is hidden from the edit form', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    const entry = await entriesRepository.create({
+      domain: 'trips',
+      type: 'expense',
+      title: 'Coffee',
+      amount: 12.5,
+      recordedAt: Date.now(),
+      tags: [],
+      metadata: { tripId: 'trip-1', mode: 'trip', modeLabel: 'Paris' },
+      syncedAt: null,
+    })
+    const onClose = vi.fn()
+    render(<EditEntryModal entry={entry} onClose={onClose} />)
+
+    // The currency label/input must not appear in the edit form
+    expect(screen.queryByLabelText(/^currency$/i)).toBeNull()
+  })
+
   it('double-submit guard: rapid Save clicks call update at most once', async () => {
     vi.useFakeTimers({ toFake: ['Date'] })
     const entry = await entriesRepository.create({
