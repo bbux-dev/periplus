@@ -8,6 +8,7 @@ import { ReviewPage }      from './pages/ReviewPage'
 import { ManualEntryPage } from './pages/ManualEntryPage'
 import { EntryListPage }   from './pages/EntryListPage'
 import { EntryDetailPage } from './pages/EntryDetailPage'
+import { EntryEditPage }   from './pages/EntryEditPage'
 import { PlaceholderPage } from './pages/PlaceholderPage'
 import { SettingsPage }    from './pages/SettingsPage'
 import { ManageShortcutsPage } from './pages/ManageShortcutsPage'
@@ -32,6 +33,9 @@ function App() {
       {/* Phase 6 — Entry List + Detail (real pages) */}
       <Route path="/entries"    element={<EntryListPage />} />
       <Route path="/entries/:id" element={<EntryDetailPage />} />
+
+      {/* Phase 17 — Edit a saved entry */}
+      <Route path="/entries/:id/edit" element={<EntryEditPage />} />
 
       {/* Phase 14 — Import / Export Config */}
       <Route path="/settings"   element={<SettingsPage />} />
