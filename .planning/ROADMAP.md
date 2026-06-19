@@ -128,7 +128,7 @@ Plans:
   5. Tapping Edit on a timeline entry opens an edit form backed by `entriesRepository.update`; tapping Delete shows a confirmation prompt before calling `entriesRepository.delete`; the trip total, category subtotals, and timeline update reactively after each edit or delete
 **Plans**: 3 plans
 - [x] 24-01-PLAN.md — summarizeTrips single-pass helper + PreviousTripsPage at /trips (PREV-01..04)
-- [ ] 24-02-PLAN.md — ExpenseReport component + TripDetailPage report & timeline at /trips/:tripId (RPT-01..04)
+- [x] 24-02-PLAN.md — ExpenseReport component + TripDetailPage report & timeline at /trips/:tripId (RPT-01..04)
 - [ ] 24-03-PLAN.md — EditEntryModal + inline edit/delete on TripDetail timeline (RPT-05, RPT-06)
 **Key pitfalls**: Trip grouping MUST use `metadata.tripId` (UUID) not `metadata.modeLabel` (string) — name-based grouping merges identically-named trips; Previous Trips page MUST use single-pass `db.entries.toArray()` grouping, never a per-trip Dexie filter in a loop (N+1 scan); `Math.round(x*100)/100` + `formatUSD` on all summed amounts before display; `useLiveQuery` dependency array must include `tripId` when querying trip-specific entries; no "Delete Trip" UI in v0.5.0 — entry-level delete only (avoids cascade complexity)
 **UI hint**: yes
@@ -223,4 +223,4 @@ Full details: [`milestones/v0.1.0-ROADMAP.md`](milestones/v0.1.0-ROADMAP.md).
 | 21. App Shell + Routing Rewrite + Atomic Drop | v0.5.0 | 4/4 | Complete    | 2026-06-19 |
 | 22. Trip Home + Expense Capture | v0.5.0 | 3/3 | Complete    | 2026-06-19 |
 | 23. Activity Capture | v0.5.0 | 3/3 | Complete    | 2026-06-19 |
-| 24. Previous Trips + Trip Detail + Expense Report | v0.5.0 | 1/3 | In Progress|  |
+| 24. Previous Trips + Trip Detail + Expense Report | v0.5.0 | 2/3 | In Progress|  |
