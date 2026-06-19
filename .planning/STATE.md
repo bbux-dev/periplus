@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v0.4.0
 milestone_name: Active Mode De-Clunk + Editable Entries
-status: planning
-last_updated: "2026-06-19T02:30:09.465Z"
+status: in_progress
+last_updated: "2026-06-19T02:45:00.000Z"
 last_activity: 2026-06-19
 progress:
-  total_phases: 0
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_phases: 4
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
+  percent: 25
 ---
 
 # Project State
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-17)
 
 **Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 15 — Authoring Tool
+**Current focus:** v0.4.0 — Active Mode De-Clunk + Editable Entries
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 17 — Editable & Deletable Saved Entries (next)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-06-19 — Milestone v0.4.0 started
+Status: Phase 16 complete (DATE-01 ✅); autonomous run continuing
+Last activity: 2026-06-19 — Phase 16 done: occurredAt defaults to today (528 tests green, tsc + build clean)
 
 ## Performance Metrics
 
