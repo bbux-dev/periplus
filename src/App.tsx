@@ -5,6 +5,7 @@ import { SettingsPage }    from './pages/SettingsPage'
 import { TripHomePage }    from './pages/TripHomePage'
 import { CreateTripPage }  from './pages/CreateTripPage'
 import { ActivityTypePage } from './pages/ActivityTypePage'
+import { ActivityFormPage } from './pages/ActivityFormPage'
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         {/* Phase 22–23 placeholders — reuse PlaceholderPage with descriptive title */}
         <Route path="/expense"         element={<PlaceholderPage title="Log Expense" />} />
         <Route path="/activity"        element={<ActivityTypePage />} />
-        <Route path="/activity/:type"  element={<PlaceholderPage title="Activity Form" />} />
+        <Route path="/activity/:type"  element={<ActivityFormPage />} />
 
         {/* Phase 24 placeholders */}
         <Route path="/trips"           element={<PlaceholderPage title="Previous Trips" />} />
