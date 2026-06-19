@@ -1,5 +1,5 @@
 // src/config/entryFields.ts
-import type { EntryType } from '../services/db'
+import type { EntryType, LifeLogEntry } from '../services/db'
 import type { ReviewDraft } from '../services/extractMetadataFromUrl'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -181,4 +181,129 @@ export function buildReviewDraft(
   }
 
   return draft
+}
+
+// ─── formValuesFromEntry (inverse mapper) ─────────────────────────────────────
+
+/**
+ * Inverse of buildReviewDraft: projects a saved LifeLogEntry back into the
+ * `Record<fieldKey, string>` shape the manual/edit form consumes.
+ *
+ * - Core fields read from the entry's top-level columns (absent → '').
+ * - occurredAt is formatted with the LOCAL date convention (toLocaleDateString
+ *   'en-CA' → 'YYYY-MM-DD') so it round-trips through buildReviewDraft's
+ *   `Date.parse(`${d}T00:00:00`)` to the same local-midnight epoch.
+ * - amount stringifies via String(); metadata strings pass through, metadata
+ *   numbers stringify, and any other metadata value type yields ''.
+ */
+export function formValuesFromEntry(
+  fields: FieldDescriptor[],
+  entry: LifeLogEntry,
+): Record<string, string> {
+  const values: Record<string, string> = {}
+
+  for (const field of fields) {
+    if (field.mapTo.kind === 'core') {
+      switch (field.mapTo.field) {
+        case 'title':
+          values[field.key] = entry.title
+          break
+        case 'description':
+          values[field.key] = entry.description ?? ''
+          break
+        case 'location':
+          values[field.key] = entry.location ?? ''
+          break
+        case 'amount':
+          values[field.key] = entry.amount != null ? String(entry.amount) : ''
+          break
+        case 'occurredAt':
+          values[field.key] =
+            entry.occurredAt != null
+              ? new Date(entry.occurredAt).toLocaleDateString('en-CA')
+              : ''
+          break
+        case 'tags':
+          values[field.key] = entry.tags.join(', ')
+          break
+      }
+    } else {
+      // kind === 'metadata'
+      const raw = entry.metadata[field.mapTo.key]
+      values[field.key] =
+        typeof raw === 'string' ? raw : typeof raw === 'number' ? String(raw) : ''
+    }
+  }
+
+  return values
+}
+
+// ─── buildEntryUpdate (change-builder) ────────────────────────────────────────
+
+/**
+ * Builds the partial `changes` object passed to entriesRepository.update().
+ *
+ * Core fields are derived from buildReviewDraft (so all parsing/validation stays
+ * in the single source of truth): a cleared field collapses to `undefined`
+ * (Dexie update drops it), title falls back to 'Untitled', and tags fall back to
+ * `[]`. Metadata is MERGED, never replaced — existing keys (including unknown
+ * ones like URL/DSL capture data or the Phase-18 `mode`/`modeLabel` stamps)
+ * survive untouched unless explicitly edited. Known metadata fields that map to a
+ * form field are set when present and DELETED when cleared; extraMetadata edits
+ * set/delete arbitrary keys by trimmed truthiness.
+ *
+ * recordedAt, syncedAt, domain, and type are NEVER written.
+ */
+export function buildEntryUpdate(
+  fields: FieldDescriptor[],
+  entry: LifeLogEntry,
+  formValues: Record<string, string>,
+  extraMetadata: Record<string, string>,
+): Partial<Omit<LifeLogEntry, 'id'>> {
+  const draft = buildReviewDraft(fields, formValues)
+  const changes: Partial<Omit<LifeLogEntry, 'id'>> = {}
+
+  // ── Core fields ────────────────────────────────────────────────────────────
+  for (const field of fields) {
+    if (field.mapTo.kind !== 'core') continue
+    switch (field.mapTo.field) {
+      case 'title':
+        changes.title = draft.title ?? 'Untitled'
+        break
+      case 'description':
+        changes.description = draft.description
+        break
+      case 'location':
+        changes.location = draft.location
+        break
+      case 'amount':
+        changes.amount = draft.amount
+        break
+      case 'occurredAt':
+        changes.occurredAt = draft.occurredAt
+        break
+      case 'tags':
+        changes.tags = draft.tags ?? []
+        break
+    }
+  }
+
+  // ── Metadata: merge onto a copy of the existing bag ──────────────────────────
+  const meta: Record<string, unknown> = { ...entry.metadata }
+  // Known metadata fields: set when the parsed draft has them, delete when cleared.
+  for (const field of fields) {
+    if (field.mapTo.kind !== 'metadata') continue
+    const key = field.mapTo.key
+    if (key in draft.metadata) meta[key] = draft.metadata[key]
+    else delete meta[key]
+  }
+  // Extra (uncovered) keys: trimmed-truthy sets the value, empty deletes the key.
+  for (const [key, raw] of Object.entries(extraMetadata)) {
+    const trimmed = raw.trim()
+    if (trimmed) meta[key] = trimmed
+    else delete meta[key]
+  }
+  changes.metadata = meta
+
+  return changes
 }

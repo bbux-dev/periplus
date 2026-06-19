@@ -1,6 +1,31 @@
 import { describe, it, expect } from 'vitest'
-import { ENTRY_FIELDS, buildReviewDraft } from './entryFields'
-import type { EntryType } from '../services/db'
+import {
+  ENTRY_FIELDS,
+  buildReviewDraft,
+  formValuesFromEntry,
+  buildEntryUpdate,
+} from './entryFields'
+import type { EntryType, LifeLogEntry } from '../services/db'
+
+// Local-midnight epoch helper (matches the LOCAL date convention used everywhere)
+const localEpoch = (d: string) => new Date(`${d}T00:00:00`).getTime()
+
+/** Factory for a fully-populated entry; override per test. */
+function makeEntry(overrides?: Partial<LifeLogEntry>): LifeLogEntry {
+  return {
+    id: 'test-id',
+    domain: 'media',
+    type: 'show',
+    title: 'Breaking Bad',
+    description: 'A great show',
+    occurredAt: localEpoch('2024-03-10'),
+    recordedAt: 1700000000000,
+    tags: ['drama', 'crime'],
+    metadata: { creator: 'Vince Gilligan', rating: 5 },
+    syncedAt: null,
+    ...overrides,
+  }
+}
 
 // ─── ENTRY_FIELDS shape assertions ────────────────────────────────────────────
 
@@ -274,5 +299,169 @@ describe('buildReviewDraft — date handling', () => {
       tags: '',
     })
     expect(draft.occurredAt).toBeUndefined()
+  })
+})
+
+// ─── formValuesFromEntry (inverse mapper) ─────────────────────────────────────
+
+describe('formValuesFromEntry', () => {
+  it('maps core fields to their string form (title, description, tags)', () => {
+    const fields = ENTRY_FIELDS.show
+    const values = formValuesFromEntry(fields, makeEntry())
+    expect(values.title).toBe('Breaking Bad')
+    expect(values.description).toBe('A great show')
+    expect(values.tags).toBe('drama, crime')
+  })
+
+  it('stringifies a numeric amount and yields "" when amount is absent', () => {
+    const fields = ENTRY_FIELDS.expense
+    const withAmount = formValuesFromEntry(
+      fields,
+      makeEntry({ type: 'expense', amount: 15.5 }),
+    )
+    expect(withAmount.amount).toBe('15.5')
+    const noAmount = formValuesFromEntry(
+      fields,
+      makeEntry({ type: 'expense', amount: undefined }),
+    )
+    expect(noAmount.amount).toBe('')
+  })
+
+  it('yields "" for absent optional core fields (description, location)', () => {
+    const fields = ENTRY_FIELDS.event
+    const values = formValuesFromEntry(
+      fields,
+      makeEntry({ type: 'event', description: undefined, location: undefined }),
+    )
+    expect(values.description).toBe('')
+    expect(values.location).toBe('')
+  })
+
+  it('formats occurredAt to local YYYY-MM-DD and "" when absent', () => {
+    const fields = ENTRY_FIELDS.show
+    const values = formValuesFromEntry(fields, makeEntry())
+    expect(values.occurredAt).toBe('2024-03-10')
+    const noDate = formValuesFromEntry(fields, makeEntry({ occurredAt: undefined }))
+    expect(noDate.occurredAt).toBe('')
+  })
+
+  it('maps a string metadata field to its value and a number to String(it)', () => {
+    const fields = ENTRY_FIELDS.show
+    const values = formValuesFromEntry(fields, makeEntry())
+    expect(values.creator).toBe('Vince Gilligan') // string metadata
+    expect(values.rating).toBe('5') // number metadata stringified
+  })
+
+  it('yields "" for a metadata field whose value is neither string nor number', () => {
+    const fields = ENTRY_FIELDS.show
+    const values = formValuesFromEntry(
+      fields,
+      makeEntry({ metadata: { creator: { nested: true } } }),
+    )
+    expect(values.creator).toBe('')
+  })
+
+  it('round-trips through buildReviewDraft back to the original core/metadata values', () => {
+    const fields = ENTRY_FIELDS.show
+    const entry = makeEntry()
+    const draft = buildReviewDraft(fields, formValuesFromEntry(fields, entry))
+    expect(draft.title).toBe(entry.title)
+    expect(draft.description).toBe(entry.description)
+    expect(draft.tags).toEqual(entry.tags)
+    expect(draft.occurredAt).toBe(entry.occurredAt)
+    expect(draft.metadata.creator).toBe(entry.metadata.creator)
+    expect(draft.metadata.rating).toBe(entry.metadata.rating)
+  })
+})
+
+// ─── buildEntryUpdate (change-builder) ────────────────────────────────────────
+
+describe('buildEntryUpdate', () => {
+  const fields = ENTRY_FIELDS.show
+
+  it('produces core field changes from edited form values', () => {
+    const entry = makeEntry()
+    const values = formValuesFromEntry(fields, entry)
+    values.title = 'Better Call Saul'
+    const changes = buildEntryUpdate(fields, entry, values, {})
+    expect(changes.title).toBe('Better Call Saul')
+    expect(changes.tags).toEqual(['drama', 'crime'])
+  })
+
+  it('falls back to "Untitled" when title is cleared', () => {
+    const entry = makeEntry()
+    const values = formValuesFromEntry(fields, entry)
+    values.title = ''
+    const changes = buildEntryUpdate(fields, entry, values, {})
+    expect(changes.title).toBe('Untitled')
+  })
+
+  it('clears a core field to undefined when emptied (description)', () => {
+    const entry = makeEntry()
+    const values = formValuesFromEntry(fields, entry)
+    values.description = ''
+    const changes = buildEntryUpdate(fields, entry, values, {})
+    expect('description' in changes).toBe(true)
+    expect(changes.description).toBeUndefined()
+  })
+
+  it('returns tags as [] when the tags field is cleared', () => {
+    const entry = makeEntry()
+    const values = formValuesFromEntry(fields, entry)
+    values.tags = ''
+    const changes = buildEntryUpdate(fields, entry, values, {})
+    expect(changes.tags).toEqual([])
+  })
+
+  it('merges unknown metadata keys untouched (mode survives)', () => {
+    const entry = makeEntry({
+      metadata: { creator: 'Vince Gilligan', rating: 5, mode: 'Travel' },
+    })
+    const values = formValuesFromEntry(fields, entry)
+    const changes = buildEntryUpdate(fields, entry, values, {})
+    expect(changes.metadata).toMatchObject({ mode: 'Travel' })
+  })
+
+  it('deletes a known metadata key when its form field is cleared', () => {
+    const entry = makeEntry()
+    const values = formValuesFromEntry(fields, entry)
+    values.creator = ''
+    const changes = buildEntryUpdate(fields, entry, values, {})
+    expect(changes.metadata && 'creator' in changes.metadata).toBe(false)
+    // rating (untouched known key) is preserved
+    expect(changes.metadata).toMatchObject({ rating: 5 })
+  })
+
+  it('sets a new key from extraMetadata', () => {
+    const entry = makeEntry()
+    const values = formValuesFromEntry(fields, entry)
+    const changes = buildEntryUpdate(fields, entry, values, { mode: 'Focus' })
+    expect(changes.metadata).toMatchObject({ mode: 'Focus' })
+  })
+
+  it('trims an extraMetadata value before storing it', () => {
+    const entry = makeEntry()
+    const values = formValuesFromEntry(fields, entry)
+    const changes = buildEntryUpdate(fields, entry, values, { mode: '  Focus  ' })
+    expect(changes.metadata).toMatchObject({ mode: 'Focus' })
+  })
+
+  it('deletes an extra key when its value is cleared', () => {
+    const entry = makeEntry({
+      metadata: { creator: 'Vince Gilligan', rating: 5, mode: 'Travel' },
+    })
+    const values = formValuesFromEntry(fields, entry)
+    const changes = buildEntryUpdate(fields, entry, values, { mode: '' })
+    expect(changes.metadata && 'mode' in changes.metadata).toBe(false)
+  })
+
+  it('never includes recordedAt, syncedAt, domain, or type in the changes', () => {
+    const entry = makeEntry()
+    const values = formValuesFromEntry(fields, entry)
+    const changes = buildEntryUpdate(fields, entry, values, {})
+    expect('recordedAt' in changes).toBe(false)
+    expect('syncedAt' in changes).toBe(false)
+    expect('domain' in changes).toBe(false)
+    expect('type' in changes).toBe(false)
   })
 })
