@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v0.5.0
 milestone_name: Trips MVP UI Refactor
-status: verifying
-stopped_at: Completed 21-03-PLAN.md
-last_updated: "2026-06-19T16:56:00.815Z"
+status: executing
+stopped_at: Completed 24-01-PLAN.md
+last_updated: "2026-06-19T20:47:26.127Z"
 last_activity: 2026-06-19
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 12
-  completed_plans: 12
+  total_plans: 15
+  completed_plans: 13
   percent: 80
 ---
 
@@ -21,17 +21,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-19)
 
 **Core value:** A user can capture a structured life event on their phone in seconds and have it persist locally and offline as a typed entry.
-**Current focus:** Phase 23 — Activity Capture
+**Current focus:** Phase 24 — Previous Trips + Trip Detail + Expense Report
 
 ## Current Position
 
-Phase: 23 (Activity Capture) — EXECUTING
-Plan: 3 of 3
-Status: Phase complete — ready for verification
+Phase: 24 (Previous Trips + Trip Detail + Expense Report) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-06-19
 
 ```
-Progress: [██████████] 100%
+Progress: [█████████░] 87%
 ```
 
 ## Deferred Items
@@ -46,7 +46,7 @@ Items acknowledged and deferred at milestone close on 2026-06-19:
 
 **Velocity:**
 
-- Total plans completed: 12
+- Total plans completed: 15
 - Average duration: ~5 min/plan
 - Total execution time: ~15 min (Phase 1)
 
@@ -58,6 +58,7 @@ Items acknowledged and deferred at milestone close on 2026-06-19:
 | 20 | 2 | - | - |
 | 21 | 4 | - | - |
 | 22 | 3 | - | - |
+| 23 | 3 | - | - |
 
 **Recent Trend:**
 
@@ -107,6 +108,7 @@ Items acknowledged and deferred at milestone close on 2026-06-19:
 | Phase 23-activity-capture P01 | 2min | 2 tasks | 3 files |
 | Phase 23-activity-capture P02 | 72s | 2 tasks | 3 files |
 | Phase 23-activity-capture P03 | 6min | 2 tasks | 3 files |
+| Phase 24-previous-trips-trip-detail-report P01 | 6min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -177,6 +179,8 @@ architecture-template.md SPEC + spec.md:
 - [Phase ?]: 22-03 TripHomePage full dashboard
 - [Phase ?]: ActivityFormPage noValidate form + settled-signal guard pattern
 - [Phase ?]: 23-03: ActivityFormPage stamped save via draftToEntry('activity','trips',activeMode) — tripId auto-stamped
+- [Phase ?]: summarizeTrips is PURE (no db handle) — signature enforces single-pass at compile time (24-01)
+- [Phase ?]: Row role=button + aria-label=trip.title; activity count in own span for exact-text test matching (24-01)
 
 ### Pending Todos
 
@@ -205,8 +209,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-19T16:55:20.188Z
-Stopped at: Completed 21-03-PLAN.md
+Last session: 2026-06-19T20:47:26.117Z
+Stopped at: Completed 24-01-PLAN.md
 Resume file: None
 
 ## Operator Next Steps

@@ -64,10 +64,10 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 
 ### Previous Trips (PREV)
 
-- [ ] **PREV-01**: A Previous Trips screen lists all trips, newest first
-- [ ] **PREV-02**: Each trip row shows trip name, date range (if available), total expenses, and activity count
-- [ ] **PREV-03**: Tapping a trip drills into its Trip Detail screen
-- [ ] **PREV-04**: Trip list stats are derived in a single pass over entries (no per-trip N+1 scans)
+- [x] **PREV-01**: A Previous Trips screen lists all trips, newest first
+- [x] **PREV-02**: Each trip row shows trip name, date range (if available), total expenses, and activity count
+- [x] **PREV-03**: Tapping a trip drills into its Trip Detail screen
+- [x] **PREV-04**: Trip list stats are derived in a single pass over entries (no per-trip N+1 scans)
 
 ### Trip Detail & Expense Report (RPT)
 
@@ -145,10 +145,10 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 | ACT-04 | Phase 23 | Complete |
 | ACT-05 | Phase 23 | Complete |
 | ACT-06 | Phase 23 | Complete |
-| PREV-01 | Phase 24 | Pending |
-| PREV-02 | Phase 24 | Pending |
-| PREV-03 | Phase 24 | Pending |
-| PREV-04 | Phase 24 | Pending |
+| PREV-01 | Phase 24 | Complete |
+| PREV-02 | Phase 24 | Complete |
+| PREV-03 | Phase 24 | Complete |
+| PREV-04 | Phase 24 | Complete |
 | RPT-01 | Phase 24 | Pending |
 | RPT-02 | Phase 24 | Pending |
 | RPT-03 | Phase 24 | Pending |
