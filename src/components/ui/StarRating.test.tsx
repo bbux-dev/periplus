@@ -25,20 +25,36 @@ describe('StarRating', () => {
     expect(onChange).toHaveBeenCalledWith(0)
   })
 
-  it('ArrowRight increases rating', async () => {
+  it('ArrowRight increases rating based on value (not focused button)', async () => {
+    const onChange = vi.fn()
+    render(<StarRating value={3} onChange={onChange} />)
+    screen.getByRole('button', { name: '3 stars' }).focus()
+    await userEvent.keyboard('{ArrowRight}')
+    expect(onChange).toHaveBeenCalledWith(4)
+  })
+
+  it('ArrowLeft decreases rating based on value (not focused button)', async () => {
     const onChange = vi.fn()
     render(<StarRating value={2} onChange={onChange} />)
     screen.getByRole('button', { name: '2 stars' }).focus()
-    await userEvent.keyboard('{ArrowRight}')
-    expect(onChange).toHaveBeenCalledWith(3)
+    await userEvent.keyboard('{ArrowLeft}')
+    expect(onChange).toHaveBeenCalledWith(1)
   })
 
-  it('ArrowLeft decreases rating', async () => {
+  it('ArrowRight clamps at 5 when value is already 5', async () => {
     const onChange = vi.fn()
-    render(<StarRating value={4} onChange={onChange} />)
-    screen.getByRole('button', { name: '4 stars' }).focus()
+    render(<StarRating value={5} onChange={onChange} />)
+    screen.getByRole('button', { name: '5 stars' }).focus()
+    await userEvent.keyboard('{ArrowRight}')
+    expect(onChange).toHaveBeenCalledWith(5)
+  })
+
+  it('ArrowLeft clamps at 0 when value is 1', async () => {
+    const onChange = vi.fn()
+    render(<StarRating value={1} onChange={onChange} />)
+    screen.getByRole('button', { name: '1 star' }).focus()
     await userEvent.keyboard('{ArrowLeft}')
-    expect(onChange).toHaveBeenCalledWith(3)
+    expect(onChange).toHaveBeenCalledWith(0)
   })
 
   it('buttons have aria-pressed reflecting current value', () => {

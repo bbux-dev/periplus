@@ -21,6 +21,9 @@ export function ActivityFormPage() {
     (t) => t.toLowerCase() === type,
   ) ?? 'Other'
   const isOther = canonicalType === 'Other'
+  if (import.meta.env.DEV && type && canonicalType === 'Other' && type !== 'other') {
+    console.warn(`ActivityFormPage: unknown slug "${type}", falling back to Other`)
+  }
 
   // Settled-signal guard — mirrors TripHomePage lines 18-28.
   // Returns { ready: false, mode: undefined } synchronously until Dexie resolves.
@@ -112,7 +115,7 @@ export function ActivityFormPage() {
       await entriesRepository.create(entryData)
       navigate('/')
     } catch (err) {
-      console.error('ActivityFormPage save failed:', err)
+      if (import.meta.env.DEV) console.error('ActivityFormPage save failed:', err)
       setErrors({ _form: 'Could not save. Please try again.' })
     } finally {
       setSaving(false)
@@ -176,15 +179,10 @@ export function ActivityFormPage() {
           />
 
           {/* Rating — optional StarRating (0 = unset) */}
-          <div className="flex flex-col gap-1">
-            <label
-              htmlFor="activity-rating"
-              className="text-sm font-medium text-[var(--color-foreground)]"
-            >
-              Rating
-            </label>
+          <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+            <legend className="text-sm font-medium text-[var(--color-foreground)]">Rating</legend>
             <StarRating value={rating} onChange={setRating} />
-          </div>
+          </fieldset>
 
           <FormField
             id="activity-notes"

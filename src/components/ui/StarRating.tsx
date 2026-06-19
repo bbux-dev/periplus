@@ -10,19 +10,23 @@ interface StarRatingProps {
 }
 
 export function StarRating({ value, onChange }: StarRatingProps) {
-  function handleKeyDown(e: React.KeyboardEvent, n: number) {
+  function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'ArrowRight') {
       e.preventDefault()
-      onChange(Math.min(5, n + 1))
+      onChange(Math.min(5, value + 1))
     }
     if (e.key === 'ArrowLeft') {
       e.preventDefault()
-      onChange(Math.max(0, n - 1))
+      onChange(Math.max(0, value - 1))
     }
   }
 
   return (
-    <div role="group" aria-label="Rating" className="flex gap-1">
+    <div
+      role="group"
+      aria-label={value > 0 ? `Rating: ${value} of 5 stars` : 'Rating: not set'}
+      className="flex gap-1"
+    >
       {STARS.map((n) => (
         <button
           key={n}
@@ -30,7 +34,7 @@ export function StarRating({ value, onChange }: StarRatingProps) {
           aria-label={`${n} star${n > 1 ? 's' : ''}`}
           aria-pressed={value === n}
           onClick={() => onChange(value === n ? 0 : n)}
-          onKeyDown={(e) => handleKeyDown(e, n)}
+          onKeyDown={handleKeyDown}
           className={cn(
             'h-11 w-11 flex items-center justify-center rounded-full',
             'transition-colors active:opacity-75',
