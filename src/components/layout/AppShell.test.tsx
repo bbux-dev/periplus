@@ -1,17 +1,12 @@
-import { render, screen, act, waitFor } from '@testing-library/react'
+import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { db } from '../../services/db'
-import { configRepository } from '../../services/configRepository'
-import {
-  activeModeRepository,
-  defaultInstanceLabel,
-} from '../../services/activeMode'
-import { DEFAULT_SHORTCUT_CONFIG } from '../../config/shortcutConfig'
+import { activeModeRepository } from '../../services/activeMode'
 import { AppShell } from './AppShell'
 
-// Reset Dexie before each test — AppShell now reads config + active mode reactively.
+// Reset Dexie before each test — AppShell reads activeMode reactively.
 beforeEach(async () => {
   await db.delete()
   await db.open()
@@ -19,7 +14,7 @@ beforeEach(async () => {
 
 /**
  * Renders AppShell inside a MemoryRouter at the given initial path.
- * Provides minimal sentinel routes for navigation assertions.
+ * Provides sentinel routes for navigation assertions.
  */
 function renderAt(path: string) {
   return render(
@@ -27,11 +22,9 @@ function renderAt(path: string) {
       <AppShell>
         <Routes>
           <Route path="/"        element={<div data-testid="home-sentinel">Home</div>} />
-          <Route path="/entries" element={<div data-testid="entries-sentinel">Entries</div>} />
+          <Route path="/trips"   element={<div data-testid="trips-sentinel">Previous Trips</div>} />
           <Route path="/settings" element={<div data-testid="settings-sentinel">Settings</div>} />
-          <Route path="/manage"  element={<div data-testid="manage-sentinel">Manage</div>} />
-          <Route path="/d/:domain"       element={<div data-testid="domain-sentinel">Domain</div>} />
-          <Route path="/d/:domain/:type" element={<div data-testid="type-sentinel">Type</div>} />
+          <Route path="/other"   element={<div data-testid="other-sentinel">Other</div>} />
         </Routes>
       </AppShell>
     </MemoryRouter>,
@@ -41,19 +34,19 @@ function renderAt(path: string) {
 // ─── Home button ──────────────────────────────────────────────────────────────
 
 describe('AppShell — home button', () => {
-  it('is hidden on "/"', () => {
+  it('is hidden at "/"', () => {
     renderAt('/')
     expect(screen.queryByRole('button', { name: /go home/i })).not.toBeInTheDocument()
   })
 
   it('is visible on routes other than "/"', () => {
-    renderAt('/entries')
+    renderAt('/other')
     expect(screen.getByRole('button', { name: /go home/i })).toBeInTheDocument()
   })
 
   it('navigates to "/" when clicked', async () => {
     const user = userEvent.setup()
-    renderAt('/entries')
+    renderAt('/other')
     await user.click(screen.getByRole('button', { name: /go home/i }))
     expect(screen.getByTestId('home-sentinel')).toBeInTheDocument()
   })
@@ -68,13 +61,13 @@ describe('AppShell — hamburger menu toggle', () => {
     expect(btn).toHaveAttribute('aria-expanded', 'false')
   })
 
-  it('clicking hamburger opens the menu (aria-expanded="true") and reveals Dashboard link', async () => {
+  it('clicking hamburger opens the menu (aria-expanded="true") and reveals Home link', async () => {
     const user = userEvent.setup()
     renderAt('/')
     const btn = screen.getByRole('button', { name: /toggle navigation menu/i })
     await user.click(btn)
     expect(btn).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByRole('link', { name: /^dashboard$/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /^home$/i })).toBeInTheDocument()
   })
 
   it('clicking hamburger again closes the menu', async () => {
@@ -82,172 +75,93 @@ describe('AppShell — hamburger menu toggle', () => {
     renderAt('/')
     const btn = screen.getByRole('button', { name: /toggle navigation menu/i })
     await user.click(btn)
-    expect(screen.getByRole('link', { name: /^dashboard$/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /^home$/i })).toBeInTheDocument()
     await user.click(btn)
     expect(btn).toHaveAttribute('aria-expanded', 'false')
-    expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /^home$/i })).not.toBeInTheDocument()
   })
 })
 
-// ─── Menu contents ────────────────────────────────────────────────────────────
+// ─── Menu contents: exactly Home, Previous Trips, Settings ────────────────────
 
-describe('AppShell — menu top-level links', () => {
-  it('renders Dashboard, Entries, Settings, and Manage Shortcuts links', async () => {
+describe('AppShell — menu trip-only links', () => {
+  it('renders exactly Home, Previous Trips, and Settings nav links', async () => {
     const user = userEvent.setup()
     renderAt('/')
     await user.click(screen.getByRole('button', { name: /toggle navigation menu/i }))
-    expect(screen.getByRole('link', { name: /^dashboard$/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /^entries$/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /^home$/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /^previous trips$/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /^settings$/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /^manage shortcuts$/i })).toBeInTheDocument()
   })
 
-  it('renders all NAVIGATION domains as links (Media, Trips, Expenditures)', async () => {
+  it('does NOT render the old Dashboard, Entries, or Manage Shortcuts links', async () => {
     const user = userEvent.setup()
     renderAt('/')
     await user.click(screen.getByRole('button', { name: /toggle navigation menu/i }))
-    expect(screen.getByRole('link', { name: /^media$/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /^trips$/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /^expenditures$/i })).toBeInTheDocument()
-  })
-})
-
-// ─── Domain expansion ─────────────────────────────────────────────────────────
-
-describe('AppShell — domain expansion', () => {
-  it('expanding Media reveals Show, Movie, Book, Podcast links', async () => {
-    const user = userEvent.setup()
-    renderAt('/')
-    await user.click(screen.getByRole('button', { name: /toggle navigation menu/i }))
-    await user.click(screen.getByRole('button', { name: /expand media/i }))
-
-    const showLink = screen.getByRole('link', { name: /^show$/i })
-    expect(showLink).toBeInTheDocument()
-    expect(showLink).toHaveAttribute('href', '/d/media/show')
-
-    expect(screen.getByRole('link', { name: /^movie$/i })).toHaveAttribute('href', '/d/media/movie')
-    expect(screen.getByRole('link', { name: /^book$/i })).toHaveAttribute('href', '/d/media/book')
-    expect(screen.getByRole('link', { name: /^podcast$/i })).toHaveAttribute('href', '/d/media/podcast')
+    expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /^entries$/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /^manage shortcuts$/i })).not.toBeInTheDocument()
   })
 })
 
 // ─── Close behaviors ──────────────────────────────────────────────────────────
 
 describe('AppShell — close behaviors', () => {
-  it('closes menu on item selection and navigates (top-level link click)', async () => {
+  it('clicking a nav link closes the menu and navigates', async () => {
     const user = userEvent.setup()
-    renderAt('/entries')
+    renderAt('/')
     await user.click(screen.getByRole('button', { name: /toggle navigation menu/i }))
-    expect(screen.getByRole('link', { name: /^dashboard$/i })).toBeInTheDocument()
-    await user.click(screen.getByRole('link', { name: /^dashboard$/i }))
-    // menu closed — Dashboard link no longer in document
-    expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
-    // navigation occurred — home sentinel renders
-    expect(screen.getByTestId('home-sentinel')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /^settings$/i })).toBeInTheDocument()
+    await user.click(screen.getByRole('link', { name: /^settings$/i }))
+    // menu closed
+    expect(screen.queryByRole('link', { name: /^settings$/i })).not.toBeInTheDocument()
+    // navigation occurred
+    expect(screen.getByTestId('settings-sentinel')).toBeInTheDocument()
   })
 
   it('closes menu on Escape key', async () => {
     const user = userEvent.setup()
     renderAt('/')
     await user.click(screen.getByRole('button', { name: /toggle navigation menu/i }))
-    expect(screen.getByRole('link', { name: /^dashboard$/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /^home$/i })).toBeInTheDocument()
     await user.keyboard('{Escape}')
-    expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /^home$/i })).not.toBeInTheDocument()
   })
 
   it('closes menu on outside click', async () => {
     const user = userEvent.setup()
     renderAt('/')
     await user.click(screen.getByRole('button', { name: /toggle navigation menu/i }))
-    expect(screen.getByRole('link', { name: /^dashboard$/i })).toBeInTheDocument()
-    // click the page content sentinel (outside the nav bar wrapper)
+    expect(screen.getByRole('link', { name: /^home$/i })).toBeInTheDocument()
+    // click outside the nav bar (the home sentinel is page content below the bar)
     await user.click(screen.getByTestId('home-sentinel'))
-    expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /^home$/i })).not.toBeInTheDocument()
   })
 })
 
-// ─── Active mode — app bar display (MODE-04) ──────────────────────────────────
+// ─── App bar: active trip name display ───────────────────────────────────────
 
-describe('AppShell — app bar active mode display', () => {
-  it('renders nothing when no active mode is set', () => {
+describe('AppShell — app bar trip name display', () => {
+  it('renders nothing in the center when no active mode is set', () => {
     renderAt('/')
+    // No "·" separator (old format) and no trip name text besides the sentinel
     expect(screen.queryByText(/·/)).not.toBeInTheDocument()
   })
 
-  it('shows "{mode} · {label}" when an active mode is set', async () => {
+  it('shows the trip label when activeMode.mode === "trip"', async () => {
     await act(async () => {
-      await activeModeRepository.put({ mode: 'Travel', label: 'Italy-trip' })
+      await activeModeRepository.put({ mode: 'trip', label: 'Paris Summer', tripId: 'uuid-1' })
     })
     renderAt('/')
-    expect(await screen.findByText(/Travel\s*·\s*Italy-trip/)).toBeInTheDocument()
+    expect(await screen.findByText('Paris Summer')).toBeInTheDocument()
   })
-})
 
-// ─── Active mode — hamburger menu switcher (MODE-03) ──────────────────────────
-
-describe('AppShell — Active Mode menu', () => {
-  async function openMenuWithConfig(path = '/') {
+  it('does NOT show a non-trip mode label in the app bar', async () => {
     await act(async () => {
-      await configRepository.put(DEFAULT_SHORTCUT_CONFIG)
+      await activeModeRepository.put({ mode: 'DayToDay', label: 'Daily' })
     })
-    const user = userEvent.setup()
-    renderAt(path)
-    // Wait for config to load reactively before opening the submenu.
-    await user.click(screen.getByRole('button', { name: /toggle navigation menu/i }))
-    return user
-  }
-
-  it('exposes an "Active Mode" control in the menu', async () => {
-    const user = await openMenuWithConfig()
-    expect(screen.getByRole('button', { name: /active mode/i })).toBeInTheDocument()
-    // touch user to satisfy lint
-    expect(user).toBeDefined()
-  })
-
-  it('opening "Active Mode" lists the configured mode names', async () => {
-    const user = await openMenuWithConfig()
-    await user.click(screen.getByRole('button', { name: /active mode/i }))
-    expect(await screen.findByRole('button', { name: 'DayToDay' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Travel' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'WorkTrip' })).toBeInTheDocument()
-  })
-
-  it('selecting a mode shows a label input pre-filled with the default instance label', async () => {
-    const user = await openMenuWithConfig()
-    await user.click(screen.getByRole('button', { name: /active mode/i }))
-    await user.click(await screen.findByRole('button', { name: 'Travel' }))
-    const input = await screen.findByLabelText(/instance label/i)
-    expect(input).toHaveValue(defaultInstanceLabel('Travel'))
-  })
-
-  it('editing the label + Confirm persists via activateMode and updates the app bar', async () => {
-    const user = await openMenuWithConfig()
-    await user.click(screen.getByRole('button', { name: /active mode/i }))
-    await user.click(await screen.findByRole('button', { name: 'Travel' }))
-
-    const input = await screen.findByLabelText(/instance label/i)
-    await user.clear(input)
-    await user.type(input, 'Italy-2026')
-    await act(async () => {
-      await user.click(screen.getByRole('button', { name: /^confirm$/i }))
-    })
-
-    await waitFor(async () => {
-      const persisted = await activeModeRepository.get()
-      expect(persisted).toEqual({ mode: 'Travel', label: 'Italy-2026' })
-    })
-    // App bar reflects the new active mode and the menu has closed.
-    expect(await screen.findByText(/Travel\s*·\s*Italy-2026/)).toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
-  })
-
-  it('Cancel discards the pending selection without persisting', async () => {
-    const user = await openMenuWithConfig()
-    await user.click(screen.getByRole('button', { name: /active mode/i }))
-    await user.click(await screen.findByRole('button', { name: 'Travel' }))
-    await user.click(screen.getByRole('button', { name: /^cancel$/i }))
-
-    expect(screen.queryByLabelText(/instance label/i)).not.toBeInTheDocument()
-    expect(await activeModeRepository.get()).toBeUndefined()
+    renderAt('/')
+    // mode !== 'trip', so label must NOT appear in the app bar
+    expect(screen.queryByText('Daily')).not.toBeInTheDocument()
   })
 })

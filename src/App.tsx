@@ -1,52 +1,33 @@
 import { Routes, Route } from 'react-router-dom'
 import { AppShell }        from './components/layout/AppShell'
-import { DashboardPage }   from './pages/DashboardPage'
-import { DomainPage }      from './pages/DomainPage'
-import { QuickCapturePage } from './pages/QuickCapturePage'
-import { CaptureUrlPage }  from './pages/CaptureUrlPage'
-import { ReviewPage }      from './pages/ReviewPage'
-import { ManualEntryPage } from './pages/ManualEntryPage'
-import { EntryListPage }   from './pages/EntryListPage'
-import { EntryDetailPage } from './pages/EntryDetailPage'
-import { EntryEditPage }   from './pages/EntryEditPage'
 import { PlaceholderPage } from './pages/PlaceholderPage'
 import { SettingsPage }    from './pages/SettingsPage'
-import { ManageShortcutsPage } from './pages/ManageShortcutsPage'
-import { ShortcutFormPage } from './pages/ShortcutFormPage'
+import { TripHomePage }    from './pages/TripHomePage'
+import { CreateTripPage }  from './pages/CreateTripPage'
 
 function App() {
   return (
     <AppShell>
-    <Routes>
-      {/* Phase 3 — real content */}
-      <Route path="/"              element={<DashboardPage />} />
-      <Route path="/capture"       element={<QuickCapturePage />} />
-      <Route path="/d/:domain"     element={<DomainPage />} />
+      <Routes>
+        {/* Trip routes */}
+        <Route path="/"             element={<TripHomePage />} />
+        <Route path="/create-trip"  element={<CreateTripPage />} />
 
-      {/* Phase 4 — URL Capture (default) + Review */}
-      <Route path="/d/:domain/:type"         element={<CaptureUrlPage />} />
-      <Route path="/d/:domain/:type/review"  element={<ReviewPage />} />
+        {/* Settings */}
+        <Route path="/settings"     element={<SettingsPage />} />
 
-      {/* Phase 5 — Manual Entry */}
-      <Route path="/d/:domain/:type/manual"  element={<ManualEntryPage />} />
+        {/* Phase 22–23 placeholders — reuse PlaceholderPage with descriptive title */}
+        <Route path="/expense"         element={<PlaceholderPage title="Log Expense" />} />
+        <Route path="/activity"        element={<PlaceholderPage title="Log Activity" />} />
+        <Route path="/activity/:type"  element={<PlaceholderPage title="Activity Form" />} />
 
-      {/* Phase 6 — Entry List + Detail (real pages) */}
-      <Route path="/entries"    element={<EntryListPage />} />
-      <Route path="/entries/:id" element={<EntryDetailPage />} />
+        {/* Phase 24 placeholders */}
+        <Route path="/trips"           element={<PlaceholderPage title="Previous Trips" />} />
+        <Route path="/trips/:tripId"   element={<PlaceholderPage title="Trip Detail" />} />
 
-      {/* Phase 17 — Edit a saved entry */}
-      <Route path="/entries/:id/edit" element={<EntryEditPage />} />
-
-      {/* Phase 14 — Import / Export Config */}
-      <Route path="/settings"   element={<SettingsPage />} />
-
-      {/* Phase 15 — Authoring Tool */}
-      <Route path="/manage" element={<ManageShortcutsPage />} />
-      <Route path="/manage/shortcut" element={<ShortcutFormPage />} />
-
-      {/* Catch-all: unknown paths show a graceful not-found page */}
-      <Route path="*" element={<PlaceholderPage title="Page Not Found" />} />
-    </Routes>
+        {/* Catch-all: unknown paths show a graceful not-found page */}
+        <Route path="*" element={<PlaceholderPage title="Page Not Found" />} />
+      </Routes>
     </AppShell>
   )
 }
