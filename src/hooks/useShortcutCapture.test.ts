@@ -57,6 +57,13 @@ const merchantHole: Shortcut = {
   confirm: false,
 }
 
+/** Zero-hole confirm:false whose template explicitly specifies a date (date= alias) */
+const datedShortcut: Shortcut = {
+  name: 'Dated',
+  dslTemplate: 'expense 5:coffee?date=2024-01-15',
+  confirm: false,
+}
+
 // ── Shared setup ─────────────────────────────────────────────────────────────
 
 describe('useShortcutCapture', () => {
@@ -178,6 +185,70 @@ describe('useShortcutCapture', () => {
     expect(result.current.sheetState?.holeMap.named).toContain('merchant')
     // amount=5 and category=food are filled → no positional holes
     expect(result.current.sheetState?.holeMap.positional).toHaveLength(0)
+  })
+
+  // ── DATE-01: one-tap paths default occurredAt to today ────────────────────
+  //
+  // Fake only Date (not setTimeout) so Dexie's timer-based scheduler still runs
+  // and the direct-save await resolves; setSystemTime makes "today" deterministic.
+
+  describe('DATE-01 default date on one-tap paths', () => {
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('confirm:false direct-save defaults occurredAt to today local-midnight when template has no date', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] })
+      vi.setSystemTime(new Date('2026-06-18T14:00:00'))
+      const { result } = renderHook(() => useShortcutCapture())
+      await act(async () => {
+        await result.current.handleTap(coffeeShortcut)
+      })
+      const entries = await entriesRepository.list()
+      expect(entries).toHaveLength(1)
+      expect(entries[0].occurredAt).toBe(Date.parse('2026-06-18T00:00:00'))
+    })
+
+    it('handleSheetSave defaults occurredAt to today local-midnight after merging fills', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] })
+      vi.setSystemTime(new Date('2026-06-18T14:00:00'))
+      const { result } = renderHook(() => useShortcutCapture())
+      await act(async () => {
+        await result.current.handleTap(groceriesShortcut)
+      })
+      await act(async () => {
+        await result.current.handleSheetSave({ amount: '25' })
+      })
+      const entries = await entriesRepository.list()
+      expect(entries).toHaveLength(1)
+      expect(entries[0].amount).toBe(25)
+      expect(entries[0].occurredAt).toBe(Date.parse('2026-06-18T00:00:00'))
+    })
+
+    it('a template that specifies a date keeps it (withDefaultOccurredAt leaves it untouched)', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] })
+      vi.setSystemTime(new Date('2026-06-18T14:00:00'))
+      const { result } = renderHook(() => useShortcutCapture())
+      await act(async () => {
+        await result.current.handleTap(datedShortcut)
+      })
+      const entries = await entriesRepository.list()
+      expect(entries).toHaveLength(1)
+      expect(entries[0].occurredAt).toBe(Date.parse('2024-01-15T00:00:00'))
+    })
+
+    it('confirm:true branch does NOT default the date in the hook (ReviewPage defaults it)', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] })
+      vi.setSystemTime(new Date('2026-06-18T14:00:00'))
+      const { result } = renderHook(() => useShortcutCapture())
+      await act(async () => {
+        await result.current.handleTap(movieShortcut)
+      })
+      expect(mockNavigate).toHaveBeenCalledTimes(1)
+      const navState = mockNavigate.mock.calls[0][1] as { state: { draft: { occurredAt?: number } } }
+      expect(navState.state.draft.occurredAt).toBeUndefined()
+      expect(await entriesRepository.list()).toHaveLength(0)
+    })
   })
 
   // ── 4-second auto-dismiss ─────────────────────────────────────────────────

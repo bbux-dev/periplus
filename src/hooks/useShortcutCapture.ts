@@ -27,6 +27,7 @@ import {
   cleanValues,
   applyFills,
   draftToEntry,
+  withDefaultOccurredAt,
 } from '../services/captureService'
 import type { HoleMap } from '../services/captureService'
 import { entriesRepository } from '../services/entriesRepository'
@@ -113,8 +114,13 @@ export function useShortcutCapture() {
       const holeMap = detectHoles(type, parsed.values)
 
       if (!holeMap.hasHoles) {
-        // Direct save path
-        const draft = buildReviewDraft(ENTRY_FIELDS[type], clean)
+        // Direct save path — DATE-01: default occurredAt to today for date-bearing
+        // types when the template carried none (withDefaultOccurredAt leaves an
+        // explicit date untouched).
+        const draft = withDefaultOccurredAt(
+          buildReviewDraft(ENTRY_FIELDS[type], clean),
+          type,
+        )
         const entry = draftToEntry(draft, type, domain)
         try {
           const saved = await entriesRepository.create(entry)
@@ -139,7 +145,12 @@ export function useShortcutCapture() {
       if (!sheetState) return
       const { type, domain, baseValues } = sheetState
       const merged = applyFills(baseValues, fills)
-      const draft = buildReviewDraft(ENTRY_FIELDS[type], merged)
+      // DATE-01: default occurredAt to today after merging fills (same rule as
+      // the direct-save path); an explicitly-filled date is left untouched.
+      const draft = withDefaultOccurredAt(
+        buildReviewDraft(ENTRY_FIELDS[type], merged),
+        type,
+      )
       const entry = draftToEntry(draft, type, domain)
       try {
         const saved = await entriesRepository.create(entry)
