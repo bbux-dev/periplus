@@ -1,8 +1,21 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, act, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
+import { db } from '../../services/db'
+import { configRepository } from '../../services/configRepository'
+import {
+  activeModeRepository,
+  defaultInstanceLabel,
+} from '../../services/activeMode'
+import { DEFAULT_SHORTCUT_CONFIG } from '../../config/shortcutConfig'
 import { AppShell } from './AppShell'
+
+// Reset Dexie before each test — AppShell now reads config + active mode reactively.
+beforeEach(async () => {
+  await db.delete()
+  await db.open()
+})
 
 /**
  * Renders AppShell inside a MemoryRouter at the given initial path.
@@ -150,5 +163,91 @@ describe('AppShell — close behaviors', () => {
     // click the page content sentinel (outside the nav bar wrapper)
     await user.click(screen.getByTestId('home-sentinel'))
     expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
+  })
+})
+
+// ─── Active mode — app bar display (MODE-04) ──────────────────────────────────
+
+describe('AppShell — app bar active mode display', () => {
+  it('renders nothing when no active mode is set', () => {
+    renderAt('/')
+    expect(screen.queryByText(/·/)).not.toBeInTheDocument()
+  })
+
+  it('shows "{mode} · {label}" when an active mode is set', async () => {
+    await act(async () => {
+      await activeModeRepository.put({ mode: 'Travel', label: 'Italy-trip' })
+    })
+    renderAt('/')
+    expect(await screen.findByText(/Travel\s*·\s*Italy-trip/)).toBeInTheDocument()
+  })
+})
+
+// ─── Active mode — hamburger menu switcher (MODE-03) ──────────────────────────
+
+describe('AppShell — Active Mode menu', () => {
+  async function openMenuWithConfig(path = '/') {
+    await act(async () => {
+      await configRepository.put(DEFAULT_SHORTCUT_CONFIG)
+    })
+    const user = userEvent.setup()
+    renderAt(path)
+    // Wait for config to load reactively before opening the submenu.
+    await user.click(screen.getByRole('button', { name: /toggle navigation menu/i }))
+    return user
+  }
+
+  it('exposes an "Active Mode" control in the menu', async () => {
+    const user = await openMenuWithConfig()
+    expect(screen.getByRole('button', { name: /active mode/i })).toBeInTheDocument()
+    // touch user to satisfy lint
+    expect(user).toBeDefined()
+  })
+
+  it('opening "Active Mode" lists the configured mode names', async () => {
+    const user = await openMenuWithConfig()
+    await user.click(screen.getByRole('button', { name: /active mode/i }))
+    expect(await screen.findByRole('button', { name: 'DayToDay' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Travel' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'WorkTrip' })).toBeInTheDocument()
+  })
+
+  it('selecting a mode shows a label input pre-filled with the default instance label', async () => {
+    const user = await openMenuWithConfig()
+    await user.click(screen.getByRole('button', { name: /active mode/i }))
+    await user.click(await screen.findByRole('button', { name: 'Travel' }))
+    const input = await screen.findByLabelText(/instance label/i)
+    expect(input).toHaveValue(defaultInstanceLabel('Travel'))
+  })
+
+  it('editing the label + Confirm persists via activateMode and updates the app bar', async () => {
+    const user = await openMenuWithConfig()
+    await user.click(screen.getByRole('button', { name: /active mode/i }))
+    await user.click(await screen.findByRole('button', { name: 'Travel' }))
+
+    const input = await screen.findByLabelText(/instance label/i)
+    await user.clear(input)
+    await user.type(input, 'Italy-2026')
+    await act(async () => {
+      await user.click(screen.getByRole('button', { name: /^confirm$/i }))
+    })
+
+    await waitFor(async () => {
+      const persisted = await activeModeRepository.get()
+      expect(persisted).toEqual({ mode: 'Travel', label: 'Italy-2026' })
+    })
+    // App bar reflects the new active mode and the menu has closed.
+    expect(await screen.findByText(/Travel\s*·\s*Italy-2026/)).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
+  })
+
+  it('Cancel discards the pending selection without persisting', async () => {
+    const user = await openMenuWithConfig()
+    await user.click(screen.getByRole('button', { name: /active mode/i }))
+    await user.click(await screen.findByRole('button', { name: 'Travel' }))
+    await user.click(screen.getByRole('button', { name: /^cancel$/i }))
+
+    expect(screen.queryByLabelText(/instance label/i)).not.toBeInTheDocument()
+    expect(await activeModeRepository.get()).toBeUndefined()
   })
 })

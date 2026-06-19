@@ -7,6 +7,14 @@ import {
 } from '@heroicons/react/24/outline'
 import { NAVIGATION } from '../../config/navigation'
 import { cn } from '../ui/cn'
+import { Input } from '../ui/Input'
+import { useShortcutConfig } from '../../services/configRepository'
+import {
+  useActiveMode,
+  activateMode,
+  defaultInstanceLabel,
+  listModes,
+} from '../../services/activeMode'
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation()
@@ -14,6 +22,32 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
   const wrapperRef = useRef<HTMLDivElement>(null)
+
+  // ─── Active mode (MODE-03 / MODE-04) ──────────────────────────────────────
+  const activeMode = useActiveMode()
+  const config = useShortcutConfig()
+  const modes = config ? listModes(config) : []
+  const [modeSubmenuOpen, setModeSubmenuOpen] = useState(false)
+  const [pendingMode, setPendingMode] = useState<string | null>(null)
+  const [pendingLabel, setPendingLabel] = useState('')
+
+  function resetModeMenu() {
+    setModeSubmenuOpen(false)
+    setPendingMode(null)
+    setPendingLabel('')
+  }
+
+  function selectPendingMode(mode: string) {
+    setPendingMode(mode)
+    setPendingLabel(defaultInstanceLabel(mode))
+  }
+
+  async function confirmPendingMode() {
+    if (pendingMode === null) return
+    await activateMode(pendingMode, pendingLabel)
+    resetModeMenu()
+    setOpen(false)
+  }
 
   // Close on Escape while menu is open
   useEffect(() => {
@@ -37,6 +71,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return () => document.removeEventListener('mousedown', handleMouseDown)
   }, [open])
 
+  // Reset the Active Mode submenu whenever the dropdown closes.
+  useEffect(() => {
+    if (!open) {
+      setModeSubmenuOpen(false)
+      setPendingMode(null)
+      setPendingLabel('')
+    }
+  }, [open])
+
   function toggleDomain(domain: string) {
     setExpanded((prev) => ({ ...prev, [domain]: !prev[domain] }))
   }
@@ -54,7 +97,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {/* Top bar row */}
           <div className="w-full max-w-sm mx-auto flex items-center justify-between px-6 h-14">
             {/* LEFT — home button (hidden at '/') */}
-            <div>
+            <div className="flex-1 flex justify-start">
               {pathname !== '/' && (
                 <button
                   aria-label="Go home"
@@ -66,16 +109,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               )}
             </div>
 
+            {/* CENTER — active mode · label (MODE-04) */}
+            <div className="flex-1 min-w-0 px-2 text-center">
+              {activeMode && (
+                <span className="block truncate text-sm font-medium text-[var(--color-foreground)]">
+                  {activeMode.mode} · {activeMode.label}
+                </span>
+              )}
+            </div>
+
             {/* RIGHT — hamburger */}
-            <button
-              aria-label="Toggle navigation menu"
-              aria-expanded={open}
-              aria-controls="app-nav-menu"
-              onClick={() => setOpen((v) => !v)}
-              className="text-[var(--color-foreground)]"
-            >
-              <Bars3Icon className="h-5 w-5" aria-hidden="true" />
-            </button>
+            <div className="flex-1 flex justify-end">
+              <button
+                aria-label="Toggle navigation menu"
+                aria-expanded={open}
+                aria-controls="app-nav-menu"
+                onClick={() => setOpen((v) => !v)}
+                className="text-[var(--color-foreground)]"
+              >
+                <Bars3Icon className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
           </div>
 
           {/* DROPDOWN — visible when open */}
@@ -118,6 +172,72 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               >
                 Manage Shortcuts
               </Link>
+
+              {/* Active Mode switcher (MODE-03) */}
+              <div className="flex flex-col border-t border-[var(--color-border)] mt-1 pt-1">
+                <button
+                  type="button"
+                  aria-expanded={modeSubmenuOpen}
+                  onClick={() => setModeSubmenuOpen((v) => !v)}
+                  className="flex items-center justify-between py-2 text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
+                >
+                  <span>Active Mode</span>
+                  <ChevronDownIcon
+                    className={cn(
+                      'h-4 w-4 transition-transform',
+                      modeSubmenuOpen ? 'rotate-180' : '',
+                    )}
+                    aria-hidden="true"
+                  />
+                </button>
+
+                {modeSubmenuOpen && (
+                  <div className="pl-4 flex flex-col gap-0.5">
+                    {pendingMode === null ? (
+                      modes.map((mode) => (
+                        <button
+                          key={mode}
+                          type="button"
+                          onClick={() => selectPendingMode(mode)}
+                          className="py-1.5 text-left text-sm text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
+                        >
+                          {mode}
+                        </button>
+                      ))
+                    ) : (
+                      <div className="flex flex-col gap-2 py-1.5">
+                        <label
+                          htmlFor="active-mode-label"
+                          className="text-xs font-medium text-[var(--color-muted)]"
+                        >
+                          Instance label for {pendingMode}
+                        </label>
+                        <Input
+                          id="active-mode-label"
+                          value={pendingLabel}
+                          onChange={(e) => setPendingLabel(e.target.value)}
+                        />
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => { void confirmPendingMode() }}
+                            className="rounded-md px-3 py-1.5 text-sm font-semibold bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:opacity-90"
+                          >
+                            Confirm
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setPendingMode(null); setPendingLabel('') }}
+                            className="rounded-md px-3 py-1.5 text-sm font-semibold border border-[var(--color-border)] text-[var(--color-foreground)] hover:bg-[var(--color-muted)]"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
 
               {/* Nav tree from NAVIGATION (single source of truth) */}
               {NAVIGATION.map(({ domain, label, types }) => (
