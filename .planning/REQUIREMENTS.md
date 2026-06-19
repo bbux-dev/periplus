@@ -113,6 +113,45 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 
 ## Traceability
 
-<!-- Filled by the roadmapper: REQ-ID → Phase. -->
-
-(To be populated by roadmap creation.)
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| ENG-01 | Phase 20 | Pending |
+| ENG-02 | Phase 20 | Pending |
+| ENG-03 | Phase 20 | Pending |
+| ENG-04 | Phase 20 | Pending |
+| TRIP-02 | Phase 21 | Pending |
+| TRIP-04 | Phase 21 | Pending |
+| UI-01 | Phase 21 | Pending |
+| UI-02 | Phase 21 | Pending |
+| UI-03 | Phase 21 | Pending |
+| UI-04 | Phase 21 | Pending |
+| UI-05 | Phase 21 | Pending |
+| TRIP-01 | Phase 22 | Pending |
+| TRIP-03 | Phase 22 | Pending |
+| HOME-01 | Phase 22 | Pending |
+| HOME-02 | Phase 22 | Pending |
+| HOME-03 | Phase 22 | Pending |
+| HOME-04 | Phase 22 | Pending |
+| HOME-05 | Phase 22 | Pending |
+| EXP-01 | Phase 22 | Pending |
+| EXP-02 | Phase 22 | Pending |
+| EXP-03 | Phase 22 | Pending |
+| EXP-04 | Phase 22 | Pending |
+| EXP-05 | Phase 22 | Pending |
+| EXP-06 | Phase 22 | Pending |
+| ACT-01 | Phase 23 | Pending |
+| ACT-02 | Phase 23 | Pending |
+| ACT-03 | Phase 23 | Pending |
+| ACT-04 | Phase 23 | Pending |
+| ACT-05 | Phase 23 | Pending |
+| ACT-06 | Phase 23 | Pending |
+| PREV-01 | Phase 24 | Pending |
+| PREV-02 | Phase 24 | Pending |
+| PREV-03 | Phase 24 | Pending |
+| PREV-04 | Phase 24 | Pending |
+| RPT-01 | Phase 24 | Pending |
+| RPT-02 | Phase 24 | Pending |
+| RPT-03 | Phase 24 | Pending |
+| RPT-04 | Phase 24 | Pending |
+| RPT-05 | Phase 24 | Pending |
+| RPT-06 | Phase 24 | Pending |

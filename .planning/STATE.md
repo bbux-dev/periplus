@@ -2,11 +2,11 @@
 gsd_state_version: 1.0
 milestone: v0.5.0
 milestone_name: Trips MVP UI Refactor
-status: planning
-last_updated: "2026-06-19T13:16:36.376Z"
+status: roadmapped
+last_updated: "2026-06-19"
 last_activity: 2026-06-19
 progress:
-  total_phases: 0
+  total_phases: 5
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -17,17 +17,21 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-17)
+See: .planning/PROJECT.md (updated 2026-06-19)
 
-**Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** Planning next milestone (run `/gsd:new-milestone`)
+**Core value:** A user can capture a structured life event on their phone in seconds and have it persist locally and offline as a typed entry.
+**Current focus:** v0.5.0 Trips MVP UI Refactor — roadmap created, ready for Phase 20
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 20 (Trip Data Model + Engine Extensions) — Not started
 Plan: —
-Status: Defining requirements
-Last activity: 2026-06-19 — Milestone v0.5.0 started
+Status: Roadmap created; ready to begin Phase 20
+Last activity: 2026-06-19 — Roadmap written for v0.5.0 (Phases 20–24)
+
+```
+Progress: [----------] 0% (0/5 phases)
+```
 
 ## Deferred Items
 
@@ -143,6 +147,13 @@ architecture-template.md SPEC + spec.md:
 - [Phase 15-01]: deleteLayout throws 'Cannot delete the only remaining layout.' — exact message for UI to surface
 - [Phase 15-01]: renameLayout does NOT write activeLayoutName — caller/Dexie concern (Pitfall 3)
 - [Phase ?]: 15-02: selectedLayoutName=undefined init; effectiveSelectedName derived from config+persisted for graceful fallback
+- [v0.5.0 Roadmap]: Trip is a LifeLogEntry (type='trip', domain='trips') with UUID; ActiveMode extended with tripId; entries stamped via draftToEntry — Option C selected (rejects name-string grouping)
+- [v0.5.0 Roadmap]: Expense domain is always hardcoded 'trips' in the trip flow — never use defaultDomainForType('expense') which returns 'expenditures'
+- [v0.5.0 Roadmap]: Old pages + test files deleted atomically in Phase 21; ReviewDraft type moved from extractMetadataFromUrl.ts into captureService.ts before deletion
+- [v0.5.0 Roadmap]: All money display uses Math.round(x*100)/100 + formatUSD; no integer-cents storage (would require Dexie migration)
+- [v0.5.0 Roadmap]: Previous Trips stats use single-pass db.entries.toArray() grouping — no per-trip N+1 Dexie filter loop
+- [v0.5.0 Roadmap]: StarRating uses <button> elements with aria-label; role="radiogroup" pattern for accessibility + iOS tap compatibility
+- [v0.5.0 Roadmap]: No "Delete Trip" in v0.5.0 — entry-level delete only from TripDetailPage (avoids orphaned-entries cascade complexity)
 
 ### Pending Todos
 
@@ -150,7 +161,7 @@ architecture-template.md SPEC + spec.md:
 
 ### Blockers/Concerns
 
-None yet.
+None.
 
 ### Quick Tasks Completed
 
@@ -171,10 +182,10 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-17T19:29:15.964Z
-Stopped at: Completed 15-authoring-tool/15-01-PLAN.md
+Last session: 2026-06-19
+Stopped at: Roadmap created for v0.5.0 (Phases 20–24)
 Resume file: None
 
 ## Operator Next Steps
 
-- Start the next milestone with /gsd-new-milestone
+- Run `/gsd:plan-phase 20` to plan Phase 20 (Trip Data Model + Engine Extensions)
