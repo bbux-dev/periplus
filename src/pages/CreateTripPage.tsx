@@ -8,11 +8,17 @@ export function CreateTripPage() {
   const goBack = useBackOrHome('/')
   const navigate = useNavigate()
   const [name, setName] = useState('')
+  const [saving, setSaving] = useState(false)
 
   async function handleSave() {
-    if (!name.trim()) return
-    await createAndActivateTrip(name)
-    navigate('/')
+    if (!name.trim() || saving) return
+    setSaving(true)
+    try {
+      await createAndActivateTrip(name.trim())
+      navigate('/')
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -27,21 +33,28 @@ export function CreateTripPage() {
           <span className="text-sm font-medium">Back</span>
         </button>
         <h1 className="text-2xl font-bold tracking-tight">Create a Trip</h1>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Trip name"
-          className="px-3 py-2 rounded-md border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] text-sm"
-          aria-label="Trip name"
-        />
-        <button
-          onClick={() => { void handleSave() }}
-          className="px-4 py-2 rounded-md border border-[var(--color-border)]
-                     text-sm font-medium hover:bg-[var(--color-muted)] transition-colors"
+        <form
+          onSubmit={(e) => { e.preventDefault(); void handleSave() }}
+          className="flex flex-col gap-4"
         >
-          Save
-        </button>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Trip name"
+            className="px-3 py-2 rounded-md border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] text-sm"
+            aria-label="Trip name"
+          />
+          <button
+            type="submit"
+            disabled={saving || !name.trim()}
+            aria-disabled={saving || !name.trim()}
+            className="px-4 py-2 rounded-md border border-[var(--color-border)]
+                       text-sm font-medium hover:bg-[var(--color-muted)] transition-colors"
+          >
+            {saving ? 'Saving…' : 'Save'}
+          </button>
+        </form>
       </div>
     </div>
   )

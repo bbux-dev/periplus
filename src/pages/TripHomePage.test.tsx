@@ -18,10 +18,10 @@ afterEach(() => {
 
 describe('TripHomePage', () => {
   it('shows loading skeleton before Dexie resolves', async () => {
-    // Re-delete DB so Dexie is "closed" — useLiveQuery default (false) fires synchronously
+    // Re-delete DB so Dexie is "closed" — useLiveQuery default fires synchronously
     await db.delete()
     render(<MemoryRouter><TripHomePage /></MemoryRouter>)
-    // Skeleton renders synchronously via the false default from useLiveQuery
+    // Skeleton renders synchronously via the { ready: false, mode: undefined } default
     expect(screen.getByText(/loading/i)).toBeInTheDocument()
   })
 

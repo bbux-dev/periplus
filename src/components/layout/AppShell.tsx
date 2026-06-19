@@ -12,13 +12,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const toggleRef = useRef<HTMLButtonElement>(null)
   const activeMode = useActiveMode()
 
-  // Close on Escape while menu is open
+  // Close on Escape while menu is open; restore focus to hamburger (WR-03)
   useEffect(() => {
     if (!open) return
     function handleKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false)
+      if (e.key === 'Escape') {
+        setOpen(false)
+        toggleRef.current?.focus()
+      }
     }
     document.addEventListener('keydown', handleKey)
     return () => document.removeEventListener('keydown', handleKey)
@@ -73,9 +77,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {/* RIGHT — hamburger */}
             <div className="flex-1 flex justify-end">
               <button
+                ref={toggleRef}
                 aria-label="Toggle navigation menu"
                 aria-expanded={open}
-                aria-controls="app-nav-menu"
+                aria-haspopup="true"
+                {...(open ? { 'aria-controls': 'app-nav-menu' } : {})}
                 onClick={() => setOpen((v) => !v)}
                 className="text-[var(--color-foreground)]"
               >

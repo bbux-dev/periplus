@@ -5,9 +5,9 @@ import { db } from './db'
 //
 // Stores the active mode (a layout name) plus a free-text instance label in the
 // same Dexie settings table under a dedicated key. No schema version bump — the
-// settings table accepts arbitrary keys. Pattern mirrors activeLayoutRepository
-// in configRepository.ts EXACTLY (undefined-loading semantics, no default value
-// in useLiveQuery).
+// settings table accepts arbitrary keys.
+// Pattern: undefined return means "Dexie is still opening OR no mode has been set".
+// Callers MUST handle undefined — do NOT provide a default value to useLiveQuery here.
 //
 // "Mode" is the user-facing concept; for trip mode, mode='trip' and tripId holds the UUID.
 
