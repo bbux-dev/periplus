@@ -52,12 +52,18 @@ Delivers (PREV-01..04, RPT-01..06):
   name/activityType + rating. Keep it simple.
 
 ### Inline edit/delete (RPT-05, RPT-06) — reactive
-- Edit: open an edit form backed by `entriesRepository.update(id, changes)`. REUSE the existing
-  field machinery: `ENTRY_FIELDS[entry.type]` + `projectEntryToFormValues(entry)` (to seed the form)
-  + `buildReviewDraft(fields, formValues)` (to map back) — all in `entryFields.ts`. The update MUST
-  merge-preserve unknown metadata (the `tripId`/`mode`/`modeLabel` stamps) — pass a `changes` object
-  that updates the edited fields without dropping `metadata.tripId`. (Mirror how the old edit path
-  merged metadata: spread existing metadata then overlay edited keys.)
+- Edit: open an edit form backed by `entriesRepository.update(id, changes)`. REUSE the existing,
+  still-present field machinery in `entryFields.ts`:
+  - `ENTRY_FIELDS[entry.type]` — the field descriptors for the entry's type.
+  - `formValuesFromEntry(fields, entry)` — seeds the form's `Record<fieldKey,string>` from the entry
+    (local-date `occurredAt` round-trip already handled).
+  - `buildEntryUpdate(fields, formValues, entry)` — produces the `Partial<Omit<LifeLogEntry,'id'>>`
+    `changes` object. This is the AUTHORITATIVE merge-preserving updater used by the old edit path:
+    metadata is MERGED (unknown keys + `mode`/`modeLabel`/`tripId` survive untouched unless edited),
+    and `recordedAt`/`syncedAt`/`domain`/`type` are NEVER written. Pass its result straight to
+    `entriesRepository.update(entry.id, changes)`.
+  Do NOT hand-roll the merge — `buildEntryUpdate` already does it correctly (this is the function the
+  v0.4.0 EEDIT path used).
 - Delete: a confirmation prompt (confirm dialog or a two-step confirm button) BEFORE
   `entriesRepository.delete(id)`. No accidental deletes.
 - All views (`PreviousTripsPage` totals, `TripDetailPage` report + timeline) read via `useLiveQuery`
@@ -84,8 +90,8 @@ panel vs a small route), and date-range formatting are at Claude's discretion (m
   `tripDateRange`, `tripActivityCount` (pure helpers to reuse), `useTrips`, `useTripEntries`,
   `listTripEntries`. Add `summarizeTrips` here.
 - `src/services/entriesRepository.ts` — `update(id, changes)`, `delete(id)`.
-- `src/config/entryFields.ts` — `ENTRY_FIELDS`, `buildReviewDraft`, `projectEntryToFormValues`
-  (seed + map-back for the edit form).
+- `src/config/entryFields.ts` — `ENTRY_FIELDS`, `formValuesFromEntry` (seed the edit form),
+  `buildEntryUpdate` (merge-preserving `changes` for `entriesRepository.update`).
 - `src/config/money.ts` — `formatUSD`. `src/config/expenseCategories.ts` — `EXPENSE_CATEGORIES`
   (report ordering).
 - `src/pages/TripHomePage.tsx` — reactive `useLiveQuery` + entry-row rendering analog.
