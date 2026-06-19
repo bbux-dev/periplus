@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import {
   HOLE_TOKEN,
   cleanValues,
@@ -6,7 +6,12 @@ import {
   applyFills,
   buildDSLPreview,
   draftToEntry,
+  todayLocalDate,
+  todayLocalMidnightEpoch,
+  typeHasDateField,
+  withDefaultOccurredAt,
 } from './captureService'
+import type { EntryType } from './db'
 import type { ReviewDraft } from './extractMetadataFromUrl'
 
 // ─── Factory helper ───────────────────────────────────────────────────────────
@@ -325,6 +330,85 @@ describe('draftToEntry — optional-field omission (if-truthy / if-not-null-or-N
   it('omits sourceUrl when falsy/undefined (shortcut draft, no URL)', () => {
     const entry = draftToEntry(makeReviewDraft({ title: 'Test' }), 'expense', 'expenditures')
     expect('sourceUrl' in entry).toBe(false)
+  })
+})
+
+// ─── Date-default helpers (DATE-01) ───────────────────────────────────────────
+
+describe('todayLocalDate / todayLocalMidnightEpoch', () => {
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('todayLocalDate returns the local YYYY-MM-DD string (en-CA convention)', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-06-18T14:00:00'))
+    expect(todayLocalDate()).toBe(new Date().toLocaleDateString('en-CA'))
+    expect(todayLocalDate()).toBe('2026-06-18')
+  })
+
+  it('todayLocalMidnightEpoch returns the local-midnight epoch of today (Date.parse `${d}T00:00:00`)', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-06-18T14:00:00'))
+    const expected = Date.parse('2026-06-18T00:00:00')
+    expect(todayLocalMidnightEpoch()).toBe(expected)
+  })
+})
+
+describe('typeHasDateField', () => {
+  it('returns true for types with a core occurredAt descriptor', () => {
+    expect(typeHasDateField('expense')).toBe(true)
+    expect(typeHasDateField('movie')).toBe(true)
+  })
+
+  it('returns false for an unknown/bogus type', () => {
+    expect(typeHasDateField('bogus' as EntryType)).toBe(false)
+  })
+})
+
+describe('withDefaultOccurredAt (DATE-01)', () => {
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('fills today local-midnight epoch when occurredAt is absent and type has a date field', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-06-18T14:00:00'))
+    const draft = makeReviewDraft({ title: 'Coffee' })
+    const result = withDefaultOccurredAt(draft, 'expense')
+    expect(result.occurredAt).toBe(Date.parse('2026-06-18T00:00:00'))
+  })
+
+  it('leaves an explicit occurredAt untouched', () => {
+    const draft = makeReviewDraft({ title: 'Coffee', occurredAt: 1700000000000 })
+    const result = withDefaultOccurredAt(draft, 'expense')
+    expect(result.occurredAt).toBe(1700000000000)
+  })
+
+  it('does not mutate the input draft', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-06-18T14:00:00'))
+    const draft = makeReviewDraft({ title: 'Coffee' })
+    const result = withDefaultOccurredAt(draft, 'expense')
+    expect(draft.occurredAt).toBeUndefined()
+    expect(result).not.toBe(draft)
+  })
+
+  it('returns the draft unchanged for a type with no date field', () => {
+    const bogus = 'bogus' as EntryType
+    // sanity: the gate is typeHasDateField → false
+    expect(typeHasDateField(bogus)).toBe(false)
+    const draft = makeReviewDraft({ title: 'Coffee' })
+    const result = withDefaultOccurredAt(draft, bogus)
+    expect(result.occurredAt).toBeUndefined()
+  })
+
+  it('treats a NaN occurredAt as absent and fills today', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-06-18T14:00:00'))
+    const draft = makeReviewDraft({ title: 'Coffee', occurredAt: NaN })
+    const result = withDefaultOccurredAt(draft, 'expense')
+    expect(result.occurredAt).toBe(Date.parse('2026-06-18T00:00:00'))
   })
 })
 

@@ -10,7 +10,7 @@
  * Mirror: src/services/exportEntries.ts
  */
 
-import { POSITIONAL_SCHEMA } from '../config/entryFields'
+import { ENTRY_FIELDS, POSITIONAL_SCHEMA } from '../config/entryFields'
 import type { EntryDomain, EntryType, LifeLogEntry } from './db'
 import type { ReviewDraft } from './extractMetadataFromUrl'
 
@@ -195,4 +195,61 @@ export function draftToEntry(
       ? { occurredAt: draft.occurredAt }
       : {}),
   }
+}
+
+// ─── Date-default helpers (DATE-01) ────────────────────────────────────────────
+
+/**
+ * Today's date as a LOCAL 'YYYY-MM-DD' string.
+ *
+ * Uses toLocaleDateString('en-CA') (NOT toISOString, which is UTC) so the value
+ * matches what <input type="date"> shows and what buildReviewDraft expects.
+ * Mirror: ReviewPage occurredAt useState init (WR-03), entryFields.ts L154-160.
+ */
+export function todayLocalDate(): string {
+  return new Date().toLocaleDateString('en-CA')
+}
+
+/**
+ * Today's LOCAL-midnight epoch (ms).
+ *
+ * Appends T00:00:00 so Date.parse treats it as local midnight, NOT UTC midnight
+ * (Date.UTC / toISOString would be off-by-one in UTC-offset zones — the project
+ * already fixed this once). Mirror: buildReviewDraft 'occurredAt' case.
+ */
+export function todayLocalMidnightEpoch(): number {
+  return Date.parse(`${todayLocalDate()}T00:00:00`)
+}
+
+/**
+ * True iff the type's ENTRY_FIELDS config has a core occurredAt descriptor.
+ *
+ * All 7 current types do; the gate is kept for correctness/future-proofing so a
+ * type without a date field never gets an invented date. Tolerates an unknown
+ * type (optional chaining + `?? false`).
+ */
+export function typeHasDateField(type: EntryType): boolean {
+  return (
+    ENTRY_FIELDS[type]?.some(
+      (f) => f.mapTo.kind === 'core' && f.mapTo.field === 'occurredAt',
+    ) ?? false
+  )
+}
+
+/**
+ * Returns a draft with occurredAt defaulted to today's local-midnight epoch when
+ * the draft carries no usable date AND the type has a date field. Otherwise the
+ * draft is returned unchanged.
+ *
+ * Pure — never mutates the input. Intentionally NOT applied inside draftToEntry,
+ * which is shared with ReviewPage.handleSave where defaulting would override a
+ * user who deliberately cleared the date (DATE-01: default, not lock).
+ */
+export function withDefaultOccurredAt(
+  draft: ReviewDraft,
+  type: EntryType,
+): ReviewDraft {
+  const hasDate = draft.occurredAt != null && !Number.isNaN(draft.occurredAt)
+  if (hasDate || !typeHasDateField(type)) return draft
+  return { ...draft, occurredAt: todayLocalMidnightEpoch() }
 }
