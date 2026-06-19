@@ -111,7 +111,7 @@ Plans:
 **Plans**: 3 plans
 Plans:
 - [x] 23-01-PLAN.md — ACTIVITY_TYPES constant + accessible StarRating component (5 button stars, tap-set/clear, arrow keys) + tests
-- [ ] 23-02-PLAN.md — ActivityTypePage at /activity (5 constant-driven tap targets → /activity/<slug>) + route wiring
+- [x] 23-02-PLAN.md — ActivityTypePage at /activity (5 constant-driven tap targets → /activity/<slug>) + route wiring
 - [ ] 23-03-PLAN.md — ActivityFormPage at /activity/:type (Name/Location/Rating/Notes + Other free-text Type; stamped activity save) + route wiring
 **Key pitfalls**: `StarRating` MUST use `<button>` elements (not `<div>` or `<span>`) to capture iOS tap events without `cursor: pointer` workarounds; `occurredAt` default uses `todayLocalDate()` not `new Date().toISOString().substring(0,10)` (UTC off-by-one); fake timers in tests use `{ toFake: ['Date'] }`; `activityType` stored in `metadata.activityType`, not a new top-level DB field; "Other" type stored as the user-entered free-text string, not the literal string `"other"`
 **UI hint**: yes
@@ -219,5 +219,5 @@ Full details: [`milestones/v0.1.0-ROADMAP.md`](milestones/v0.1.0-ROADMAP.md).
 | 20. Trip Data Model + Engine Extensions | v0.5.0 | 2/2 | Complete    | 2026-06-19 |
 | 21. App Shell + Routing Rewrite + Atomic Drop | v0.5.0 | 4/4 | Complete    | 2026-06-19 |
 | 22. Trip Home + Expense Capture | v0.5.0 | 3/3 | Complete    | 2026-06-19 |
-| 23. Activity Capture | v0.5.0 | 1/3 | In Progress|  |
+| 23. Activity Capture | v0.5.0 | 2/3 | In Progress|  |
 | 24. Previous Trips + Trip Detail + Expense Report | v0.5.0 | 0/1 | Not started | - |

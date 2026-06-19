@@ -55,7 +55,7 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 
 ### Activity Capture (ACT)
 
-- [ ] **ACT-01**: Tapping `Activity` navigates to an Activity Type screen with buttons: Hike, Show, Restaurant, Cafe, Other
+- [x] **ACT-01**: Tapping `Activity` navigates to an Activity Type screen with buttons: Hike, Show, Restaurant, Cafe, Other
 - [ ] **ACT-02**: Choosing Hike/Show/Restaurant/Cafe opens a form with Name (required), Location (optional), Rating (optional), Notes (optional)
 - [ ] **ACT-03**: Choosing Other opens the same form plus a required free-text Type field
 - [x] **ACT-04**: Rating is entered with a clickable, accessible 1–5 star control (tap to set/clear)
@@ -139,7 +139,7 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 | EXP-04 | Phase 22 | Complete |
 | EXP-05 | Phase 22 | Complete |
 | EXP-06 | Phase 22 | Complete |
-| ACT-01 | Phase 23 | Pending |
+| ACT-01 | Phase 23 | Complete |
 | ACT-02 | Phase 23 | Pending |
 | ACT-03 | Phase 23 | Pending |
 | ACT-04 | Phase 23 | Complete |
