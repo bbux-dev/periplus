@@ -24,9 +24,9 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 
 <!-- Minimal additive changes to the preserved engine — no Dexie schema version bump. -->
 
-- [ ] **ENG-01**: `EntryType` union includes `trip` and `activity` (TypeScript only; `type` is unindexed)
-- [ ] **ENG-02**: `ActiveMode` carries an optional `tripId`, and `activateMode()` accepts it
-- [ ] **ENG-03**: `draftToEntry` stamps `metadata.tripId` (and existing `mode`/`modeLabel`) when a trip is active
+- [x] **ENG-01**: `EntryType` union includes `trip` and `activity` (TypeScript only; `type` is unindexed)
+- [x] **ENG-02**: `ActiveMode` carries an optional `tripId`, and `activateMode()` accepts it
+- [x] **ENG-03**: `draftToEntry` stamps `metadata.tripId` (and existing `mode`/`modeLabel`) when a trip is active
 - [ ] **ENG-04**: `tripService` provides create-and-activate, list-trips, list-trip-entries, and pure stat helpers (date range, expense total, expenses-by-category, activity count)
 
 ### Trip Context (TRIP)
@@ -115,9 +115,9 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ENG-01 | Phase 20 | Pending |
-| ENG-02 | Phase 20 | Pending |
-| ENG-03 | Phase 20 | Pending |
+| ENG-01 | Phase 20 | Complete |
+| ENG-02 | Phase 20 | Complete |
+| ENG-03 | Phase 20 | Complete |
 | ENG-04 | Phase 20 | Pending |
 | TRIP-02 | Phase 21 | Pending |
 | TRIP-04 | Phase 21 | Pending |

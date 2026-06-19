@@ -58,7 +58,7 @@ active-mode/context stamping, `draftToEntry`). Design north-star: `seeds/fewest-
   5. Pure stat helpers (`tripExpenseTotal`, `tripExpensesByCategory`, `tripDateRange`, `tripActivityCount`) return correct values from in-memory entry arrays with no Dexie calls; all existing 592+ tests remain green
 **Plans**: 2 plans
 Plans:
-- [ ] 20-01-PLAN.md — Extend EntryType (trip/activity) + entryFields exhaustiveness; ActiveMode.tripId + activateMode 3rd param; draftToEntry tripId stamp
+- [x] 20-01-PLAN.md — Extend EntryType (trip/activity) + entryFields exhaustiveness; ActiveMode.tripId + activateMode 3rd param; draftToEntry tripId stamp
 - [ ] 20-02-PLAN.md — tripService.ts: create-and-activate, list helpers, reactive hooks, and pure stat helpers + tests
 **Key pitfalls**: Update `EntryType` in `db.ts` FIRST before any code that passes `'trip'` or `'activity'` as a type arg (`tsc -b` fails otherwise); `tripId` param on `activateMode` is optional — all existing callers unbroken; new tests with `vi.useFakeTimers` MUST use `{ toFake: ['Date'] }` not full fake timers (Dexie IndexedDB hang); `entryFields.ts` ENTRY_FIELDS and POSITIONAL_SCHEMA must include entries for `trip` and `activity` or TypeScript enforces exhaustiveness
 
@@ -204,7 +204,7 @@ Full details: [`milestones/v0.1.0-ROADMAP.md`](milestones/v0.1.0-ROADMAP.md).
 | 17. Editable & Deletable Saved Entries | v0.4.0 | 1/1 | Complete | 2026-06-18 |
 | 18. Active Mode Model + Instance Stamping | v0.4.0 | 1/1 | Complete | 2026-06-18 |
 | 19. Active Mode Navigation + Dashboard De-Clunk | v0.4.0 | 1/1 | Complete | 2026-06-18 |
-| 20. Trip Data Model + Engine Extensions | v0.5.0 | 0/2 | Planned | - |
+| 20. Trip Data Model + Engine Extensions | v0.5.0 | 1/2 | In Progress|  |
 | 21. App Shell + Routing Rewrite + Atomic Drop | v0.5.0 | 0/1 | Not started | - |
 | 22. Trip Home + Expense Capture | v0.5.0 | 0/1 | Not started | - |
 | 23. Activity Capture | v0.5.0 | 0/1 | Not started | - |
