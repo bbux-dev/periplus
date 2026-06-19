@@ -1,6 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from './db'
-import type { ShortcutConfig } from '../config/shortcutConfig'
 
 // ─── Active mode persistence (MODE-01, MODE-02) ───────────────────────────────
 //
@@ -10,8 +9,7 @@ import type { ShortcutConfig } from '../config/shortcutConfig'
 // in configRepository.ts EXACTLY (undefined-loading semantics, no default value
 // in useLiveQuery).
 //
-// "Mode" is the user-facing concept layered over the existing ShortcutConfig
-// layouts — existing layouts ARE the modes. There is NO Layout→Mode rename.
+// "Mode" is the user-facing concept; for trip mode, mode='trip' and tripId holds the UUID.
 
 /** A user-facing entry in the active-mode list: a layout name + an instance label. */
 export interface ActiveMode {
@@ -87,9 +85,4 @@ export async function activateMode(
     label: trimmed || defaultInstanceLabel(mode),
     ...(tripId ? { tripId } : {}),
   })
-}
-
-/** Lists the available mode names — the layout names of the shortcut config, in order. */
-export function listModes(config: ShortcutConfig): string[] {
-  return config.layouts.map((l) => l.name)
 }

@@ -3,51 +3,16 @@ import { useLocation, useNavigate, Link } from 'react-router-dom'
 import {
   HomeIcon,
   Bars3Icon,
-  ChevronDownIcon,
 } from '@heroicons/react/24/outline'
-import { NAVIGATION } from '../../config/navigation'
 import { cn } from '../ui/cn'
-import { Input } from '../ui/Input'
-import { useShortcutConfig } from '../../services/configRepository'
-import {
-  useActiveMode,
-  activateMode,
-  defaultInstanceLabel,
-  listModes,
-} from '../../services/activeMode'
+import { useActiveMode } from '../../services/activeMode'
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({})
   const wrapperRef = useRef<HTMLDivElement>(null)
-
-  // ─── Active mode (MODE-03 / MODE-04) ──────────────────────────────────────
   const activeMode = useActiveMode()
-  const config = useShortcutConfig()
-  const modes = config ? listModes(config) : []
-  const [modeSubmenuOpen, setModeSubmenuOpen] = useState(false)
-  const [pendingMode, setPendingMode] = useState<string | null>(null)
-  const [pendingLabel, setPendingLabel] = useState('')
-
-  function resetModeMenu() {
-    setModeSubmenuOpen(false)
-    setPendingMode(null)
-    setPendingLabel('')
-  }
-
-  function selectPendingMode(mode: string) {
-    setPendingMode(mode)
-    setPendingLabel(defaultInstanceLabel(mode))
-  }
-
-  async function confirmPendingMode() {
-    if (pendingMode === null) return
-    await activateMode(pendingMode, pendingLabel)
-    resetModeMenu()
-    setOpen(false)
-  }
 
   // Close on Escape while menu is open
   useEffect(() => {
@@ -70,19 +35,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     document.addEventListener('mousedown', handleMouseDown)
     return () => document.removeEventListener('mousedown', handleMouseDown)
   }, [open])
-
-  // Reset the Active Mode submenu whenever the dropdown closes.
-  useEffect(() => {
-    if (!open) {
-      setModeSubmenuOpen(false)
-      setPendingMode(null)
-      setPendingLabel('')
-    }
-  }, [open])
-
-  function toggleDomain(domain: string) {
-    setExpanded((prev) => ({ ...prev, [domain]: !prev[domain] }))
-  }
 
   return (
     <div>
@@ -109,11 +61,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               )}
             </div>
 
-            {/* CENTER — active mode · label (MODE-04) */}
+            {/* CENTER — active trip name (shown only when mode === 'trip') */}
             <div className="flex-1 min-w-0 px-2 text-center">
-              {activeMode && (
+              {activeMode?.mode === 'trip' && (
                 <span className="block truncate text-sm font-medium text-[var(--color-foreground)]">
-                  {activeMode.mode} · {activeMode.label}
+                  {activeMode.label}
                 </span>
               )}
             </div>
@@ -143,20 +95,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 'px-6 py-3 flex flex-col gap-1',
               )}
             >
-              {/* Top-level links */}
               <Link
                 to="/"
                 onClick={() => setOpen(false)}
                 className="py-2 text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
               >
-                Dashboard
+                Home
               </Link>
               <Link
-                to="/entries"
+                to="/trips"
                 onClick={() => setOpen(false)}
                 className="py-2 text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
               >
-                Entries
+                Previous Trips
               </Link>
               <Link
                 to="/settings"
@@ -165,125 +116,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               >
                 Settings
               </Link>
-              <Link
-                to="/manage"
-                onClick={() => setOpen(false)}
-                className="py-2 text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
-              >
-                Manage Shortcuts
-              </Link>
-
-              {/* Active Mode switcher (MODE-03) */}
-              <div className="flex flex-col border-t border-[var(--color-border)] mt-1 pt-1">
-                <button
-                  type="button"
-                  aria-expanded={modeSubmenuOpen}
-                  onClick={() => setModeSubmenuOpen((v) => !v)}
-                  className="flex items-center justify-between py-2 text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
-                >
-                  <span>Active Mode</span>
-                  <ChevronDownIcon
-                    className={cn(
-                      'h-4 w-4 transition-transform',
-                      modeSubmenuOpen ? 'rotate-180' : '',
-                    )}
-                    aria-hidden="true"
-                  />
-                </button>
-
-                {modeSubmenuOpen && (
-                  <div className="pl-4 flex flex-col gap-0.5">
-                    {pendingMode === null ? (
-                      modes.map((mode) => (
-                        <button
-                          key={mode}
-                          type="button"
-                          onClick={() => selectPendingMode(mode)}
-                          className="py-1.5 text-left text-sm text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
-                        >
-                          {mode}
-                        </button>
-                      ))
-                    ) : (
-                      <div className="flex flex-col gap-2 py-1.5">
-                        <label
-                          htmlFor="active-mode-label"
-                          className="text-xs font-medium text-[var(--color-muted)]"
-                        >
-                          Instance label for {pendingMode}
-                        </label>
-                        <Input
-                          id="active-mode-label"
-                          value={pendingLabel}
-                          onChange={(e) => setPendingLabel(e.target.value)}
-                        />
-                        <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={() => { void confirmPendingMode() }}
-                            className="rounded-md px-3 py-1.5 text-sm font-semibold bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:opacity-90"
-                          >
-                            Confirm
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => { setPendingMode(null); setPendingLabel('') }}
-                            className="rounded-md px-3 py-1.5 text-sm font-semibold border border-[var(--color-border)] text-[var(--color-foreground)] hover:bg-[var(--color-muted)]"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Nav tree from NAVIGATION (single source of truth) */}
-              {NAVIGATION.map(({ domain, label, types }) => (
-                <div key={domain} className="flex flex-col">
-                  {/* Domain row: label link + expander button */}
-                  <div className="flex items-center justify-between">
-                    <Link
-                      to={`/d/${domain}`}
-                      onClick={() => setOpen(false)}
-                      className="py-2 text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
-                    >
-                      {label}
-                    </Link>
-                    <button
-                      aria-label={`Expand ${label}`}
-                      aria-expanded={!!expanded[domain]}
-                      onClick={() => toggleDomain(domain)}
-                      className="p-1 text-[var(--color-muted)]"
-                    >
-                      <ChevronDownIcon
-                        className={cn(
-                          'h-4 w-4 transition-transform',
-                          expanded[domain] ? 'rotate-180' : '',
-                        )}
-                        aria-hidden="true"
-                      />
-                    </button>
-                  </div>
-
-                  {/* Entry type links (visible when domain is expanded) */}
-                  {expanded[domain] && (
-                    <div className="pl-4 flex flex-col gap-0.5">
-                      {types.map(({ type, label: typeLabel }) => (
-                        <Link
-                          key={type}
-                          to={`/d/${domain}/${type}`}
-                          onClick={() => setOpen(false)}
-                          className="py-1.5 text-sm text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
-                        >
-                          {typeLabel}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
             </nav>
           )}
         </div>

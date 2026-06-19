@@ -6,9 +6,7 @@ import {
   useActiveMode,
   defaultInstanceLabel,
   activateMode,
-  listModes,
 } from './activeMode'
-import type { ShortcutConfig } from '../config/shortcutConfig'
 
 // fake-indexeddb/auto is already hoisted in src/test-setup.ts — do NOT re-import it
 
@@ -16,18 +14,6 @@ beforeEach(async () => {
   await db.delete()
   await db.open()
 })
-
-// ─── Test fixtures ────────────────────────────────────────────────────────────
-
-function makeConfig(): ShortcutConfig {
-  return {
-    version: 1,
-    layouts: [
-      { name: 'DayToDay', icon: 'HomeIcon', shortcuts: [] },
-      { name: 'Travel', icon: 'GlobeAltIcon', shortcuts: [] },
-    ],
-  }
-}
 
 // ─── activeModeRepository: get and put ────────────────────────────────────────
 
@@ -126,18 +112,6 @@ describe('activateMode', () => {
     await activateMode('Travel', 'Oregon')
     const stored = await activeModeRepository.get()
     expect('tripId' in (stored ?? {})).toBe(false)
-  })
-})
-
-// ─── listModes ────────────────────────────────────────────────────────────────
-
-describe('listModes', () => {
-  it('returns the layout names in order', () => {
-    expect(listModes(makeConfig())).toEqual(['DayToDay', 'Travel'])
-  })
-
-  it('returns an empty array when there are no layouts', () => {
-    expect(listModes({ version: 1, layouts: [] })).toEqual([])
   })
 })
 
