@@ -1,6 +1,10 @@
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useTripEntries } from '../services/tripService'
+import { entriesRepository } from '../services/entriesRepository'
 import { ExpenseReport } from '../components/ExpenseReport'
+import { EditEntryModal } from '../components/EditEntryModal'
+import { Button } from '../components/ui/Button'
 import { formatUSD } from '../config/money'
 import type { LifeLogEntry } from '../services/db'
 
@@ -10,6 +14,9 @@ export function TripDetailPage() {
   // useTripEntries has tripId in dep array — query re-runs when tripId changes.
   // UUID-based isolation: two trips with the same name resolve independently (Pitfall 5).
   const entries = useTripEntries(tripId ?? '')
+
+  // Track which entry is being edited; null = modal closed
+  const [editingEntry, setEditingEntry] = useState<LifeLogEntry | null>(null)
 
   if (entries === undefined) {
     // Dexie still opening — neutral centered loading skeleton (mirrors TripHomePage)
@@ -26,6 +33,13 @@ export function TripDetailPage() {
     const bTime = b.occurredAt ?? b.recordedAt
     return aTime - bTime
   })
+
+  // Confirm-gated delete — useTripEntries is reactive so the list/report update automatically
+  async function handleDelete(id: string) {
+    if (!confirm('Delete this entry? This cannot be undone.')) return
+    await entriesRepository.delete(id)
+    // useLiveQuery in useTripEntries re-renders automatically; no manual refresh needed
+  }
 
   return (
     <div className="min-h-screen flex flex-col px-6 py-8 bg-[var(--color-background)] text-[var(--color-foreground)]">
@@ -48,25 +62,39 @@ export function TripDetailPage() {
           ) : (
             <ul className="flex flex-col gap-2">
               {timeline.map((e) => (
-                <TimelineRow key={e.id} entry={e} />
+                <TimelineRow
+                  key={e.id}
+                  entry={e}
+                  onEdit={() => setEditingEntry(e)}
+                  onDelete={() => void handleDelete(e.id)}
+                />
               ))}
             </ul>
           )}
         </section>
 
       </div>
+
+      {/* Edit modal — mounted when an entry is selected; closes itself after save/delete */}
+      {editingEntry !== null && (
+        <EditEntryModal
+          entry={editingEntry}
+          onClose={() => setEditingEntry(null)}
+        />
+      )}
     </div>
   )
 }
 
 // ─── Private sub-component ────────────────────────────────────────────────────
-// Read-only timeline row — 24-03 will attach Edit/Delete buttons here.
 
 interface TimelineRowProps {
   entry: LifeLogEntry
+  onEdit: () => void
+  onDelete: () => void
 }
 
-function TimelineRow({ entry: e }: TimelineRowProps) {
+function TimelineRow({ entry: e, onEdit, onDelete }: TimelineRowProps) {
   const label =
     e.type === 'expense'
       ? (typeof e.metadata.category === 'string' ? e.metadata.category : 'Expense')
@@ -80,9 +108,19 @@ function TimelineRow({ entry: e }: TimelineRowProps) {
         : ''
 
   return (
-    <li className="flex justify-between text-sm py-2 border-b border-[var(--color-border)]">
-      <span>{label}</span>
-      {detail && <span className="font-medium">{detail}</span>}
+    <li className="flex items-center justify-between text-sm py-2 border-b border-[var(--color-border)]">
+      <div className="flex flex-col flex-1 min-w-0">
+        <span className="truncate">{label}</span>
+        {detail && <span className="font-medium text-xs">{detail}</span>}
+      </div>
+      <div className="flex gap-1 ml-2 shrink-0">
+        <Button size="sm" variant="secondary" type="button" onClick={onEdit}>
+          Edit
+        </Button>
+        <Button size="sm" variant="secondary" type="button" onClick={onDelete}>
+          Delete
+        </Button>
+      </div>
     </li>
   )
 }

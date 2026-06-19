@@ -226,7 +226,8 @@ describe('TripDetailPage', () => {
       })
     })
     renderTripDetail(trip.id)
-    expect(await screen.findByText('$5.00')).toBeInTheDocument()
+    // $5.00 appears in the ExpenseReport subtotal, grand total, and timeline row
+    expect(await screen.findAllByText('$5.00')).not.toHaveLength(0)
 
     vi.spyOn(window, 'confirm').mockReturnValue(true)
     // Timeline rows each have a Delete button — click the one on the row
