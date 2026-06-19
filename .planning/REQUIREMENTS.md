@@ -31,18 +31,18 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 
 ### Trip Context (TRIP)
 
-- [ ] **TRIP-01**: User can create a trip by name; it is written as a `type='trip'` entry and becomes the active trip
+- [x] **TRIP-01**: User can create a trip by name; it is written as a `type='trip'` entry and becomes the active trip
 - [x] **TRIP-02**: When no active trip exists, the app shows a "Create a Trip" empty/first-run screen (name input + Save)
-- [ ] **TRIP-03**: On save, the new trip is activated and the user is navigated to that trip's Home screen
+- [x] **TRIP-03**: On save, the new trip is activated and the user is navigated to that trip's Home screen
 - [x] **TRIP-04**: The active trip persists across reloads (reuses the `activeMode` settings persistence)
 
 ### Trip Home (HOME)
 
-- [ ] **HOME-01**: Home screen shows the active trip name prominently (e.g. "Trip: Oregon Road Trip")
-- [ ] **HOME-02**: Home shows primary `Expense` and `Activity` action buttons
+- [x] **HOME-01**: Home screen shows the active trip name prominently (e.g. "Trip: Oregon Road Trip")
+- [x] **HOME-02**: Home shows primary `Expense` and `Activity` action buttons
 - [x] **HOME-03**: Home shows the active trip's running expense total (currency-formatted)
-- [ ] **HOME-04**: Home shows recent entries for the active trip (most recent first)
-- [ ] **HOME-05**: Top-level navigation exists for Home / Previous Trips / Settings (Export)
+- [x] **HOME-04**: Home shows recent entries for the active trip (most recent first)
+- [x] **HOME-05**: Top-level navigation exists for Home / Previous Trips / Settings (Export)
 
 ### Expense Capture (EXP)
 
@@ -58,7 +58,7 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 - [ ] **ACT-01**: Tapping `Activity` navigates to an Activity Type screen with buttons: Hike, Show, Restaurant, Cafe, Other
 - [ ] **ACT-02**: Choosing Hike/Show/Restaurant/Cafe opens a form with Name (required), Location (optional), Rating (optional), Notes (optional)
 - [ ] **ACT-03**: Choosing Other opens the same form plus a required free-text Type field
-- [ ] **ACT-04**: Rating is entered with a clickable, accessible 1–5 star control (tap to set/clear)
+- [x] **ACT-04**: Rating is entered with a clickable, accessible 1–5 star control (tap to set/clear)
 - [ ] **ACT-05**: Activity date defaults to today (local) and the trip defaults to the active trip
 - [ ] **ACT-06**: Saving creates an `activity` entry stamped with `activityType` and the active `tripId`
 
@@ -126,13 +126,13 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 | UI-03 | Phase 21 | Complete |
 | UI-04 | Phase 21 | Complete |
 | UI-05 | Phase 21 | Complete |
-| TRIP-01 | Phase 22 | Pending |
-| TRIP-03 | Phase 22 | Pending |
-| HOME-01 | Phase 22 | Pending |
-| HOME-02 | Phase 22 | Pending |
+| TRIP-01 | Phase 22 | Complete |
+| TRIP-03 | Phase 22 | Complete |
+| HOME-01 | Phase 22 | Complete |
+| HOME-02 | Phase 22 | Complete |
 | HOME-03 | Phase 22 | Complete |
-| HOME-04 | Phase 22 | Pending |
-| HOME-05 | Phase 22 | Pending |
+| HOME-04 | Phase 22 | Complete |
+| HOME-05 | Phase 22 | Complete |
 | EXP-01 | Phase 22 | Complete |
 | EXP-02 | Phase 22 | Complete |
 | EXP-03 | Phase 22 | Complete |
@@ -142,7 +142,7 @@ expense/activity entries are stamped with `metadata.tripId` via the existing `dr
 | ACT-01 | Phase 23 | Pending |
 | ACT-02 | Phase 23 | Pending |
 | ACT-03 | Phase 23 | Pending |
-| ACT-04 | Phase 23 | Pending |
+| ACT-04 | Phase 23 | Complete |
 | ACT-05 | Phase 23 | Pending |
 | ACT-06 | Phase 23 | Pending |
 | PREV-01 | Phase 24 | Pending |
