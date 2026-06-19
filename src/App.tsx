@@ -6,6 +6,7 @@ import { TripHomePage }    from './pages/TripHomePage'
 import { CreateTripPage }  from './pages/CreateTripPage'
 import { ActivityTypePage } from './pages/ActivityTypePage'
 import { ActivityFormPage } from './pages/ActivityFormPage'
+import { PreviousTripsPage } from './pages/PreviousTripsPage'
 
 function App() {
   return (
@@ -23,8 +24,8 @@ function App() {
         <Route path="/activity"        element={<ActivityTypePage />} />
         <Route path="/activity/:type"  element={<ActivityFormPage />} />
 
-        {/* Phase 24 placeholders */}
-        <Route path="/trips"           element={<PlaceholderPage title="Previous Trips" />} />
+        {/* Phase 24 — Plan 01: PreviousTripsPage wired; /trips/:tripId placeholder remains for Plan 02 */}
+        <Route path="/trips"           element={<PreviousTripsPage />} />
         <Route path="/trips/:tripId"   element={<PlaceholderPage title="Trip Detail" />} />
 
         {/* Catch-all: unknown paths show a graceful not-found page */}
