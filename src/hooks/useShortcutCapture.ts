@@ -30,6 +30,7 @@ import {
   withDefaultOccurredAt,
 } from '../services/captureService'
 import type { HoleMap } from '../services/captureService'
+import { useActiveMode } from '../services/activeMode'
 import { entriesRepository } from '../services/entriesRepository'
 import type { EntryDomain, EntryType } from '../services/db'
 import type { Shortcut } from '../config/shortcutConfig'
@@ -51,6 +52,8 @@ export function useShortcutCapture() {
   const [toastEntryId, setToastEntryId] = useState<string | null>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [sheetState, setSheetState] = useState<SheetState | null>(null)
+  // STAMP-01: active mode (if any) stamped onto entries created on the one-tap paths.
+  const activeMode = useActiveMode()
 
   // ── Toast helpers ──────────────────────────────────────────────────────────
 
@@ -121,7 +124,7 @@ export function useShortcutCapture() {
           buildReviewDraft(ENTRY_FIELDS[type], clean),
           type,
         )
-        const entry = draftToEntry(draft, type, domain)
+        const entry = draftToEntry(draft, type, domain, activeMode)
         try {
           const saved = await entriesRepository.create(entry)
           showToast(saved.id)
@@ -135,7 +138,7 @@ export function useShortcutCapture() {
       // Fill-the-hole sheet path
       setSheetState({ type, domain, baseValues: clean, holeMap })
     },
-    [navigate, showToast],
+    [navigate, showToast, activeMode],
   )
 
   // ── handleSheetSave ───────────────────────────────────────────────────────
@@ -151,7 +154,7 @@ export function useShortcutCapture() {
         buildReviewDraft(ENTRY_FIELDS[type], merged),
         type,
       )
-      const entry = draftToEntry(draft, type, domain)
+      const entry = draftToEntry(draft, type, domain, activeMode)
       try {
         const saved = await entriesRepository.create(entry)
         setSheetState(null)
@@ -163,7 +166,7 @@ export function useShortcutCapture() {
         // as out-of-scope for this polish pass; sheet stays open for retry.
       }
     },
-    [sheetState, showToast],
+    [sheetState, showToast, activeMode],
   )
 
   // ── handleSheetCancel ─────────────────────────────────────────────────────

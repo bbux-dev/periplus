@@ -8,6 +8,7 @@ import { Button } from '../components/ui/Button'
 import { entriesRepository } from '../services/entriesRepository'
 import { isSafeUrl } from '../services/urlUtils'
 import { draftToEntry, todayLocalDate, typeHasDateField } from '../services/captureService'
+import { useActiveMode } from '../services/activeMode'
 import type { ReviewDraft } from '../services/extractMetadataFromUrl'
 import type { EntryDomain, EntryType } from '../services/db'
 
@@ -54,6 +55,10 @@ export function ReviewPage() {
     initialDraft?.amount != null ? String(initialDraft.amount) : '',
   )
   const [tags, setTags] = useState(initialDraft?.tags?.join(', ') ?? '')
+
+  // STAMP-01: active mode (if any) is stamped onto the entry at save time.
+  // useLiveQuery hook — called unconditionally before the guard returns below.
+  const activeMode = useActiveMode()
 
   // Guard: unknown domain — IN-02: full layout + Back button (mirrors ManualEntryPage)
   if (!config) {
@@ -123,7 +128,7 @@ export function ReviewPage() {
       metadata:    initialDraft.metadata ?? {},
     }
     try {
-      await entriesRepository.create(draftToEntry(formDraft, type as EntryType, domain as EntryDomain))
+      await entriesRepository.create(draftToEntry(formDraft, type as EntryType, domain as EntryDomain, activeMode))
       navigate(`/d/${domain}`)
     } catch (err) {
       setSaveError('Save failed. Please try again.')

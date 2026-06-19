@@ -6,10 +6,11 @@
  * Fake timers cover the 4-second auto-dismiss path.
  */
 
-import { renderHook, act } from '@testing-library/react'
+import { renderHook, act, waitFor } from '@testing-library/react'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { db } from '../services/db'
 import { entriesRepository } from '../services/entriesRepository'
+import { activeModeRepository } from '../services/activeMode'
 import { useShortcutCapture } from './useShortcutCapture'
 import type { Shortcut } from '../config/shortcutConfig'
 
@@ -248,6 +249,55 @@ describe('useShortcutCapture', () => {
       const navState = mockNavigate.mock.calls[0][1] as { state: { draft: { occurredAt?: number } } }
       expect(navState.state.draft.occurredAt).toBeUndefined()
       expect(await entriesRepository.list()).toHaveLength(0)
+    })
+  })
+
+  // ── STAMP-01: active-mode stamping on one-tap paths ───────────────────────
+
+  describe('STAMP-01 active-mode stamping', () => {
+    it('direct-save (confirm:false zero-hole) stamps metadata.mode/modeLabel when a mode is active', async () => {
+      await activeModeRepository.put({ mode: 'Travel', label: 'Oregon' })
+      const { result } = renderHook(() => useShortcutCapture())
+      // Wait for the useActiveMode useLiveQuery to resolve: handleTap is a useCallback
+      // with activeMode in its deps, so its reference changes once the mode loads.
+      const initialTap = result.current.handleTap
+      await waitFor(() => expect(result.current.handleTap).not.toBe(initialTap))
+      await act(async () => {
+        await result.current.handleTap(coffeeShortcut)
+      })
+      const entries = await entriesRepository.list()
+      expect(entries).toHaveLength(1)
+      expect(entries[0].metadata.mode).toBe('Travel')
+      expect(entries[0].metadata.modeLabel).toBe('Oregon')
+    })
+
+    it('handleSheetSave stamps metadata.mode/modeLabel when a mode is active', async () => {
+      await activeModeRepository.put({ mode: 'Travel', label: 'Oregon' })
+      const { result } = renderHook(() => useShortcutCapture())
+      // Wait for the useActiveMode useLiveQuery to resolve (handleSheetSave dep updates).
+      const initialSave = result.current.handleSheetSave
+      await waitFor(() => expect(result.current.handleSheetSave).not.toBe(initialSave))
+      await act(async () => {
+        await result.current.handleTap(groceriesShortcut)
+      })
+      await act(async () => {
+        await result.current.handleSheetSave({ amount: '25' })
+      })
+      const entries = await entriesRepository.list()
+      expect(entries).toHaveLength(1)
+      expect(entries[0].metadata.mode).toBe('Travel')
+      expect(entries[0].metadata.modeLabel).toBe('Oregon')
+    })
+
+    it('does NOT stamp mode/modeLabel when no mode is active (direct save)', async () => {
+      const { result } = renderHook(() => useShortcutCapture())
+      await act(async () => {
+        await result.current.handleTap(coffeeShortcut)
+      })
+      const entries = await entriesRepository.list()
+      expect(entries).toHaveLength(1)
+      expect('mode' in entries[0].metadata).toBe(false)
+      expect('modeLabel' in entries[0].metadata).toBe(false)
     })
   })
 

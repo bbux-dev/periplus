@@ -4,6 +4,7 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { db } from '../services/db'
 import { entriesRepository } from '../services/entriesRepository'
+import { activeModeRepository } from '../services/activeMode'
 import { ReviewPage } from './ReviewPage'
 import type { ExtractedDraft } from '../services/extractMetadataFromUrl'
 
@@ -464,6 +465,53 @@ describe('ReviewPage — DATE-01: date field defaults to today', () => {
     const entries = await entriesRepository.list()
     expect(entries).toHaveLength(1)
     expect('occurredAt' in entries[0]).toBe(false)
+  })
+})
+
+// ─── STAMP-01: ReviewPage save stamps the active mode ─────────────────────────
+
+describe('ReviewPage — STAMP-01: save stamps active mode', () => {
+  it('stamps metadata.mode/modeLabel on the saved entry when a mode is active', async () => {
+    const user = userEvent.setup()
+    await activeModeRepository.put({ mode: 'Travel', label: 'Oregon' })
+    const draft: ExtractedDraft = {
+      sourceUrl: 'https://example.com',
+      title: 'Trip Expense',
+      metadata: { category: 'food' },
+    }
+    renderWithDraft('expenditures', 'expense', draft)
+
+    await screen.findByRole('button', { name: 'Save' })
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    await screen.findByTestId('domain-probe')
+
+    const entries = await entriesRepository.list()
+    expect(entries).toHaveLength(1)
+    expect(entries[0].metadata.mode).toBe('Travel')
+    expect(entries[0].metadata.modeLabel).toBe('Oregon')
+    // Prior draft metadata is preserved
+    expect(entries[0].metadata.category).toBe('food')
+  })
+
+  it('does NOT stamp mode/modeLabel when no mode is active', async () => {
+    const user = userEvent.setup()
+    const draft: ExtractedDraft = {
+      sourceUrl: 'https://example.com',
+      title: 'Trip Expense',
+      metadata: { category: 'food' },
+    }
+    renderWithDraft('expenditures', 'expense', draft)
+
+    await screen.findByRole('button', { name: 'Save' })
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    await screen.findByTestId('domain-probe')
+
+    const entries = await entriesRepository.list()
+    expect(entries).toHaveLength(1)
+    expect('mode' in entries[0].metadata).toBe(false)
+    expect('modeLabel' in entries[0].metadata).toBe(false)
   })
 })
 
