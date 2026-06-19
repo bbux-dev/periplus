@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v0.4.0
-milestone_name: Active Mode De-Clunk + Editable Entries
-status: Awaiting next milestone
-stopped_at: Completed 15-authoring-tool/15-01-PLAN.md
-last_updated: "2026-06-19T03:17:29.017Z"
-last_activity: 2026-06-19 — Milestone v0.4.0 completed and archived
+milestone: v0.5.0
+milestone_name: Trips MVP UI Refactor
+status: planning
+last_updated: "2026-06-19T13:16:36.376Z"
+last_activity: 2026-06-19
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 4
-  completed_plans: 4
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -25,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 
 ## Current Position
 
-Phase: Milestone v0.4.0 complete
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-06-19 — Milestone v0.4.0 completed and archived
+Status: Defining requirements
+Last activity: 2026-06-19 — Milestone v0.5.0 started
 
 ## Deferred Items
 

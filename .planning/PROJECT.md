@@ -32,10 +32,44 @@ Review screen with type-token + history-backed value suggestions — no new save
 silent mis-saves. Parser was ported directly from the VALIDATED spike `001-dsl-parser`.
 Full details in `.planning/MILESTONES.md`.
 
-## Current Milestone: open (next milestone not yet scoped)
+## Current Milestone: v0.5.0 Trips MVP UI Refactor (in progress)
 
-Run `/gsd:new-milestone` to scope the next cycle. Candidate directions are in the Deferred list
-below (filter/group entries by mode instance is the natural follow-on now that STAMP-01 ships).
+**Goal:** Aggressively rewrite the UI to expose ONLY a minimal trip logger — create/activate a trip,
+log expenses and activities tied to the active trip, view prior trips, and see per-trip expense
+reports grouped by category — while preserving the headless engine (typed entries, Dexie storage,
+active-mode/context stamping, `draftToEntry`).
+
+**Framing:** This is a UI **rewrite**, not a feature hide. All 13 existing screens/routes
+(Dashboard, Domain, CaptureUrl, Review, ManualEntry, EntryList/Detail/Edit, QuickCapture, Settings,
+ManageShortcuts, ShortcutForm, Placeholder) are dropped. Low-level building blocks are **reused** to
+realize the new vision: `components/ui/*` (Button, FormField, Input, cn), `AppShell` (reworked
+shell/nav), `HoleSheet` (keypad amount pattern), `SavedToast`, and the full engine —
+`services/activeMode` (trip = active context), `entriesRepository` (CRUD + reactive +
+distinct-values), `captureService`/`draftToEntry` (single stamped save path), `db`, `exportEntries`.
+
+**Target features:**
+- **Trip as active context** — a Trip reuses the `activeMode` service (trip name = active-mode
+  instance label); create a trip → it becomes active → entries stamp with the trip identity.
+- **Empty / first-run** — no active trip → "Create a Trip" screen (name + Save → activate → home).
+- **Trip Home** — active trip shown prominently; primary `Expense` + `Activity` buttons; recent
+  entries for the active trip; trip expense total; top-level nav (Home / Previous Trips / Settings).
+- **Expense flow** — small modal: Amount (required), Category (required; Hotel, Rental Car, Flight,
+  Taxi/Uber, Food, Gas, Other), Vendor (optional), Notes (optional); date defaults today, trip
+  defaults active; fast path Expense → amount → category → save.
+- **Activity flow** — Activity type page (Hike / Show / Restaurant / Cafe / Other) → form with Name
+  (required), Location (optional), Rating (clickable 1–5 stars, optional), Notes (optional); Other
+  adds a required free-text Type field. Date defaults today, trip defaults active.
+- **Previous Trips + Trip Detail** — list all trips newest first (name, date range, total expenses,
+  activity count); drill in → expense report grouped by category with subtotals + total, timeline of
+  expenses + activities, edit/delete entries.
+
+**Key context:** Reuse over rebuild — the engine is preserved; only the UI layer is rewritten. A
+"trip" is the existing **active mode** concept specialized to one mode (trip) with the trip name as
+the free-text instance label, so expense/activity entries are stamped via the existing
+`draftToEntry` path (`metadata.mode = "trip"`, `metadata.modeLabel = <trip name>`). Logical entry
+types: `trip`, `expense`, `activity`. No generic Groups system; no shortcut/layout customization UI;
+no media/books/podcasts/general logging. Mobile-first, minimal clicks/typing — "fast trip
+cash-register/logbook." Designs/north-star: `seeds/fewest-buttons-slickest.md`.
 
 ## Previous Milestone: v0.4.0 "Active Mode" De-Clunk + Editable Entries — ✅ SHIPPED 2026-06-19
 
@@ -155,9 +189,15 @@ out of the v0.2.0 "always Review" invariant for trusted shortcuts, paired with u
 
 ### Active
 
-<!-- v0.4.0 shipped; next milestone scope is open — run /gsd:new-milestone. -->
+<!-- v0.5.0 Trips MVP UI Refactor — REQ-IDs defined in REQUIREMENTS.md. -->
 
-(None — v0.4.0 shipped; next milestone not yet scoped)
+- [ ] Create a trip and make it the active trip context (TRIP-*)
+- [ ] Empty/first-run "Create a Trip" screen when no active trip (TRIP-*)
+- [ ] Trip Home: active trip + Expense/Activity buttons + recent entries + expense total (HOME-*)
+- [ ] Log an expense (amount, category, vendor, notes) tied to the active trip (EXP-*)
+- [ ] Log an activity (type → name/location/rating/notes) tied to the active trip (ACT-*)
+- [ ] Previous Trips list + Trip Detail with category-grouped expense report (PREV-*, RPT-*)
+- [ ] Rewrite UI to trip-only; drop non-trip screens, reuse engine + ui components (UI-*)
 
 ### Deferred (candidate directions for future milestones)
 
@@ -242,4 +282,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-19 — after completing milestone v0.4.0 ("Active Mode" De-Clunk + Editable Entries shipped)*
+*Last updated: 2026-06-19 — started milestone v0.5.0 (Trips MVP UI Refactor — UI rewrite to trip-only logger over the preserved engine)*
