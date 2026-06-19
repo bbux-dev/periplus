@@ -12,8 +12,25 @@
 
 import { ENTRY_FIELDS, POSITIONAL_SCHEMA } from '../config/entryFields'
 import type { EntryDomain, EntryType, LifeLogEntry } from './db'
-import type { ReviewDraft } from './extractMetadataFromUrl'
 import type { ActiveMode } from './activeMode'
+
+// ─── ReviewDraft ──────────────────────────────────────────────────────────────
+
+/**
+ * Shared draft shape consumed by buildReviewDraft, draftToEntry, and
+ * projectEntryToFormValues. Moved here from extractMetadataFromUrl.ts (Plan 21-01)
+ * so it survives the deletion of extractMetadataFromUrl.ts in Plan 21-04.
+ */
+export interface ReviewDraft {
+  sourceUrl?: string      // URL-captured: always set; manual entries: absent
+  title?: string
+  location?: string
+  description?: string    // pre-populated from manual form's notes/description field
+  occurredAt?: number     // epoch ms; manual form date input → Date.parse()
+  amount?: number         // expense entries; MUST map to LifeLogEntry.amount (core)
+  tags?: string[]         // manual form tags field (comma-split)
+  metadata: Record<string, unknown>  // type-specific extras (currency, creator, rating, …)
+}
 
 // ─── CAP-04 Named-Hole Token ──────────────────────────────────────────────────
 

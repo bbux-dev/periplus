@@ -1,6 +1,6 @@
 // src/config/entryFields.ts
 import type { EntryType, LifeLogEntry } from '../services/db'
-import type { ReviewDraft } from '../services/extractMetadataFromUrl'
+import type { ReviewDraft } from '../services/captureService'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

@@ -12,7 +12,7 @@ import {
   withDefaultOccurredAt,
 } from './captureService'
 import type { EntryType } from './db'
-import type { ReviewDraft } from './extractMetadataFromUrl'
+import type { ReviewDraft } from './captureService'
 
 // ─── Factory helper ───────────────────────────────────────────────────────────
 
