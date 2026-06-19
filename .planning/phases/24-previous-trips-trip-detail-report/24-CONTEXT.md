@@ -57,7 +57,7 @@ Delivers (PREV-01..04, RPT-01..06):
   - `ENTRY_FIELDS[entry.type]` — the field descriptors for the entry's type.
   - `formValuesFromEntry(fields, entry)` — seeds the form's `Record<fieldKey,string>` from the entry
     (local-date `occurredAt` round-trip already handled).
-  - `buildEntryUpdate(fields, formValues, entry)` — produces the `Partial<Omit<LifeLogEntry,'id'>>`
+  - `buildEntryUpdate(fields, entry, formValues, extraMetadata)` — produces the `Partial<Omit<LifeLogEntry,'id'>>`
     `changes` object. This is the AUTHORITATIVE merge-preserving updater used by the old edit path:
     metadata is MERGED (unknown keys + `mode`/`modeLabel`/`tripId` survive untouched unless edited),
     and `recordedAt`/`syncedAt`/`domain`/`type` are NEVER written. Pass its result straight to
