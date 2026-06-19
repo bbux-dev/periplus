@@ -69,6 +69,64 @@ export function tripActivityCount(entries: LifeLogEntry[]): number {
   return entries.filter((e) => e.type === 'activity').length
 }
 
+// ─── Single-pass trip summaries (PREV-01..04) ────────────────────────────────
+
+/**
+ * Per-trip summary derived from a single flat array of all entries.
+ * Callers pass `db.entries.toArray()` output; this helper performs ZERO db calls.
+ */
+export interface TripSummary {
+  trip: LifeLogEntry                            // the type='trip' record
+  entries: LifeLogEntry[]                       // non-trip child entries for this trip
+  total: number                                 // raw float from tripExpenseTotal
+  dateRange: { start: number; end: number } | null
+  activityCount: number
+}
+
+/**
+ * Derives per-trip summaries from a single flat array of all entries.
+ *
+ * PURE — takes NO Dexie handle, makes ZERO db calls.
+ * Callers own the single `db.entries.toArray()` pass (see PITFALLS Pitfall 6).
+ *
+ * Algorithm:
+ *  1. Partition into trip records and child entries.
+ *  2. Group child entries by metadata.tripId in ONE loop (Map accumulator).
+ *     Entries whose metadata.tripId is not a string are silently skipped.
+ *  3. For each trip record compute total/dateRange/activityCount from its slice.
+ *  4. Sort newest-first by trip.recordedAt descending.
+ */
+export function summarizeTrips(allEntries: LifeLogEntry[]): TripSummary[] {
+  // Step 1: separate trip records from child entries
+  const tripRecords = allEntries.filter((e) => e.type === 'trip')
+  const childEntries = allEntries.filter((e) => e.type !== 'trip')
+
+  // Step 2: group child entries by metadata.tripId — ONE pass, no per-trip filter
+  const byTripId = new Map<string, LifeLogEntry[]>()
+  for (const e of childEntries) {
+    const tid = typeof e.metadata.tripId === 'string' ? e.metadata.tripId : null
+    if (!tid) continue
+    const bucket = byTripId.get(tid)
+    if (bucket) bucket.push(e)
+    else byTripId.set(tid, [e])
+  }
+
+  // Step 3: compute per-trip stats using existing pure helpers
+  const summaries: TripSummary[] = tripRecords.map((trip) => {
+    const entries = byTripId.get(trip.id) ?? []
+    return {
+      trip,
+      entries,
+      total: tripExpenseTotal(entries),
+      dateRange: tripDateRange(entries),
+      activityCount: tripActivityCount(entries),
+    }
+  })
+
+  // Step 4: sort newest-first by the trip record's recordedAt
+  return summaries.sort((a, b) => b.trip.recordedAt - a.trip.recordedAt)
+}
+
 // ─── Async repository (ENG-04) ────────────────────────────────────────────────
 
 /**

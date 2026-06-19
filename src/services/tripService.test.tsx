@@ -13,7 +13,9 @@ import {
   tripExpensesByCategory,
   tripDateRange,
   tripActivityCount,
+  summarizeTrips,
 } from './tripService'
+import { formatUSD } from '../config/money'
 
 // fake-indexeddb/auto is already hoisted in src/test-setup.ts — do NOT re-import it
 
@@ -167,6 +169,63 @@ describe('tripActivityCount', () => {
       { ...makeEntryData({ type: 'trip' }), id: '2' },
     ]
     expect(tripActivityCount(entries)).toBe(0)
+  })
+})
+
+describe('summarizeTrips', () => {
+  it('single-pass: two trips, computes per-trip stats, empty-trip has zero/null', () => {
+    const trip1: LifeLogEntry = { ...makeEntryData({ type: 'trip', recordedAt: 2000 }), id: 'trip-1' }
+    const trip2: LifeLogEntry = { ...makeEntryData({ type: 'trip', recordedAt: 1000 }), id: 'trip-2' }
+    const expense: LifeLogEntry = {
+      ...makeEntryData({ type: 'expense', amount: 42, metadata: { tripId: 'trip-1' } }),
+      id: 'e-1',
+    }
+    const activity: LifeLogEntry = {
+      ...makeEntryData({ type: 'activity', metadata: { tripId: 'trip-1' } }),
+      id: 'a-1',
+    }
+    const allEntries = [trip1, trip2, expense, activity]
+    const summaries = summarizeTrips(allEntries)
+
+    // newest-first
+    expect(summaries[0].trip.id).toBe('trip-1')
+    expect(summaries[1].trip.id).toBe('trip-2')
+
+    // trip-1 stats
+    expect(summaries[0].total).toBe(42)
+    expect(summaries[0].activityCount).toBe(1)
+
+    // trip-2 is empty
+    expect(summaries[1].total).toBe(0)
+    expect(summaries[1].dateRange).toBeNull()
+    expect(summaries[1].activityCount).toBe(0)
+  })
+
+  it('does NOT call listTripEntries (pure in-memory grouping — signature enforces no db handle)', () => {
+    // summarizeTrips takes LifeLogEntry[] and cannot call listTripEntries (no Dexie handle).
+    // If the signature is correct, the contract is enforced. Verify the empty-array case.
+    const result = summarizeTrips([])
+    expect(result).toEqual([])
+  })
+
+  it('float-safe: grand total via formatUSD equals $15.30 for amounts 10.1 + 5.2', () => {
+    const tripRec: LifeLogEntry = { ...makeEntryData({ type: 'trip' }), id: 'trip-1' }
+    const e1: LifeLogEntry = { ...makeEntryData({ amount: 10.1, metadata: { tripId: 'trip-1' } }), id: 'e1' }
+    const e2: LifeLogEntry = { ...makeEntryData({ amount: 5.2, metadata: { tripId: 'trip-1' } }), id: 'e2' }
+    const [s] = summarizeTrips([tripRec, e1, e2])
+    // Raw float; render via formatUSD which guards via Math.round(n * 100) / 100
+    expect(formatUSD(s.total)).toBe('$15.30')
+  })
+
+  it('entries with non-string metadata.tripId are ignored (no crash, no wrong grouping)', () => {
+    const trip1: LifeLogEntry = { ...makeEntryData({ type: 'trip' }), id: 'trip-1' }
+    const orphan: LifeLogEntry = {
+      ...makeEntryData({ type: 'expense', amount: 99, metadata: { tripId: 42 } }),
+      id: 'orphan',
+    }
+    const [s] = summarizeTrips([trip1, orphan])
+    expect(s.total).toBe(0) // orphan's tripId=42 is not a string → ignored
+    expect(s.entries).toHaveLength(0)
   })
 })
 
