@@ -471,6 +471,54 @@ describe('draftToEntry — active-mode stamping (STAMP-01)', () => {
   })
 })
 
+// ─── STAMP-02: tripId stamping (ENG-03) ──────────────────────────────────────
+
+describe('draftToEntry — tripId stamping (STAMP-02 / ENG-03)', () => {
+  it('stamps metadata.tripId when activeMode.tripId is set', () => {
+    const draft = makeReviewDraft({ title: 'Coffee' })
+    const entry = draftToEntry(draft, 'expense', 'trips', {
+      mode: 'trip',
+      label: 'Paris',
+      tripId: 'uuid-x',
+    })
+    expect(entry.metadata.tripId).toBe('uuid-x')
+    expect(entry.metadata.mode).toBe('trip')
+    expect(entry.metadata.modeLabel).toBe('Paris')
+  })
+
+  it('does NOT stamp tripId when activeMode has no tripId', () => {
+    const draft = makeReviewDraft({ title: 'Coffee' })
+    const entry = draftToEntry(draft, 'expense', 'expenditures', {
+      mode: 'Travel',
+      label: 'Oregon',
+    })
+    expect('tripId' in entry.metadata).toBe(false)
+    expect(entry.metadata.mode).toBe('Travel')
+  })
+
+  it('does NOT stamp tripId when activeMode is undefined', () => {
+    const draft = makeReviewDraft({ title: 'Coffee' })
+    const entry = draftToEntry(draft, 'expense', 'expenditures', undefined)
+    expect('tripId' in entry.metadata).toBe(false)
+  })
+
+  it('does NOT stamp tripId when activeMode is null', () => {
+    const draft = makeReviewDraft({ title: 'Coffee' })
+    const entry = draftToEntry(draft, 'expense', 'expenditures', null)
+    expect('tripId' in entry.metadata).toBe(false)
+  })
+
+  it('does NOT stamp tripId when activeMode.mode is empty string', () => {
+    const draft = makeReviewDraft({ title: 'Coffee' })
+    const entry = draftToEntry(draft, 'expense', 'expenditures', {
+      mode: '',
+      label: '',
+      tripId: 'should-not-appear',
+    })
+    expect('tripId' in entry.metadata).toBe(false)
+  })
+})
+
 describe('draftToEntry — full entry shape (draftToEntry vs buildDSLPreview round-trip)', () => {
   it('complete expense draft produces all expected fields', () => {
     const draft = makeReviewDraft({

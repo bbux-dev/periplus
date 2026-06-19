@@ -113,6 +113,20 @@ describe('activateMode', () => {
     await activateMode('Travel', '  Oregon  ')
     expect(await activeModeRepository.get()).toEqual({ mode: 'Travel', label: 'Oregon' })
   })
+
+  it('persists tripId when a 3rd param is provided (ENG-02)', async () => {
+    await activateMode('trip', 'Paris', 'uuid-1')
+    const stored = await activeModeRepository.get()
+    expect(stored?.tripId).toBe('uuid-1')
+    expect(stored?.mode).toBe('trip')
+    expect(stored?.label).toBe('Paris')
+  })
+
+  it('does NOT persist tripId when 2-arg caller omits it (ENG-02)', async () => {
+    await activateMode('Travel', 'Oregon')
+    const stored = await activeModeRepository.get()
+    expect('tripId' in (stored ?? {})).toBe(false)
+  })
 })
 
 // ─── listModes ────────────────────────────────────────────────────────────────
