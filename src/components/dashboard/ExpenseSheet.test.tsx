@@ -51,6 +51,8 @@ describe('ExpenseSheet', () => {
     expect(savedEntry!.metadata.tripId).toBe(tripEntry.id)       // auto-stamped by draftToEntry
     expect(savedEntry!.metadata.category).toBe('Food')
     expect(savedEntry!.amount).toBe(42.5)
+    // IN-02: title is set to the selected category (not 'Untitled')
+    expect(savedEntry!.title).toBe('Food')
 
     // occurredAt is LOCAL midnight on Jun 19, NOT UTC midnight Jun 20
     const expectedLocalMidnight = Date.parse('2026-06-19T00:00:00')
@@ -78,6 +80,20 @@ describe('ExpenseSheet', () => {
     await user.type(screen.getByLabelText(/amount/i), '10')
     await user.click(screen.getByRole('button', { name: /save/i }))
     expect(onSave).not.toHaveBeenCalled()
+  })
+
+  it('does not save and shows alert when amount is malformed (12.5.0)', async () => {
+    // CR-01: strict regex rejects multi-dot strings, comma-thousands, alpha chars, scientific notation
+    const onSave = vi.fn()
+    const user = userEvent.setup()
+    render(
+      <ExpenseSheet isOpen={true} activeMode={null} onSave={onSave} onCancel={() => {}} />,
+    )
+    await user.type(screen.getByLabelText(/amount/i), '12.5.0')
+    await user.click(screen.getByRole('button', { name: 'Food' }))
+    await user.click(screen.getByRole('button', { name: /save/i }))
+    expect(onSave).not.toHaveBeenCalled()
+    expect(screen.getByRole('alert')).toBeInTheDocument()
   })
 
   it('calls onCancel when backdrop is clicked', async () => {

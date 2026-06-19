@@ -70,8 +70,13 @@ export function TripHomePage() {
 
   async function handleUndo() {
     if (!savedEntry) return
-    await entriesRepository.delete(savedEntry.id)
-    setSavedEntry(null)
+    try {
+      await entriesRepository.delete(savedEntry.id)
+      setSavedEntry(null)
+    } catch (err) {
+      console.error('ExpenseSheet undo failed:', err)
+      // Keep savedEntry visible so the user can retry or dismiss manually
+    }
   }
 
   return (

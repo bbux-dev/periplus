@@ -19,5 +19,6 @@ const _fmt = new Intl.NumberFormat('en-US', {
  * formatUSD(15.299999999999999)  // "$15.30"  ← rounding guard
  */
 export function formatUSD(n: number): string {
+  if (!Number.isFinite(n)) return '$0.00'
   return _fmt.format(Math.round(n * 100) / 100)
 }

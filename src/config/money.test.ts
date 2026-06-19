@@ -22,4 +22,12 @@ describe('formatUSD', () => {
   it('is float-safe: 15.299999999999999 rounds to $15.30', () => {
     expect(formatUSD(15.299999999999999)).toBe('$15.30')
   })
+
+  it('returns $0.00 for NaN', () => {
+    expect(formatUSD(NaN)).toBe('$0.00')
+  })
+
+  it('returns $0.00 for Infinity', () => {
+    expect(formatUSD(Infinity)).toBe('$0.00')
+  })
 })

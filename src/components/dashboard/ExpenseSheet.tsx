@@ -30,6 +30,10 @@ interface ExpenseSheetProps {
   onCancel: () => void
 }
 
+// Strict amount pattern — rejects "12.5.0", "1,500", "1abc", "1e2".
+// Only plain decimal numbers are accepted (e.g. "42", "42.50", ".5").
+const AMOUNT_RE = /^\d*\.?\d+$/
+
 // ── Component ──────────────────────────────────────────────────────────────────
 
 export function ExpenseSheet({
@@ -45,12 +49,16 @@ export function ExpenseSheet({
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
   const panelRef = useRef<HTMLDivElement>(null)
+  const amountRef = useRef<HTMLInputElement>(null)
+  // WR-02: synchronous double-submit guard — checked before async state re-render
+  const savingRef = useRef(false)
 
-  // Move focus into the sheet on open (WCAG 2.1 SC 4.1.2)
-  // The amount input has autoFocus, so this serves as a panelRef fallback.
+  // Move focus to the amount input when the sheet opens (WCAG 2.1 SC 4.1.2).
+  // Using a ref+effect instead of autoFocus so focus reliably lands on the
+  // amount field even when the component is conditionally mounted.
   useEffect(() => {
     if (isOpen) {
-      panelRef.current?.focus()
+      amountRef.current?.focus()
     }
   }, [isOpen])
 
@@ -76,26 +84,36 @@ export function ExpenseSheet({
 
   // ── Validation ───────────────────────────────────────────────────────────────
 
-  // Save gated: amount must be a positive number AND a category must be selected
-  const parsedAmount = parseFloat(amount)
+  // Save gated: amount must pass strict regex AND be positive; category must be selected.
+  // parseFloat is only called after the regex ensures a parseable decimal string.
+  const trimmedAmount = amount.trim()
   const canSave =
-    amount.trim() !== '' &&
-    !isNaN(parsedAmount) &&
-    parsedAmount > 0 &&
+    trimmedAmount !== '' &&
+    AMOUNT_RE.test(trimmedAmount) &&
+    parseFloat(trimmedAmount) > 0 &&
     category !== ''
 
   // ── Save handler ─────────────────────────────────────────────────────────────
 
   async function handleSave() {
-    const amt = parseFloat(amount)
-    if (isNaN(amt) || amt <= 0 || !category) {
+    // WR-02: synchronous double-submit guard before the async state re-render
+    if (savingRef.current) return
+
+    // CR-01: strict regex validation — rejects "12.5.0", "1,500", "1abc", "1e2"
+    const trimmedAmt = amount.trim()
+    if (!AMOUNT_RE.test(trimmedAmt) || parseFloat(trimmedAmt) <= 0 || !category) {
       setError('Amount and category are required.')
       return
     }
+
+    savingRef.current = true
     setSaving(true)
     setError('')
     try {
+      const amt = parseFloat(trimmedAmt)
       const draft: ReviewDraft = {
+        // IN-02: title from category so entries are named in exports/timeline
+        title: category,
         amount: amt,
         // LOCAL midnight epoch — avoids UTC date off-by-one in negative UTC-offset zones
         occurredAt: todayLocalMidnightEpoch(),
@@ -110,8 +128,13 @@ export function ExpenseSheet({
       const entryData = draftToEntry(draft, 'expense', 'trips', activeMode)
       const saved = await entriesRepository.create(entryData)
       onSave(saved)
+    } catch (err) {
+      // WR-01: surface save errors to the user
+      console.error('ExpenseSheet save failed:', err)
+      setError('Could not save. Please try again.')
     } finally {
       setSaving(false)
+      savingRef.current = false
     }
   }
 
@@ -144,7 +167,8 @@ export function ExpenseSheet({
                    max-h-[90vh] overflow-y-auto outline-none"
       >
         {/* Amount field — inputMode="decimal" gives numeric keyboard on mobile without
-            type="number" stepper-arrow quirks */}
+            type="number" stepper-arrow quirks. No pattern attribute — JS regex is
+            the real validation (WR-05). */}
         <div className="mb-4">
           <label
             htmlFor="expense-amount"
@@ -156,11 +180,10 @@ export function ExpenseSheet({
             id="expense-amount"
             type="text"
             inputMode="decimal"
-            pattern="[0-9]*\.?[0-9]+"
+            ref={amountRef}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="0.00"
-            autoFocus
             className={cn(
               'w-full rounded-md border px-3 py-2 text-2xl font-bold',
               'bg-[var(--color-background)] text-[var(--color-foreground)]',
@@ -170,12 +193,16 @@ export function ExpenseSheet({
           />
         </div>
 
-        {/* Category grid — large tap targets, toggle selection */}
+        {/* Category grid — large tap targets, toggle selection.
+            WR-06: role="group" + aria-labelledby for accessible grouping. */}
         <div className="mb-4">
-          <p className="text-sm font-medium text-[var(--color-foreground)] mb-2">
+          <p
+            id="category-label"
+            className="text-sm font-medium text-[var(--color-foreground)] mb-2"
+          >
             Category <span aria-hidden="true">*</span>
           </p>
-          <div className="grid grid-cols-4 gap-2">
+          <div role="group" aria-labelledby="category-label" className="grid grid-cols-4 gap-2">
             {EXPENSE_CATEGORIES.map((cat) => (
               <button
                 key={cat}
