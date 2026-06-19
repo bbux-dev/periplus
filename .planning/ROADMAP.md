@@ -72,7 +72,12 @@ Plans:
   3. `AppShell` has no remaining imports of `NAVIGATION`, `useShortcutConfig`, `listModes`, or `LayoutChips`; the hamburger menu contains exactly Home, Previous Trips, and Settings links; the app bar shows the active trip name when a trip is active
   4. `SettingsPage` shows only a JSON export button; no shortcut-config, layout-authoring, or DSL UI is visible; export still produces a valid JSON file
   5. Navigating to an unknown path (e.g., `/foo`) shows the `PlaceholderPage` 404 catch-all without crashing; the active trip persists across a page reload (the `activeMode` settings key survives a browser refresh)
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+- [ ] 21-01-PLAN.md — Move ReviewDraft into captureService.ts + repoint importers (compile-safety decouple)
+- [ ] 21-02-PLAN.md — New CreateTripPage + TripHomePage stub (loading guard) + export-only SettingsPage
+- [ ] 21-03-PLAN.md — Trip-only AppShell + router rewrite + remove listModes from activeMode
+- [ ] 21-04-PLAN.md — Atomic deletion of 11 pages + dead subsystem; final tsc/vitest green gate
 **Key pitfalls**: Delete implementation + test file pairs atomically — never leave a dead import across a commit boundary (suite turns fully red); `useActiveMode() === undefined` means loading OR no-trip — MUST distinguish with a loading skeleton before showing empty state; complete AppShell rewrite in one pass — no partial edits leaving dangling `NAVIGATION`/shortcut references; `ReviewDraft` type must be moved out of `extractMetadataFromUrl.ts` into `captureService.ts` before `extractMetadataFromUrl.ts` is deleted
 **UI hint**: yes
 
@@ -204,7 +209,7 @@ Full details: [`milestones/v0.1.0-ROADMAP.md`](milestones/v0.1.0-ROADMAP.md).
 | 17. Editable & Deletable Saved Entries | v0.4.0 | 1/1 | Complete | 2026-06-18 |
 | 18. Active Mode Model + Instance Stamping | v0.4.0 | 1/1 | Complete | 2026-06-18 |
 | 19. Active Mode Navigation + Dashboard De-Clunk | v0.4.0 | 1/1 | Complete | 2026-06-18 |
-| 20. Trip Data Model + Engine Extensions | v0.5.0 | 2/2 | Complete   | 2026-06-19 |
+| 20. Trip Data Model + Engine Extensions | v0.5.0 | 2/2 | Complete    | 2026-06-19 |
 | 21. App Shell + Routing Rewrite + Atomic Drop | v0.5.0 | 0/1 | Not started | - |
 | 22. Trip Home + Expense Capture | v0.5.0 | 0/1 | Not started | - |
 | 23. Activity Capture | v0.5.0 | 0/1 | Not started | - |
