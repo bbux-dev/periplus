@@ -94,7 +94,7 @@ Plans:
 **Plans**: 3 plans
 - [x] 22-01-PLAN.md — formatUSD currency util + shared EXPENSE_CATEGORIES constant (foundation)
 - [x] 22-02-PLAN.md — ExpenseSheet bottom-sheet: amount/category grid/vendor/notes; stamped trips-domain save
-- [ ] 22-03-PLAN.md — Expand TripHomePage (name/total/recent-10/CTAs) + wire sheet/toast; verify create→home
+- [x] 22-03-PLAN.md — Expand TripHomePage (name/total/recent-10/CTAs) + wire sheet/toast; verify create→home
 **Key pitfalls**: Expense `domain` MUST be the hardcoded string `'trips'` — never call `defaultDomainForType('expense')` which returns `'expenditures'`; date default MUST use `todayLocalDate()` / `withDefaultOccurredAt()` from `captureService` to avoid UTC off-by-one; all displayed money values use `formatUSD` / `toFixed(2)` / `Math.round(x*100)/100`; expense modal needs `aria-modal="true"` + `role="dialog"` + focus trap; test fake timers use `{ toFake: ['Date'] }`
 **UI hint**: yes
 
@@ -214,6 +214,6 @@ Full details: [`milestones/v0.1.0-ROADMAP.md`](milestones/v0.1.0-ROADMAP.md).
 | 19. Active Mode Navigation + Dashboard De-Clunk | v0.4.0 | 1/1 | Complete | 2026-06-18 |
 | 20. Trip Data Model + Engine Extensions | v0.5.0 | 2/2 | Complete    | 2026-06-19 |
 | 21. App Shell + Routing Rewrite + Atomic Drop | v0.5.0 | 4/4 | Complete    | 2026-06-19 |
-| 22. Trip Home + Expense Capture | v0.5.0 | 2/3 | In Progress|  |
+| 22. Trip Home + Expense Capture | v0.5.0 | 3/3 | Complete   | 2026-06-19 |
 | 23. Activity Capture | v0.5.0 | 0/1 | Not started | - |
 | 24. Previous Trips + Trip Detail + Expense Report | v0.5.0 | 0/1 | Not started | - |
