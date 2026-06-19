@@ -108,7 +108,11 @@ Plans:
   3. Tapping Other navigates to the same form with an additional required "Type" free-text field; saving without both Name and Type shows validation errors for each missing field
   4. The star rating control renders 5 stars; tapping star N sets the rating to N; tapping the already-selected star clears it; each star is a `<button>` element with `aria-label` (e.g., `"3 stars"`); keyboard left/right arrows move the selection
   5. A saved activity entry has `type: 'activity'`, `domain: 'trips'`, `metadata.activityType` set to the chosen type, `metadata.tripId` matching the active trip's UUID, and `occurredAt` defaulting to today's local date via `todayLocalDate()`
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 23-01-PLAN.md — ACTIVITY_TYPES constant + accessible StarRating component (5 button stars, tap-set/clear, arrow keys) + tests
+- [ ] 23-02-PLAN.md — ActivityTypePage at /activity (5 constant-driven tap targets → /activity/<slug>) + route wiring
+- [ ] 23-03-PLAN.md — ActivityFormPage at /activity/:type (Name/Location/Rating/Notes + Other free-text Type; stamped activity save) + route wiring
 **Key pitfalls**: `StarRating` MUST use `<button>` elements (not `<div>` or `<span>`) to capture iOS tap events without `cursor: pointer` workarounds; `occurredAt` default uses `todayLocalDate()` not `new Date().toISOString().substring(0,10)` (UTC off-by-one); fake timers in tests use `{ toFake: ['Date'] }`; `activityType` stored in `metadata.activityType`, not a new top-level DB field; "Other" type stored as the user-entered free-text string, not the literal string `"other"`
 **UI hint**: yes
 
@@ -214,6 +218,6 @@ Full details: [`milestones/v0.1.0-ROADMAP.md`](milestones/v0.1.0-ROADMAP.md).
 | 19. Active Mode Navigation + Dashboard De-Clunk | v0.4.0 | 1/1 | Complete | 2026-06-18 |
 | 20. Trip Data Model + Engine Extensions | v0.5.0 | 2/2 | Complete    | 2026-06-19 |
 | 21. App Shell + Routing Rewrite + Atomic Drop | v0.5.0 | 4/4 | Complete    | 2026-06-19 |
-| 22. Trip Home + Expense Capture | v0.5.0 | 3/3 | Complete   | 2026-06-19 |
-| 23. Activity Capture | v0.5.0 | 0/1 | Not started | - |
+| 22. Trip Home + Expense Capture | v0.5.0 | 3/3 | Complete    | 2026-06-19 |
+| 23. Activity Capture | v0.5.0 | 0/3 | Planned | - |
 | 24. Previous Trips + Trip Detail + Expense Report | v0.5.0 | 0/1 | Not started | - |
