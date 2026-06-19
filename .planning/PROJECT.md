@@ -32,7 +32,22 @@ Review screen with type-token + history-backed value suggestions — no new save
 silent mis-saves. Parser was ported directly from the VALIDATED spike `001-dsl-parser`.
 Full details in `.planning/MILESTONES.md`.
 
-## Current Milestone: v0.4.0 "Active Mode" De-Clunk + Editable Entries
+## Current Milestone: open (next milestone not yet scoped)
+
+Run `/gsd:new-milestone` to scope the next cycle. Candidate directions are in the Deferred list
+below (filter/group entries by mode instance is the natural follow-on now that STAMP-01 ships).
+
+## Previous Milestone: v0.4.0 "Active Mode" De-Clunk + Editable Entries — ✅ SHIPPED 2026-06-19
+
+**Outcome:** All 4 phases (16–19) shipped; 10/10 requirements satisfied; 592 tests green, `tsc -b` +
+`vite build` clean, zero new runtime dependencies. The dashboard now shows ONLY the active mode's
+buttons (the on-dashboard switcher is gone); mode switching moved to a hamburger "Active Mode" item
+with an instance-label prompt; the app bar shows `mode · label`; every capture is stamped with
+`metadata.mode`/`modeLabel` via the single `draftToEntry` path; saved entries are editable (a
+reusable `/entries/:id/edit` form that merge-preserves unknown metadata, incl. the mode stamp) and
+deletable (confirm-gated); and `occurredAt` defaults to today on capture. Milestone audit passed
+(10/10 requirements, 4/4 cross-phase flows). Built autonomously via the GSD pipeline (CONTEXT → plan
+→ gsd-executor TDD → verification per phase).
 
 **Goal:** Cut steady-state navigation noise to the bone — the dashboard shows only the *active
 mode*'s buttons — and make saved entries first-class: editable, deletable, and provenance-stamped
@@ -67,7 +82,7 @@ mode selection reuse the established `activeLayoutRepository` Dexie-`settings` p
 `entriesRepository.update`/`.delete` already exist and are unused — this milestone finally wires
 them. Designs: `notes/active-mode-navigation-design.md`, `notes/editable-saved-entries-design.md`.
 
-## Previous Milestone: v0.3.0 Dashboard Shortcut Layouts — ✅ SHIPPED 2026-06-17
+## Earlier Milestone: v0.3.0 Dashboard Shortcut Layouts — ✅ SHIPPED 2026-06-17
 
 **Outcome:** All 5 phases (11–15) shipped; 16/16 requirements satisfied; 500 tests green, `tsc -b`
 clean, zero new runtime dependencies. The Dashboard now renders customizable one-tap shortcut
@@ -127,30 +142,33 @@ out of the v0.2.0 "always Review" invariant for trusted shortcuts, paired with u
 - ✓ Tap-to-capture: fill-the-hole keypad + per-shortcut one-tap save w/ undo or ReviewPage (CAP-01..04) — v0.3.0
 - ✓ Import / export of the shortcut config as validated JSON (PORT-01..02) — v0.3.0
 - ✓ Authoring tool for shortcuts + layouts + "Save current as shortcut" from the omnibar (EDIT-01..04) — v0.3.0
+- ✓ `occurredAt` defaults to today on capture paths with a date field (DATE-01) — v0.4.0
+- ✓ Edit a saved entry's metadata from the detail view (EEDIT-01) — v0.4.0
+- ✓ Fix a saved entry's core fields; `recordedAt` immutable (EEDIT-02) — v0.4.0
+- ✓ Delete a saved entry with confirmation (EEDIT-03) — v0.4.0
+- ✓ Modes as independent named button lists (existing layouts become modes) (MODE-01) — v0.4.0
+- ✓ Activate a mode → labeled instance, persisted across reloads (MODE-02) — v0.4.0
+- ✓ Switch the active mode from a hamburger-menu "Active Mode" item (MODE-03) — v0.4.0
+- ✓ App bar shows the active mode · instance label (MODE-04) — v0.4.0
+- ✓ Dashboard renders only the active mode's buttons; switcher removed (DASH-04) — v0.4.0
+- ✓ Every capture stamped with `metadata.mode` / `modeLabel` via `draftToEntry` (STAMP-01) — v0.4.0
 
 ### Active
 
-<!-- v0.4.0 "Active Mode" De-Clunk + Editable Entries — scoped 2026-06-18 -->
+<!-- v0.4.0 shipped; next milestone scope is open — run /gsd:new-milestone. -->
 
-- [ ] Default `occurredAt` to today on capture paths that have a date field (DATE-01) — v0.4.0
-- [ ] Edit a saved entry's metadata from the detail view (EEDIT-01) — v0.4.0
-- [ ] Fix a saved entry's core fields; `recordedAt` immutable (EEDIT-02) — v0.4.0
-- [ ] Delete a saved entry with confirmation (EEDIT-03) — v0.4.0
-- [ ] Modes as independent named button lists (existing layouts become modes) (MODE-01) — v0.4.0
-- [ ] Activate a mode → labeled instance, persisted across reloads (MODE-02) — v0.4.0
-- [ ] Switch the active mode from a hamburger-menu "Active Mode" item (MODE-03) — v0.4.0
-- [ ] App bar shows the active mode · instance label (MODE-04) — v0.4.0
-- [ ] Dashboard renders only the active mode's buttons; switcher removed (DASH-04) — v0.4.0
-- [ ] Stamp every capture with `metadata.mode` / `modeLabel` via `draftToEntry` (STAMP-01) — v0.4.0
+(None — v0.4.0 shipped; next milestone not yet scoped)
 
 ### Deferred (candidate directions for future milestones)
 
 <!-- Seams already exist in code for the first two. -->
 
+- [ ] Filter / group entries by mode instance ("everything I logged during the Oregon trip") — the
+  STAMP-01 provenance shipped in v0.4.0 enables this; the filtered view is the natural next milestone
 - [ ] Backend sync layer (consume the existing `syncedAt` / `listUnsynced` seam)
-- [ ] Edit / delete of *entries* from Entry Detail (`entriesRepository.update`/`.delete` exist, unused)
 - [ ] JSON import of *entries* (round-trips the existing export)
 - [ ] Richer per-type capture heuristics + short-link (`maps.app.goo.gl`) resolution
+- ✓ Edit / delete of *entries* from Entry Detail — SHIPPED v0.4.0 (EEDIT-01..03)
 
 ### Out of Scope
 
@@ -201,6 +219,10 @@ out of the v0.2.0 "always Review" invariant for trusted shortcuts, paired with u
 | Single `LifeLogEntry` record type; `entries` + `settings` stores | All categories are typed entries in one event log | ✓ LOCKED — shipped v0.1.0 |
 | URL-first capture default; manual behind `Enter Manually` | Explicit spec.md UX rule + acceptance criterion | ✓ LOCKED — shipped v0.1.0 |
 | Structure for a future sync layer (unsynced-entries query stub) | No sync now, but keep the seam open | ✓ LOCKED — shipped v0.1.0 |
+| "Mode" is the existing `Layout` reframed (no wholesale rename) | Avoid risky churn; modes derive from `config.layouts` via `listModes` | ✓ Good — shipped v0.4.0 |
+| Active mode is the dashboard's source of truth (not `activeLayoutName`) | One steady-state selector; switcher removed for the de-clunk | ✓ Good — shipped v0.4.0 |
+| Capture stamp via an optional `activeMode` arg on `draftToEntry` | Single capture path stamps all save routes; no stamp when inactive | ✓ Good — shipped v0.4.0 |
+| Entry edits merge metadata (preserve unknown keys) | Mode/modeLabel + DSL/URL keys survive edits and stay correctable | ✓ Good — shipped v0.4.0 |
 
 ## Evolution
 
@@ -220,4 +242,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-18 — started milestone v0.4.0 ("Active Mode" De-Clunk + Editable Entries)*
+*Last updated: 2026-06-19 — after completing milestone v0.4.0 ("Active Mode" De-Clunk + Editable Entries shipped)*

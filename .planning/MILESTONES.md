@@ -1,5 +1,18 @@
 # Milestones
 
+## v0.4.0 Active Mode De-Clunk + Editable Entries (Shipped: 2026-06-19)
+
+**Phases completed:** 4 phases, 4 plans, 11 tasks
+
+**Key accomplishments:**
+
+- occurredAt now defaults to today's local date on both capture paths (ReviewPage form + one-tap direct/sheet save) for date-bearing types — a visible, clearable default, with the local-midnight convention preserved and draftToEntry kept neutral.
+- Saved entries are now editable through a pre-populated reusable form (same ENTRY_FIELDS config as capture) that merge-persists core + metadata edits via the existing `entriesRepository.update`, and deletable behind an inline two-step confirm via `entriesRepository.delete` — with `recordedAt` immutable throughout.
+- Active-mode data/service layer persisted in Dexie settings with a reactive useActiveMode() hook, plus conditional mode/modeLabel provenance stamping threaded through draftToEntry into all three capture save paths.
+- v0.4.0 de-clunk: mode switching moved into the hamburger menu (with an inline label prompt), the app bar now shows `mode · label`, and the dashboard renders ONLY the active mode's buttons — the on-dashboard LayoutChips switcher is gone.
+
+---
+
 ## v0.3.0 Dashboard Shortcut Layouts (Shipped: 2026-06-17)
 
 **Phases completed:** 5 phases, 11 plans, 11 tasks
@@ -10,16 +23,20 @@
   Heroicons allow-list + a draft-07 JSON Schema spec artifact + a hand-rolled structural
   validator (whole-or-reject) with a versioned `migrateConfig` seam, persisted in the dormant
   v0.1.0 Dexie `settings` store via a reactive repository — zero new deps, `db.ts` untouched.
+
 - **Dashboard rendering (Phase 12):** Variant-B chips+rows dashboard — scrollable layout-chip
   switcher (persisted active layout) + tappable shortcut rows with Heroicons — and one-shot
   first-run seeding of sensible default layouts (DayToDay / Travel / WorkTrip).
+
 - **Tap-to-capture (Phase 13):** a shortcut is a saved DSL template; tapping routes to one-tap
   direct save (+ "Saved · Undo" toast), a fill-the-hole keypad sheet with a live DSL preview, or
   the existing ReviewPage — per-shortcut `confirm`. Reuses the whole v0.2.0 parseDSL →
   buildReviewDraft pipeline via an extracted shared `draftToEntry`; `{}` named-hole token.
+
 - **Import / export (Phase 14):** export the config as a versioned JSON envelope and import it
   back (parse → migrate → validate → put, wholesale reject) from a new `/settings` page —
   portable config sharing without accounts.
+
 - **Authoring tool (Phase 15):** in-app create/edit/delete + reorder of shortcuts and layouts
   (pure immutable helpers, always re-validated before write), an allow-list icon picker, a
   parseDSL-gated template field, plus "Save current as shortcut" from the omnibar.

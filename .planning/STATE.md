@@ -2,9 +2,10 @@
 gsd_state_version: 1.0
 milestone: v0.4.0
 milestone_name: Active Mode De-Clunk + Editable Entries
-status: in_progress
-last_updated: "2026-06-19T02:45:00.000Z"
-last_activity: 2026-06-19
+status: Awaiting next milestone
+stopped_at: Completed 15-authoring-tool/15-01-PLAN.md
+last_updated: "2026-06-19T03:17:29.017Z"
+last_activity: 2026-06-19 — Milestone v0.4.0 completed and archived
 progress:
   total_phases: 4
   completed_phases: 4
@@ -20,14 +21,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-17)
 
 **Core value:** A user can capture a structured life event on their phone in seconds — URL-first — and have it persist locally and offline as a typed entry.
-**Current focus:** v0.4.0 — Active Mode De-Clunk + Editable Entries
+**Current focus:** Planning next milestone (run `/gsd:new-milestone`)
 
 ## Current Position
 
-Phase: All v0.4.0 phases (16–19) complete
+Phase: Milestone v0.4.0 complete
 Plan: —
-Status: All 4 phases verified ✅ — ready for milestone lifecycle (audit → complete → cleanup)
-Last activity: 2026-06-19 — Phase 19 done: active-mode nav + dashboard de-clunk (592 tests green, tsc + build clean)
+Status: Awaiting next milestone
+Last activity: 2026-06-19 — Milestone v0.4.0 completed and archived
+
+## Deferred Items
+
+Items acknowledged and deferred at milestone close on 2026-06-19:
+
+| Category | Item | Status | Note |
+|----------|------|--------|------|
+| quick_task | 260618-8pp-home-button-and-hamburger-nav-menu | missing | Feature shipped (commits 6762cef, 012475c — AppShell home button + hamburger nav); only the completion tracking artifact is missing. No undone work. |
 
 ## Performance Metrics
 

@@ -105,6 +105,47 @@ full in-app authoring tool (Phase 15). 500 tests at ship; zero new runtime depen
 - Notable: worktrees disabled — sequential executors on the main tree (linear dependency chains;
   `node_modules` persistence).
 
+## Milestone: v0.4.0 — "Active Mode" De-Clunk + Editable Entries
+
+**Shipped:** 2026-06-19
+**Phases:** 4 (16–19) | **Plans:** 4 | **Tests at ship:** 592 (+80 net) | **Audit:** passed (10/10, 4/4 flows)
+
+### What Was Built
+Date defaults to today on capture (P16); saved entries are editable + deletable via a reusable
+`/entries/:id/edit` form that merge-preserves unknown metadata (P17); an active-mode model persisted
+in Dexie `settings` with capture provenance stamping threaded through the single `draftToEntry` path
+(P18); and the core de-clunk — mode switching moved to the hamburger menu, app bar shows `mode ·
+label`, dashboard renders only the active mode's buttons (P19).
+
+### What Worked
+- **Reframing over rewriting.** Treating "Mode" as the existing `Layout` (no rename) and reusing the
+  `activeLayoutRepository` persistence pattern, `ENTRY_FIELDS` + `buildReviewDraft`, and the single
+  `draftToEntry` site meant each phase was small, additive, and low-risk.
+- **Phase ordering paid off.** Building the active-mode model + stamping (P18) before the nav UI (P19),
+  and metadata-merge editing (P17) before the mode stamp existed, made the 18↔17 and 18→19 links fall
+  out cleanly — the stamp is editable because P17 already preserved unknown metadata keys.
+- **Pre-written, touchpoint-grounded plans.** Authoring each PLAN.md from a full read of the actual
+  touchpoints (then handing to gsd-executor) kept executors on rails — TDD green first try, zero
+  production deviations across all 4 phases.
+
+### What Was Inefficient
+- A recurring test-harness gotcha (full fake timers hang awaited Dexie writes) had to be re-discovered;
+  the fix (`toFake: ['Date']`) is now documented in each phase's context. Worth a standing test note.
+
+### Patterns Established
+- `services/activeMode.ts` mirrors `activeLayoutRepository` as the canonical "settings-backed reactive
+  singleton" pattern. Optional trailing args on shared constructors (`draftToEntry(..., activeMode?)`)
+  for cross-cutting concerns without disturbing existing callers.
+
+### Key Lessons
+- When a milestone is "de-clunk", the win is **removal** — measure each change against the north-star
+  seed (fewer controls), not feature count. The dashboard shipped with strictly fewer steady-state controls.
+
+### Cost Observations
+- Discuss skipped (`workflow.skip_discuss=true`), UI phase/review off — fully autonomous run.
+- Per phase: 1 pre-written plan + 1 gsd-executor (TDD, atomic commits) + main-thread verification;
+  no researcher/pattern-mapper/checker overhead (phases were well-understood reframings).
+
 ## Cross-Milestone Trends
 
 | Milestone | Phases | Plans | Tests at ship | Audit | Notes |
@@ -112,3 +153,4 @@ full in-app authoring tool (Phase 15). 500 tests at ship; zero new runtime depen
 | v0.1.0 | 6 | 22 | 221 | passed (35/35) | Full local life-log shipped from a tracer bullet |
 | v0.2.0 | 4 | 4 | 277 | passed (10/10) | Quick-Capture DSL omnibar; parser ported from validated spike |
 | v0.3.0 | 5 | 11 | 500 | passed (16/16) | Shortcut layouts on the DSL; audit caught a real cross-phase blocker |
+| v0.4.0 | 4 | 4 | 592 | passed (10/10) | Active-mode de-clunk + editable entries; reframed Layout→Mode, zero new deps |
