@@ -12,6 +12,18 @@ dist
 dist-ssr
 *.local
 
+# SST (generated platform code, local state, env types)
+.sst
+sst-env.d.ts
+
+# Personal deploy checklist — intentionally untracked
+FOLLOW_UP.md
+
+# Local secrets / env (direnv)
+.env
+.envrc
+.direnv
+
 # Playwright (mirrors patrimonium)
 playwright-report/
 test-results/
