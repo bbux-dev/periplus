@@ -34,7 +34,9 @@ export default $config({
       removal: isProd ? "retain" : "remove",
       protect: isProd,
       providers: {
-        aws: "7.34.0",
+        // Pin the home region so local and CI deploys share one SST state.
+        // (CloudFront's ACM cert is still created in us-east-1 automatically.)
+        aws: { version: "7.34.0", region: "us-west-2" },
         cloudflare: {
           version: "6.17.0",
           apiToken: process.env.CLOUDFLARE_API_TOKEN,
